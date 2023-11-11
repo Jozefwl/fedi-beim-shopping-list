@@ -1,3 +1,4 @@
+// Importing necessary React hooks and components
 import React, { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import shoppinglists from "../data/shoppinglists.json";
@@ -5,19 +6,28 @@ import "../styles/ShoppingList.css";
 import "../styles/Table.css";
 import UserContext from "../components/UserContext";
 
+// ParentComponent function component
 const ParentComponent = () => {
+  // Extracting parameters from the URL
   const params = useParams();
+  // Retrieving shopping list data based on the provided ID
   const shoppingList = shoppinglists[params.shoppingListId];
+  // Extracting relevant information from the shopping list data
   const shoppingListPublic = shoppingList.public;
   const shoppingListOwner = shoppingList.owner;
 
+  // Rendering the ShoppingList component with necessary props
   return <ShoppingList id={params.shoppingListId} shoppingListPublic={shoppingListPublic} shoppingListOwner={shoppingListOwner} />;
 };
 
+// Table function component
 const Table = ({ id }) => {
+  // Retrieving shopping list data based on the provided ID
   const shoppingList = shoppinglists[id];
+  // Extracting the shopping list name
   const shoppingListName = shoppingList.shoppingListName;
 
+  // Extracting items from the shopping list data
   const items = Object.keys(shoppingList["name"]).map((key) => ({
     id: key,
     name: shoppingList["name"][key],
@@ -25,17 +35,17 @@ const Table = ({ id }) => {
     quantity: shoppingList["quantity"][key],
   }));
 
+  // State hooks for managing visibility, checked items, and filter
   const [visibleCategories, setVisibleCategories] = useState([items[0].category]);
-
   const [checkedItems, setCheckedItems] = useState(
     items.reduce((acc, item) => {
       acc[item.id] = false;
       return acc;
     }, {})
   );
-
   const [filter, setFilter] = useState("unchecked");
 
+  // Function to toggle visibility of a category
   const toggleCategoryVisibility = (category) => {
     if (visibleCategories.includes(category)) {
       setVisibleCategories(visibleCategories.filter((c) => c !== category));
@@ -44,16 +54,19 @@ const Table = ({ id }) => {
     }
   };
 
+  // Event handler for checkbox changes
   const handleCheckboxChange = (event) => {
     const itemId = event.target.value;
     const isChecked = event.target.checked;
     setCheckedItems({ ...checkedItems, [itemId]: isChecked });
   };
 
+  // Event handler for filter changes
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   };
 
+  // Function to render table rows based on categories and filters
   const renderTableRows = () => {
     const categories = [...new Set(items.map((item) => item.category))];
     const filteredItems = filter === "checked"
@@ -107,6 +120,7 @@ const Table = ({ id }) => {
     ));
   };
 
+  // Rendering the table header, buttons, and the table itself
   return (
     <>
       <div className="table-header">
@@ -133,12 +147,16 @@ const Table = ({ id }) => {
   );
 };
 
+// ShoppingList function component
 const ShoppingList = (props) => {
+  // Using the useContext hook to access the username from the UserContext
   const username = useContext(UserContext);
 
+  // Conditional rendering based on whether the shopping list is public or if the user is the owner
   if (props.shoppingListPublic === true || username === props.shoppingListOwner) {
     return (
       <div>
+        {/* Rendering the Table component with the provided props */}
         <Table id={props.id} />
       </div>
     );
@@ -151,4 +169,5 @@ const ShoppingList = (props) => {
   }
 };
 
+// Exporting the ParentComponent as the default export
 export default ParentComponent;
