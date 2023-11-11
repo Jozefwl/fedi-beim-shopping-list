@@ -2,6 +2,8 @@
     "1": {
         "shoppingListName": "My Best Shopping List",
         "owner":"tibor123",
+        "collaborators": {        
+        },
         "public":false,
         "name": {
             "1": "Dragonfruit",
@@ -20,11 +22,19 @@
             "2": "2",
             "3": "1",
             "4": "1"
+        },
+        "checked": {
+            "1": false,
+            "2": false,
+            "3": false,
+            "4": false
         }
     },
     "2":{
         "shoppingListName": "Shopping List",
         "owner":"uhor25",
+        "collaborators": {        
+        },
         "public":true,
         "name": {
             "1": "Hammer"
@@ -34,6 +44,9 @@
         },
         "quantity": {
             "1": "1"
+        },
+        "checked": {
+            "1": false
         }
     }
 }

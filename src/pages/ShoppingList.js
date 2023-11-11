@@ -1,31 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import shoppingLists from "../data/shoppinglists.json";
-import "../styles/ShoppingList.css";
 import shoppinglists from "../data/shoppinglists.json";
+import "../styles/ShoppingList.css";
 import "../styles/Table.css";
+import UserContext from "../components/UserContext";
 
 const ParentComponent = () => {
   const params = useParams();
-  const shoppingList = shoppingLists[params.shoppingListId];
-  const shoppingListPublic = shoppingLists[params.shoppingListId].public;
-  const username = "asdf"; // replace with the actual username
+  const shoppingList = shoppinglists[params.shoppingListId];
+  const shoppingListPublic = shoppingList.public;
+  const shoppingListOwner = shoppingList.owner;
 
-  if (shoppingList.owner === username || shoppingListPublic === true) {
-    return <ShoppingList id={params.shoppingListId} username={username} />;
-  } else {
-    return (
-      <div className="unauthorized">
-        You are not authorized to view this shopping list.
-      </div>
-    );
-  }
+  return <ShoppingList id={params.shoppingListId} shoppingListPublic={shoppingListPublic} shoppingListOwner={shoppingListOwner} />;
 };
 
 const Table = ({ id }) => {
   const shoppingList = shoppinglists[id];
-  const shoppingListName = shoppinglists[id].shoppingListName;
-
+  const shoppingListName = shoppingList.shoppingListName;
 
   const items = Object.keys(shoppingList["name"]).map((key) => ({
     id: key,
@@ -34,10 +25,7 @@ const Table = ({ id }) => {
     quantity: shoppingList["quantity"][key],
   }));
 
-
-  const [visibleCategories, setVisibleCategories] = useState([
-    [...new Set(items.map((item) => item.category))][0],
-  ]);
+  const [visibleCategories, setVisibleCategories] = useState([items[0].category]);
 
   const [checkedItems, setCheckedItems] = useState(
     items.reduce((acc, item) => {
@@ -146,11 +134,21 @@ const Table = ({ id }) => {
 };
 
 const ShoppingList = (props) => {
-  return (
-    <div>
-      <Table id={props.id} />
-    </div>
-  );
+  const username = useContext(UserContext);
+
+  if (props.shoppingListPublic === true || username === props.shoppingListOwner) {
+    return (
+      <div>
+        <Table id={props.id} />
+      </div>
+    );
+  } else {
+    return (
+      <div className="unauthorized">
+        You are not authorized to view this shopping list.
+      </div>
+    );
+  }
 };
 
 export default ParentComponent;
