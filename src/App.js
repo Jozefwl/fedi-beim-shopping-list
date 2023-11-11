@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import LoginModal from "./components/LoginModal";
 import "./styles/App.css";
+import {routes as Routes} from "./Routes";
 
 const App = () => {
   const [showModal, setShowModal] = useState(false);
@@ -33,9 +34,11 @@ const App = () => {
         onLoginClick={handleShowModal}
         onLogoutClick={handleLogout}
       />
-
       <LoginModal isOpen={showModal} onRequestClose={handleCloseModal} onLogin={handleLogin} />
+    <Routes>
+    </Routes>
     </div>
+
   );
 };
 

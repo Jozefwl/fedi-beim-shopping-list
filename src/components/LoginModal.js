@@ -36,6 +36,7 @@ const LoginModal = ({ isOpen, onRequestClose, onLogin }) => {
           placeholder="Username"
           value={username}
           onChange={handleUsernameChange}
+          className="inputBox"
         />
         <input
           type="password"

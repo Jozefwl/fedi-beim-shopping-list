@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { default as HomePage } from './pages/HomePage';
 import { default as ShoppingList } from './pages/ShoppingList';
 import { default as NotFoundPage } from './pages/NoPage';
+import { default as EditList } from './pages/EditList';
 
 export const routes = () => {
     return(
@@ -13,6 +14,9 @@ export const routes = () => {
                 <Route path="/shoppinglist/:shoppingListId">
                     <ShoppingList />
                 </Route>
+                <Route path="/shoppinglist/:shoppingListId/edit">
+                    <EditList />
+                </Route>
                 <Route>
                     <NotFoundPage />
                 </Route>
@@ -20,3 +24,4 @@ export const routes = () => {
         </Router>
     )
 }
+

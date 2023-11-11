@@ -1,0 +1,39 @@
+{
+    "1": {
+        "shoppingListName": "My Best Shopping List",
+        "owner":"tibor123",
+        "public":false,
+        "name": {
+            "1": "Dragonfruit",
+            "2": "Banana",
+            "3": "Apple",
+            "4": "Tape"
+        },
+        "category": {
+            "1": "Groceries",
+            "2": "Groceries",
+            "3": "Groceries",
+            "4": "Household"
+        },
+        "quantity": {
+            "1": "1",
+            "2": "2",
+            "3": "1",
+            "4": "1"
+        }
+    },
+    "2":{
+        "shoppingListName": "Shopping List",
+        "owner":"uhor25",
+        "public":true,
+        "name": {
+            "1": "Hammer"
+        },
+        "category": {
+            "1": "Household"
+        },
+        "quantity": {
+            "1": "1"
+        }
+    }
+}

@@ -1,0 +1,139 @@
+.table-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+table {
+  margin-top: auto;
+  background-color: #242424;
+}
+
+thead {
+  display: block;
+}
+
+tbody {
+  display: block;
+  overflow-y: auto;
+  max-height: calc(100vh - 50px);
+}
+
+tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid black;
+  font-size: 48px;
+}
+
+
+.expand-cell {
+  padding: 10px;
+}
+
+.expand-cell {
+  padding: 10px;
+  text-align: right;
+}
+
+.expand-button {
+  background: black;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: block;
+  font-size: 48px;
+  font-weight: bold;
+  padding: 10px;
+  text-align: center;
+  width: 100%;
+}
+
+.expand-button:focus {
+  outline: none;
+}
+
+.expand-button::before {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-right: 5px;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid white;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+.expand-button.expanded::before {
+  border-right: none;
+  border-bottom: 5px solid white;
+  border-top: 5px solid white;
+}
+
+.checkbox {
+  width: 50px;
+  height: 50px;
+}
+
+@media (max-width: 768px) {
+  th,
+  td {
+    font-size: 24px;
+  }
+
+  .expand-button {
+    font-size: 24px;
+  }
+}
+
+
+.filter-dropdown-wrapper {
+  float: right;
+  margin: 10px;
+}
+
+.table-header-button {
+  height:50px;
+  width: 150px;
+  font-size: 25px;
+  float:right;
+  margin:10px;
+  
+}
+
+.table-header-dropdown {
+  height:50px;
+  width: 150px;
+  font-size: 25px;
+  
+}
+
+.table-header {
+  margin-top: 1%;
+  height: 70px;
+  background-color: black;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.tableName {
+  flex: 1;
+  text-align: center;
+  font-size: 32px;
+}
+
