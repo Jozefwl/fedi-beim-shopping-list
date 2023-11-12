@@ -8,19 +8,24 @@ import UserContext from "../components/UserContext";
 const ParentComponent = () => {
   const params = useParams();
   const shoppingList = shoppinglists[params.shoppingListId];
-  const shoppingListPublic = shoppingList.public;
+  const shoppingListId = params.shoppingListId;
+  const hreflink = "/edit/" + shoppingListId;
+  const shoppingListState = shoppingList.state;
+  const shoppingListSharedList = shoppingList.sharedTo;
   const shoppingListOwner = shoppingList.owner;
 
-  return <ShoppingList id={params.shoppingListId} shoppingListPublic={shoppingListPublic} shoppingListOwner={shoppingListOwner} />;
+  return <ShoppingList id={params.shoppingListId} hreflink={hreflink} shoppingListState={shoppingListState} shoppingListSharedList={shoppingListSharedList} shoppingListOwner={shoppingListOwner} />;
 };
 
-const Table = ({ id }) => {
+const Table = ({ id, hreflink }) => {
   const shoppingList = shoppinglists[id];
   const shoppingListName = shoppingList.shoppingListName;
 
   const items = Object.keys(shoppingList["name"]).map((key) => ({
     id: key,
     name: shoppingList["name"][key],
+    state: shoppingList["state"][key],
+    sharedTo: shoppingList["sharedTo"][key],
     category: shoppingList["category"][key],
     quantity: shoppingList["quantity"][key],
   }));
@@ -115,7 +120,7 @@ const Table = ({ id }) => {
             <p className="table-header-text">{shoppingListName}</p>
           </div>
           <div className="header-buttons">
-            <a href="edit"><button className="table-header-button">Edit</button></a>
+            <a href={hreflink}><button className="table-header-button">Edit</button></a>
             <div className="filter-dropdown-wrapper">
               <label htmlFor="filterDropdown">Show: </label>
               <select className="table-header-dropdown" id="filterDropdown" onChange={handleFilterChange} value={filter}>
@@ -134,12 +139,15 @@ const Table = ({ id }) => {
 };
 
 const ShoppingList = (props) => {
+  console.log(props.shoppingListState);
+  console.log(props.shoppingListOwner);
+  console.log(props.shoppingListSharedList);
   const username = useContext(UserContext);
 
-  if (props.shoppingListPublic === true || username === props.shoppingListOwner) {
+  if (props.shoppingListState === "public" || username === props.shoppingListOwner || username === props.shoppingListSharedList) {
     return (
       <div>
-        <Table id={props.id} />
+        <Table id={props.id} hreflink={props.hreflink} />
       </div>
     );
   } else {

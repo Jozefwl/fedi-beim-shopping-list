@@ -1,0 +1,18 @@
+{
+    "tibor123": {
+        "passwordBase64": "cDFhMnMzczR3NW82cjdkOA==",
+        "owned_lists": [
+            "1"
+        ],
+        "shared_lists": []
+    },
+    "uhor25":{
+        "passwordBase64": "bWlsdWplbXRpYm9yYQ==",
+        "owned_lists": [
+            "2"
+        ],
+        "shared_lists": [
+            "1"
+        ]
+    }
+}

@@ -1,10 +1,14 @@
 {
+    "publicLists": [
+        "2"
+    ],
     "1": {
         "shoppingListName": "My Best Shopping List",
-        "owner":"tibor123",
-        "collaborators": {        
-        },
-        "public":false,
+        "owner": "tibor123",
+        "sharedTo": [
+            "uhor25"
+        ],
+        "state":"unlisted",
         "name": {
             "1": "Dragonfruit",
             "2": "Banana",
@@ -30,12 +34,11 @@
             "4": false
         }
     },
-    "2":{
+    "2": {
         "shoppingListName": "Shopping List",
-        "owner":"uhor25",
-        "collaborators": {        
-        },
-        "public":true,
+        "owner": "uhor25",
+        "sharedTo": {},
+        "state":"public",
         "name": {
             "1": "Hammer"
         },
