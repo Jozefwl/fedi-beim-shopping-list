@@ -40,6 +40,7 @@
   .navbar-home {
     justify-content: center;
     align-items: center;
+    text-align: center;
     flex-grow: 1;
     background-color: transparent;
     color: #fff;

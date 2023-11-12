@@ -2,7 +2,7 @@ export default function shoppingListViewer({lists, sharedLists, archivedLists, p
 
 
     return(
-        <h1>LIST</h1>
+        <h1>Placeholder for shopping list viewer</h1>
     )
 
     }

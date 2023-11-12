@@ -1,7 +1,4 @@
 {
-    "publicLists": [
-        "2"
-    ],
     "1": {
         "shoppingListName": "My Best Shopping List",
         "owner": "tibor123",
@@ -51,5 +48,8 @@
         "checked": {
             "1": false
         }
-    }
+    },
+    "publicLists": [
+        "2"
+    ]
 }

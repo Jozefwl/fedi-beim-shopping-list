@@ -8,14 +8,18 @@ import UserContext from "../components/UserContext";
 const ParentComponent = () => {
   const params = useParams();
   const shoppingList = shoppinglists[params.shoppingListId];
+  if (!shoppingList) {
+    return <div className="unauthorized"><h1>Shopping list not found.</h1></div>;
+  }
   const shoppingListId = params.shoppingListId;
   const hreflink = "/edit/" + shoppingListId;
   const shoppingListState = shoppingList.state;
   const shoppingListSharedList = shoppingList.sharedTo;
   const shoppingListOwner = shoppingList.owner;
 
-  return <ShoppingList id={params.shoppingListId} hreflink={hreflink} shoppingListState={shoppingListState} shoppingListSharedList={shoppingListSharedList} shoppingListOwner={shoppingListOwner} />;
-};
+   
+   return (<ShoppingList id={params.shoppingListId} hreflink={hreflink} shoppingListState={shoppingListState} shoppingListSharedList={shoppingListSharedList} shoppingListOwner={shoppingListOwner} />);
+ };
 
 const Table = ({ id, hreflink }) => {
   const shoppingList = shoppinglists[id];
