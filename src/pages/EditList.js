@@ -22,7 +22,15 @@ const ParentComponent = () => {
 
 const EditList = ({ shoppingList }) => {
   const [listName, setListName] = useState(shoppingList.shoppingListName);
-  const [items, setItems] = useState(Object.entries(shoppingList.name).map(([id, details]) => ({ id, ...details, isEditing: false })));
+  const [items, setItems] = useState(
+    Object.entries(shoppingList.name).map(([id, name]) => ({
+      id,
+      name,
+      category: shoppingList.category[id],
+      quantity: shoppingList.quantity[id],
+      isEditing: false,
+    }))
+  );
 
   const handleListNameChange = () => {
     const newName = prompt("Enter new shopping list name:");
@@ -102,7 +110,9 @@ const EditList = ({ shoppingList }) => {
                   <input
                     type="text"
                     value={item.name}
-                    onChange={(e) => handleItemChange(item.id, "name", e.target.value)}
+                    onChange={(e) =>
+                      handleItemChange(item.id, "name", e.target.value)
+                    }
                   />
                 ) : (
                   item.name
@@ -113,7 +123,9 @@ const EditList = ({ shoppingList }) => {
                   <input
                     type="text"
                     value={item.category}
-                    onChange={(e) => handleItemChange(item.id, "category", e.target.value)}
+                    onChange={(e) =>
+                      handleItemChange(item.id, "category", e.target.value)
+                    }
                   />
                 ) : (
                   item.category
@@ -124,7 +136,9 @@ const EditList = ({ shoppingList }) => {
                   <input
                     type="text"
                     value={item.quantity}
-                    onChange={(e) => handleItemChange(item.id, "quantity", e.target.value)}
+                    onChange={(e) =>
+                      handleItemChange(item.id, "quantity", e.target.value)
+                    }
                   />
                 ) : (
                   item.quantity

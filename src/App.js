@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import LoginModal from "./components/LoginModal";
 import "./styles/App.css";
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { default as HomePage } from './pages/HomePage';
 import { default as ShoppingList } from './pages/ShoppingList';
 import { default as NotFoundPage } from './pages/NoPage';
@@ -42,20 +42,12 @@ const App = () => {
         />
         <LoginModal isOpen={showModal} onRequestClose={handleCloseModal} onLogin={handleLogin} />
         <Router>
-          <Switch>
-            <Route path="/" exact>
-              <HomePage />
-            </Route>
-            <Route path="/shoppinglist/:shoppingListId">
-              <ShoppingList username={username} />
-            </Route>
-            <Route path="/edit/:shoppingListId">
-              <EditList />
-            </Route>
-            <Route>
-              <NotFoundPage />
-            </Route>
-          </Switch>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/shoppinglist/:shoppingListId" element={<ShoppingList username={username} />} />
+            <Route path="/edit/:shoppingListId" element={<EditList username={username} />} />
+            <Route path="*" element={<NotFoundPage />} />
+            </Routes>
         </Router>
       </div>
     </UserContext.Provider>
