@@ -4,6 +4,8 @@ import { FaEdit, FaCheck, FaTrash } from "react-icons/fa";
 import shoppingListsData from "../data/shoppinglists.json";
 import UserContext from "../components/UserContext";
 import "../styles/ErrorMsg.css";
+import "../styles/EditList.css";
+import EditPermissionsModal from "../components/EditPermissionsModal";
 
 
 
@@ -12,10 +14,25 @@ const ParentComponent = () => {
   const { shoppingListId } = useParams();
 
   const shoppingList = shoppingListsData[shoppingListId];
+  const shoppingListSharedTo = shoppingList.sharedTo;
+  const isSharedWithOwner = (username, shoppingListSharedTo) => {
+    let isSharedWithOwner = false;
+  
+    for (let i = 0; i < shoppingListSharedTo.length; i++) {
+      if (username === shoppingListSharedTo[i]) {
+        isSharedWithOwner = true;
+        break; // Exit the loop if a match is found
+      }
+    }
+  
+    return isSharedWithOwner;
+  }
+  const isSharedWith = isSharedWithOwner(username, shoppingListSharedTo);
+
 
   if (!shoppingList) {
     return <div className="unauthorized"><h1>Shopping list not found.</h1></div>;
-  } else if (username === shoppingList.owner || username === shoppingList.sharedTo) {
+  } else if (username === shoppingList.owner || isSharedWith === true) {
     return <EditList shoppingList={shoppingList} />;
   } else {
     return <div className="unauthorized">You are not authorized to edit this shopping list.</div>;
@@ -23,17 +40,28 @@ const ParentComponent = () => {
 };
 
 const EditList = ({ shoppingList }) => {
-  
   const [listName, setListName] = useState(shoppingList.shoppingListName);
   const [items, setItems] = useState(
-    Object.entries(shoppingList.name).map(([id, name]) => ({
-      id,
-      name,
-      category: shoppingList.category[id],
-      quantity: shoppingList.quantity[id],
-      isEditing: false,
-    }))
+    shoppingList.name
+      ? Object.entries(shoppingList.name).map(([id, name]) => ({
+        id,
+        name,
+        category: shoppingList.category[id],
+        quantity: shoppingList.quantity[id],
+        isEditing: false, // Initialize isEditing property
+      }))
+      : []
   );
+  const [showPermissionsModal, setShowPermissionsModal] = useState(false);
+
+
+  const handlePermissionsClick = () => {
+    setShowPermissionsModal(true);
+  };
+
+  const handlePermissionsClose = () => {
+    setShowPermissionsModal(false);
+  };
 
   const handleListNameChange = () => {
     const newName = prompt("Enter new shopping list name:");
@@ -167,11 +195,16 @@ const EditList = ({ shoppingList }) => {
           ))}
         </tbody>
       </table>
-      <button onClick={handleItemAdd}>Add Item</button>
-      <div>
-        <button>Edit Permissions</button>
-        <button onClick={handleListDelete}>Delete List</button>
-        <button>Archive List</button>
+      <div className="button-group">
+        <button className="button" onClick={handleItemAdd}>Add Item</button>
+        <div>
+          {showPermissionsModal && (
+            <EditPermissionsModal shoppingList={shoppingList} onClose={handlePermissionsClose} />
+          )}
+          <button className="button" onClick={handlePermissionsClick}>Edit Permissions</button>
+          <button className="button" onClick={handleListDelete}>Delete List</button>
+          <button className="button" >Archive List</button>
+        </div>
       </div>
     </div>
   );

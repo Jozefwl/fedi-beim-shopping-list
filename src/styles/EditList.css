@@ -1,0 +1,11 @@
+.button-group {
+    display: flex;
+    margin: 10px;
+    justify-content: center;
+
+}
+
+.button {
+    font-size: 24px;
+    margin-left: 10px;
+}

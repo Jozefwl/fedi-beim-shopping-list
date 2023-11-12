@@ -85,37 +85,25 @@ td {
   height: 50px;
 }
 
-@media (max-width: 768px) {
-  th,
-  td {
-    font-size: 24px;
-  }
-
-  .expand-button {
-    font-size: 24px;
-  }
-}
-
-
 .filter-dropdown-wrapper {
   float: right;
   margin: 10px;
 }
 
 .table-header-button {
-  height:50px;
+  height: 50px;
   width: 150px;
   font-size: 25px;
-  float:right;
-  margin:10px;
-  
+  float: right;
+  margin: 10px;
+
 }
 
 .table-header-dropdown {
-  height:50px;
+  height: 50px;
   width: 150px;
   font-size: 25px;
-  
+
 }
 
 .table-header {
@@ -135,5 +123,35 @@ td {
   flex: 1;
   text-align: center;
   font-size: 32px;
+}
+
+@media (max-width: 768px) {
+
+  th,
+  td {
+    font-size: 20px;
+    word-break: break-all;
+  }
+
+  .expand-button {
+    font-size: 24px;
+  }
+
+  .table-header-dropdown,
+  .table-header-button {
+    font-size: 18px;
+    width: 100px;
+    height: 55px;
+  }
+
+
+  .table-header {
+    margin-top: 100px;
+  }
+
+  p {
+    font-size: 18px;
+  }
+
 }
 

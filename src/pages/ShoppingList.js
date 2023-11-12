@@ -7,7 +7,7 @@ import UserContext from "../components/UserContext";
 import { useNavigate } from "react-router-dom";
 
 
-const ParentComponent = () => {
+const ParentComponent = ({username}) => {
   const params = useParams();
   const shoppingList = shoppinglists[params.shoppingListId];
   if (!shoppingList) {
@@ -16,17 +16,30 @@ const ParentComponent = () => {
   const shoppingListId = params.shoppingListId;
   const hreflink = "/edit/" + shoppingListId;
   const shoppingListState = shoppingList.state;
-  const shoppingListSharedList = shoppingList.sharedTo;
   const shoppingListOwner = shoppingList.owner;
+  const shoppingListSharedTo = shoppingList.sharedTo;
+  const isSharedWithOwner = (username, shoppingListSharedTo) => {
+    let isSharedWithOwner = false;
+  
+    for (let i = 0; i < shoppingListSharedTo.length; i++) {
+      if (username === shoppingListSharedTo[i]) {
+        isSharedWithOwner = true;
+        break; // Exit the loop if a match is found
+      }
+    }
+  
+    return isSharedWithOwner;
+  }
+  const isSharedWith = isSharedWithOwner(username, shoppingListSharedTo);
 
-   
-   return (<ShoppingList id={params.shoppingListId} hreflink={hreflink} shoppingListState={shoppingListState} shoppingListSharedList={shoppingListSharedList} shoppingListOwner={shoppingListOwner} />);
- };
+
+  return (<ShoppingList id={params.shoppingListId} hreflink={hreflink} shoppingListState={shoppingListState} isSharedWith={isSharedWith} shoppingListOwner={shoppingListOwner} />);
+};
 
 const Table = ({ id, hreflink }) => {
   const shoppingList = shoppinglists[id];
   const shoppingListName = shoppingList.shoppingListName;
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const items = Object.keys(shoppingList["name"]).map((key) => ({
     id: key,
@@ -72,7 +85,7 @@ const Table = ({ id, hreflink }) => {
       ? items.filter((item) => checkedItems[item.id])
       : items.filter((item) => !checkedItems[item.id]);
 
-      
+
 
     return categories.map((category, index) => (
       <React.Fragment key={index}>
@@ -129,14 +142,13 @@ const Table = ({ id, hreflink }) => {
             <p className="table-header-text">{shoppingListName}</p>
           </div>
           <div className="header-buttons">
-          <button
+            <button
               className="table-header-button"
               onClick={() => navigate(hreflink)} // Use navigate to redirect to the edit route
             >
               Edit
             </button>
             <div className="filter-dropdown-wrapper">
-              <label htmlFor="filterDropdown">Show: </label>
               <select className="table-header-dropdown" id="filterDropdown" onChange={handleFilterChange} value={filter}>
                 <option value="unchecked">Unchecked</option>
                 <option value="checked">Checked</option>
@@ -155,10 +167,10 @@ const Table = ({ id, hreflink }) => {
 const ShoppingList = (props) => {
   console.log(props.shoppingListState);
   console.log(props.shoppingListOwner);
-  console.log(props.shoppingListSharedList);
+  console.log(props.isSharedWith);
   const username = useContext(UserContext);
 
-  if (props.shoppingListState === "public" || username === props.shoppingListOwner || username === props.shoppingListSharedList) {
+  if (props.shoppingListState === "public" || username === props.shoppingListOwner || props.isSharedWith === true) {
     return (
       <div>
         <Table id={props.id} hreflink={props.hreflink} />

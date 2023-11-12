@@ -75,4 +75,7 @@
   .navbar-home {
     font-size: 24px;
   }
+  .navbar{
+    height:6%;
+  }
 }
