@@ -33,6 +33,7 @@ const App = () => {
   };
 
   return (
+    <Router>
     <UserContext.Provider value={username}>
       <div className="App">
         <Navbar
@@ -41,16 +42,17 @@ const App = () => {
           onLogoutClick={handleLogout}
         />
         <LoginModal isOpen={showModal} onRequestClose={handleCloseModal} onLogin={handleLogin} />
-        <Router>
+        
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/shoppinglist/:shoppingListId" element={<ShoppingList username={username} />} />
             <Route path="/edit/:shoppingListId" element={<EditList username={username} />} />
             <Route path="*" element={<NotFoundPage />} />
             </Routes>
-        </Router>
+        
       </div>
     </UserContext.Provider>
+    </Router>
   );
 };
 

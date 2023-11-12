@@ -3,7 +3,9 @@ import { useParams } from "react-router-dom";
 import { FaEdit, FaCheck, FaTrash } from "react-icons/fa";
 import shoppingListsData from "../data/shoppinglists.json";
 import UserContext from "../components/UserContext";
-import "../styles/EditList.css";
+import "../styles/ErrorMsg.css";
+
+
 
 const ParentComponent = () => {
   const username = useContext(UserContext);
@@ -16,11 +18,12 @@ const ParentComponent = () => {
   } else if (username === shoppingList.owner || username === shoppingList.sharedTo) {
     return <EditList shoppingList={shoppingList} />;
   } else {
-    return <div className="unauthorized"><h1>You are not authorized to edit this shopping list.</h1></div>;
+    return <div className="unauthorized">You are not authorized to edit this shopping list.</div>;
   }
 };
 
 const EditList = ({ shoppingList }) => {
+  
   const [listName, setListName] = useState(shoppingList.shoppingListName);
   const [items, setItems] = useState(
     Object.entries(shoppingList.name).map(([id, name]) => ({

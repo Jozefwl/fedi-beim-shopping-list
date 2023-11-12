@@ -1,9 +1,11 @@
 import React, { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import shoppinglists from "../data/shoppinglists.json";
-import "../styles/ShoppingList.css";
+import "../styles/ErrorMsg.css";
 import "../styles/Table.css";
 import UserContext from "../components/UserContext";
+import { useNavigate } from "react-router-dom";
+
 
 const ParentComponent = () => {
   const params = useParams();
@@ -24,6 +26,7 @@ const ParentComponent = () => {
 const Table = ({ id, hreflink }) => {
   const shoppingList = shoppinglists[id];
   const shoppingListName = shoppingList.shoppingListName;
+  const navigate = useNavigate(); 
 
   const items = Object.keys(shoppingList["name"]).map((key) => ({
     id: key,
@@ -68,6 +71,8 @@ const Table = ({ id, hreflink }) => {
     const filteredItems = filter === "checked"
       ? items.filter((item) => checkedItems[item.id])
       : items.filter((item) => !checkedItems[item.id]);
+
+      
 
     return categories.map((category, index) => (
       <React.Fragment key={index}>
@@ -124,7 +129,12 @@ const Table = ({ id, hreflink }) => {
             <p className="table-header-text">{shoppingListName}</p>
           </div>
           <div className="header-buttons">
-            <a href={hreflink}><button className="table-header-button">Edit</button></a>
+          <button
+              className="table-header-button"
+              onClick={() => navigate(hreflink)} // Use navigate to redirect to the edit route
+            >
+              Edit
+            </button>
             <div className="filter-dropdown-wrapper">
               <label htmlFor="filterDropdown">Show: </label>
               <select className="table-header-dropdown" id="filterDropdown" onChange={handleFilterChange} value={filter}>

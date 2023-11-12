@@ -1,66 +1,64 @@
 .navbar {
-    width: 100%;
-    height: 10%;
-    background: linear-gradient(to bottom, #333333, #929292); /* add a background gradient */
-    color: rgb(255, 255, 255);
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000; /*make sure its 'above all'*/
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-  }
+  width: 100%;
+  height: 10%;
+  background: linear-gradient(to bottom, #333333, #929292);
+  color: rgb(255, 255, 255);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
 
-  
-  .navbar-left {
-    display: flex;
-    align-items: center;
-  }
-  
-  .navbar-right {
-    display: flex;
-    align-items: center;
-  }
-  
-  .navbar-btn {
-    background-color: transparent;
-    color: #fff;
-    border: none;
-    font-size: 48px;
-    margin-right: 10px;
-    cursor: pointer;
-  }
+.navbar-content {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .navbar-btn:hover {
-    text-decoration: underline;
-  }
+.navbar-section {
+  display: flex;
+  align-items: center;
+}
 
-  .navbar-home {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    flex-grow: 1;
-    background-color: transparent;
-    color: #fff;
-    border: none;
-    font-size: 48px;
-    margin-right: 10px;
-    cursor: pointer;
-  }
+.navbar-left {
+  text-align: left;
+}
 
-  .navbar-home:hover {
-    text-decoration: underline;
-  }
-  
- 
-  
-  .navbar-right .navbar-btn {
-    background-color: #4caf50;
-    padding: 5px 10px;
-    border-radius: 5px;
-  }
+.navbar-center {
+  text-align: center;
+  flex-grow: 1;
+}
+
+.navbar-right {
+  text-align: right;
+}
+
+.navbar-btn,
+.navbar-home {
+  background-color: transparent;
+  color: #fff;
+  border: none;
+  font-size: 48px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.navbar-btn:hover,
+.navbar-home:hover {
+  text-decoration: underline;
+}
+
+.navbar-right .navbar-btn {
+  background-color: #4caf50;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
 
 .navbar-text {
   font-size: 48px;
@@ -74,7 +72,7 @@
     font-size: 24px;
   }
 
-  .navbar-home{
-    font-size:24px;
+  .navbar-home {
+    font-size: 24px;
   }
 }
