@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styles/EditPermissionsModal.css";
 
-const EditPermissionsModal = ({ shoppingList, onClose }) => {
+const EditPermissionsModal = ({ shoppingList, onClose, currentUser }) => {
   const [users, setUsers] = useState([...shoppingList.sharedTo, shoppingList.owner]);
   const [newUser, setNewUser] = useState("");
 
@@ -13,19 +13,23 @@ const EditPermissionsModal = ({ shoppingList, onClose }) => {
   };
 
   const handleRemoveUser = (user) => {
-    setUsers(users.filter((u) => u !== user));
+    if (user !== shoppingList.owner) {
+      setUsers(users.filter((u) => u !== user));
+    }
   };
 
   return (
     <div className="modal">
       <div className="modal-content">
-        <h2>Edit Permissions</h2>
+        <h2 className="black-text">Edit Permissions</h2>
         <p className="black-text">Users:</p>
-        <ul className="black-text">
+        <ul className="user-list">
           {users.map((user) => (
-            <li key={user}>
-              {user}
-              <button onClick={() => handleRemoveUser(user)}>Remove</button>
+            <li key={user} className="user-item">
+              <div className="user-name">{user}</div>
+              {user !== shoppingList.owner && (
+                <button onClick={() => handleRemoveUser(user)}>Remove</button>
+              )}
             </li>
           ))}
         </ul>

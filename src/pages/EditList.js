@@ -6,8 +6,7 @@ import UserContext from "../components/UserContext";
 import "../styles/ErrorMsg.css";
 import "../styles/EditList.css";
 import EditPermissionsModal from "../components/EditPermissionsModal";
-
-
+import Button from 'react-bootstrap/Button';
 
 const ParentComponent = () => {
   const username = useContext(UserContext);
@@ -115,13 +114,20 @@ const EditList = ({ shoppingList }) => {
     }
   };
 
+  const handleListUpdate = () => {
+    if (window.confirm("Save changes to list?")){
+      // Update the list
+    }
+  }
+
   return (
     <div>
+      
       <h1>
         {listName}{" "}
-        <button onClick={handleListNameChange}>
+        <Button className="btn-square" onClick={handleListNameChange}>
           <FaEdit />
-        </button>
+        </Button>
       </h1>
       <table>
         <thead>
@@ -138,7 +144,7 @@ const EditList = ({ shoppingList }) => {
             <tr key={item.id}>
               <td>
                 {item.isEditing ? (
-                  <input
+                  <input className="inputbox"
                     type="text"
                     value={item.name}
                     onChange={(e) =>
@@ -151,7 +157,7 @@ const EditList = ({ shoppingList }) => {
               </td>
               <td>
                 {item.isEditing ? (
-                  <input
+                  <input className="inputbox"
                     type="text"
                     value={item.category}
                     onChange={(e) =>
@@ -164,7 +170,7 @@ const EditList = ({ shoppingList }) => {
               </td>
               <td>
                 {item.isEditing ? (
-                  <input
+                  <input className="inputbox"
                     type="text"
                     value={item.quantity}
                     onChange={(e) =>
@@ -177,33 +183,34 @@ const EditList = ({ shoppingList }) => {
               </td>
               <td>
                 {item.isEditing ? (
-                  <button onClick={() => handleItemEditFinish(item.id)}>
+                  <Button className="btn-square" onClick={() => handleItemEditFinish(item.id)}>
                     <FaCheck />
-                  </button>
+                  </Button>
                 ) : (
-                  <button onClick={() => handleItemEditToggle(item.id)}>
+                  <Button className="btn-square" onClick={() => handleItemEditToggle(item.id)}>
                     <FaEdit />
-                  </button>
+                  </Button>
                 )}
               </td>
               <td>
-                <button onClick={() => handleItemDelete(item.id)}>
+                <Button className="btn-square" onClick={() => handleItemDelete(item.id)}>
                   <FaTrash />
-                </button>
+                </Button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
       <div className="button-group">
-        <button className="button" onClick={handleItemAdd}>Add Item</button>
+        <Button className="button-default" id="addItem" onClick={handleItemAdd}>Add Item</Button>
         <div>
           {showPermissionsModal && (
             <EditPermissionsModal shoppingList={shoppingList} onClose={handlePermissionsClose} />
           )}
-          <button className="button" onClick={handlePermissionsClick}>Edit Permissions</button>
-          <button className="button" onClick={handleListDelete}>Delete List</button>
-          <button className="button" >Archive List</button>
+          <Button className="button-default"  onClick={handlePermissionsClick}>Edit Permissions</Button>
+          <Button className="button-default" id="deleteList" onClick={handleListDelete}>Delete List</Button>
+          <Button className="button-default" >Archive List</Button>
+          <Button className="button-default" onClick={handleListUpdate}>Finish Changes</Button>
         </div>
       </div>
     </div>

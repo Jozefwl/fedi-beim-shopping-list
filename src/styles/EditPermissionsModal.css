@@ -1,3 +1,26 @@
 .black-text {
-    color: black;
-  }
+  color: black;
+}
+
+.user-list {
+  list-style: none;
+  padding: 0;
+}
+
+.user-name {
+  flex-grow: 1;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 5px;
+  color: black;
+}
+
+.user-item button {
+  margin-left: 10px;
+}
+
+
