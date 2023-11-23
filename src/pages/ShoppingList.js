@@ -165,9 +165,11 @@ const Table = ({ id, hreflink }) => {
 };
 
 const ShoppingList = (props) => {
+  /*
   console.log(props.shoppingListState);
   console.log(props.shoppingListOwner);
   console.log(props.isSharedWith);
+  */
   const username = useContext(UserContext);
 
   if (props.shoppingListState === "public" || username === props.shoppingListOwner || props.isSharedWith === true) {

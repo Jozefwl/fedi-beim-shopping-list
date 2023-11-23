@@ -1,17 +1,18 @@
 import React, { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { FaEdit, FaCheck, FaTrash } from "react-icons/fa";
-import shoppingListsData from "../data/shoppinglists.json";
+
 import UserContext from "../components/UserContext";
 import "../styles/ErrorMsg.css";
 import "../styles/EditList.css";
 import EditPermissionsModal from "../components/EditPermissionsModal";
 import Button from 'react-bootstrap/Button';
+import shoppingListsData from "../data/shoppinglists.json"; // Importing the shopping lists
 
 const ParentComponent = () => {
   const username = useContext(UserContext);
-  const { shoppingListId } = useParams();
-
+  const params = useParams();
+  const shoppingListId = params.shoppingListId;
   const shoppingList = shoppingListsData[shoppingListId];
   const shoppingListSharedTo = shoppingList.sharedTo;
   const isSharedWithOwner = (username, shoppingListSharedTo) => {
@@ -32,13 +33,13 @@ const ParentComponent = () => {
   if (!shoppingList) {
     return <div className="unauthorized"><h1>Shopping list not found.</h1></div>;
   } else if (username === shoppingList.owner || isSharedWith === true) {
-    return <EditList shoppingList={shoppingList} />;
+    return <EditList shoppingList={shoppingList} shoppingListId={params.shoppingListId} />;
   } else {
     return <div className="unauthorized">You are not authorized to edit this shopping list.</div>;
   }
 };
 
-const EditList = ({ shoppingList }) => {
+const EditList = ({ shoppingList, shoppingListId }) => {
   const [listName, setListName] = useState(shoppingList.shoppingListName);
   const [items, setItems] = useState(
     shoppingList.name
@@ -114,11 +115,24 @@ const EditList = ({ shoppingList }) => {
     }
   };
 
-  const handleListUpdate = () => {
+  const handleListUpdate = (shoppingListId) => {
     if (window.confirm("Save changes to list?")){
-      // Update the list
-    }
+      // Convert the updated list to JSON
+      const updatedList = {
+        ...shoppingList,
+        shoppingListName: listName,
+        name: items.reduce((acc, curr) => ({ ...acc, [curr.id]: curr.name }), {}),
+        category: items.reduce((acc, curr) => ({ ...acc, [curr.id]: curr.category }), {}),
+        quantity: items.reduce((acc, curr) => ({ ...acc, [curr.id]: curr.quantity }), {}),
+      };
+  
+      // Save updated list to local storage
+      console.log(`shoppingList-${shoppingListId}`, JSON.stringify(updatedList));
+  
+      alert("List updated!");
   }
+}
+  
 
   return (
     <div>
@@ -210,7 +224,8 @@ const EditList = ({ shoppingList }) => {
           <Button className="button-default"  onClick={handlePermissionsClick}>Edit Permissions</Button>
           <Button className="button-default" id="deleteList" onClick={handleListDelete}>Delete List</Button>
           <Button className="button-default" >Archive List</Button>
-          <Button className="button-default" onClick={handleListUpdate}>Finish Changes</Button>
+          <Button className="button-default" onClick={() => handleListUpdate(shoppingListId)}>Finish Changes</Button>
+
         </div>
       </div>
     </div>

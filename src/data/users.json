@@ -4,7 +4,8 @@
         "owned_lists": [
             "1"
         ],
-        "shared_lists": []
+        "shared_lists": [],
+        "rights": "user"
     },
     "uhor25":{
         "passwordBase64": "bWlsdWplbXRpYm9yYQ==",
@@ -13,6 +14,7 @@
         ],
         "shared_lists": [
             "1"
-        ]
+        ],
+        "rights": "user"
     }
 }

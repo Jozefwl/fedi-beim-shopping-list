@@ -1,0 +1,116 @@
+.list-viewer {
+    font-family: Arial, sans-serif;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #b8b8b8;
+  }
+
+  a {
+    color: white;
+    text-decoration: none; /* Optional: removes the underline */
+}
+  
+  .list-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #000000;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .filter-text {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+  
+  .navbar-controls {
+    display: flex;
+    gap: 10px; /* Space between controls */
+  }
+  
+  .navbar-controls select,
+  .navbar-controls input,
+  .navbar-controls button {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: white;
+    cursor: pointer;
+  }
+  
+  .list-tiles {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .list-tile {
+    background-color: rgb(77, 77, 77);
+    border: 1px solid #000000;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    color: white;
+  }
+  
+  .tile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .list-name {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .item-count {
+    font-size: 28px;
+    color: white;
+  }
+  
+  .list-preview {
+    font-size: 20px;
+    color: white;
+    text-align: left;
+  }
+
+  .list-owner{
+    text-align: right;
+    font-size: 20px;
+  }
+  
+  .view-button {
+    display: block;
+    width: 100%;
+    font-size: 24px;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: rgb(160, 36, 36);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.1s ease;
+  }
+  
+  .view-button:hover {
+    background-color: rgb(95, 22, 22);
+    
+  }
+  
+  @media (max-width: 600px) {
+    .list-navbar, .list-owner, .navbar-controls select, .navbar-controls input, .navbar-controls button, .list-name, .list-tile, .list-tiles, .list-viewer, .tile-header {
+      width: 100%;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+  }
+  
