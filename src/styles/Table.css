@@ -8,11 +8,16 @@
 
 table {
   margin-top: auto;
-  background-color: #242424;
+  background-color: #3a3a3a; 
+  border-collapse: collapse;
+  border-radius: 8px; /* Rounded corners */
+  overflow: hidden; 
 }
 
 thead {
   display: block;
+  background-color: #242424; 
+  color: white;
 }
 
 tbody {
@@ -31,15 +36,10 @@ th,
 td {
   padding: 10px;
   text-align: center;
-  border: 1px solid black;
+  border-bottom: 1px solid #ddd; 
   font-size: 48px;
   overflow: hidden;
   transition: font-size 0.2s ease-in-out;
-}
-
-
-.expand-cell {
-  padding: 10px;
 }
 
 .expand-cell {
@@ -48,13 +48,12 @@ td {
 }
 
 .expand-button {
-  background: black;
+  background: #007bff; 
   border: none;
   color: white;
   cursor: pointer;
   display: block;
   font-size: 48px;
-  font-weight: bold;
   padding: 10px;
   text-align: center;
   width: 100%;
@@ -82,6 +81,7 @@ td {
   border-top: 5px solid white;
 }
 
+
 .checkbox {
   width: 50px;
   height: 50px;
@@ -98,20 +98,23 @@ td {
   font-size: 25px;
   float: right;
   margin: 10px;
-
+  background-color: #28a745; 
+  color: white;
+  border: none;
+  border-radius: 4px;
 }
 
 .table-header-dropdown {
   height: 50px;
   width: 150px;
   font-size: 25px;
-
+  border-radius: 4px;
 }
 
 .table-header {
   margin-top: 1%;
   height: 70px;
-  background-color: black;
+  background-color: #343a40; 
 }
 
 .header-content {
@@ -119,15 +122,16 @@ td {
   justify-content: space-between;
   align-items: center;
   height: 100%;
-  
 }
 
 .tableName {
   flex: 1;
   text-align: center;
   font-size: 32px;
-  
+  color: white; 
 }
+
+
 
 @media (max-width: 1024px) {
 

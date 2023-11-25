@@ -1,6 +1,6 @@
 import { default as ShoppingListViewer } from '../components/ShoppingListViewer'
 import "../styles/HomePage.css";
-import shoppingListsData from "../data/shoppinglists.json"; // Importing the shopping lists
+import shoppingListsData from "../data/shoppinglists.json"; //importing the shopping lists
 
 export default function Homepage({ username }) {
 

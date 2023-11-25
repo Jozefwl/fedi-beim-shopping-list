@@ -1,5 +1,5 @@
-import  React, { useState } from 'react';
-import '../styles/DropdownCheckbox.css'; // Path to your CSS file
+import  React, { useState } from "react";
+import "../styles/DropdownCheckbox.css"; // Path to your CSS file
 
 const DropdownCheckbox = ({ options, onSelectionChange }) => {
     const [isOpen, setIsOpen] = useState(false);

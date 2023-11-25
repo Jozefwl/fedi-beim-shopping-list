@@ -107,10 +107,59 @@
   }
   
   @media (max-width: 600px) {
-    .list-navbar, .list-owner, .navbar-controls select, .navbar-controls input, .navbar-controls button, .list-name, .list-tile, .list-tiles, .list-viewer, .tile-header {
-      width: 100%;
-      margin-bottom: 10px;
-      font-size: 14px;
+    .list-viewer {
+      margin-left: 0%;  
+      margin-right: 0%;
     }
-  }
   
+    .list-navbar,
+    .list-owner,
+    .navbar-controls select,
+    .navbar-controls input
+     {
+      width: 97%; 
+      margin-bottom: 10px;
+      height: 50px;
+      margin-top: 5%;
+
+    }
+
+    .navbar-controls button{
+      font-size: 14px; 
+    width: 97%; 
+    height: 60px;
+    margin-top: 5%;
+    }
+
+    #button {
+      margin-top: 5%;
+    }
+  
+    .list-name,
+    .list-tile,
+    .list-tiles,
+    .tile-header {
+      width: 97%; /* fit on mobile */
+    }
+  
+    .list-name,
+    .item-count,
+    .list-preview,
+    .view-button {
+      font-size: 18px; /* smaller font size for better fit */
+    }
+
+  
+    .item-count,
+    .list-owner {
+      margin-top: 5px; /* spacing for vertically stacked items */
+    }
+  
+    .list-tile {
+      padding: 10px; /* padding for better spacing */
+    }
+  
+    .view-button {
+      font-size: 16px; /*  button font size */
+    }
+  }  

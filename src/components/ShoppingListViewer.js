@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/ShoppingListViewer.css"; // Ensure the CSS file contains necessary styles
+import "../styles/ShoppingListViewer.css";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import DropdownCheckbox from "./DropdownCheckbox";
@@ -11,6 +11,11 @@ const ListViewer = ({ shoppingLists, username }) => {
     const handleFilterChange = (selectedOptions) => {
         // Handle the change here
         console.log(selectedOptions); // Selected options
+    };
+
+    // function to calculate the total number of items (quantity) in a shopping list
+    const calculateTotalItems = (quantityObj) => {
+        return Object.values(quantityObj).reduce((total, qty) => total + parseInt(qty, 10), 0);
     };
 
     // Dropdown options
@@ -32,8 +37,8 @@ const ListViewer = ({ shoppingLists, username }) => {
                     {selectedFilters.join(", ")} Shopping Lists
                 </div>
                 <div className="navbar-controls">
-                    <DropdownCheckbox options={options} onSelectionChange={handleFilterChange} />
-                    <button>Create Shopping List</button>
+                    <DropdownCheckbox id="button" options={options} onSelectionChange={handleFilterChange} />
+                    <Link to="/create"><button>Create Shopping List</button></Link>
                     <input type="text" placeholder="Search..." />
                 </div>
             </div>
@@ -41,6 +46,7 @@ const ListViewer = ({ shoppingLists, username }) => {
                 {shoppingLists
                     .filter(list => list.owner === currentUser || list.sharedTo.includes(currentUser) || list.state === "public")
                     .map((list) => {
+                        const totalItems = calculateTotalItems(list.quantity);
                         const firstCategory = Object.values(list.category)[0];
                         const firstTwoItems = Object.entries(list.name).slice(0, 2).map(([id, name]) => ({ id, name }));
 
@@ -48,7 +54,7 @@ const ListViewer = ({ shoppingLists, username }) => {
                             <div key={list.id} className="list-tile">
                                 <div className="tile-header">
                                     <span className="list-name">{list.shoppingListName}</span>
-                                    <span className="item-count">{Object.keys(list.name).length} items</span>
+                                    <span className="item-count">{totalItems} items</span>
                                 </div>
                                 <div className="list-preview">
                                     <p>Category: {firstCategory}</p>

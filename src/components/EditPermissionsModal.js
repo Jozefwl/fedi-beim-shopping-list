@@ -3,7 +3,7 @@ import "../styles/EditPermissionsModal.css";
 
 const EditPermissionsModal = ({ shoppingList, onClose, currentUser }) => {
   const [users, setUsers] = useState([...shoppingList.sharedTo, shoppingList.owner]);
-  const [newUser, setNewUser] = useState("");
+  const [newUser, setNewUser] = useState("Username... ");
 
   const handleAddUser = () => {
     if (newUser && !users.includes(newUser)) {
@@ -13,31 +13,38 @@ const EditPermissionsModal = ({ shoppingList, onClose, currentUser }) => {
   };
 
   const handleRemoveUser = (user) => {
-    if (user !== shoppingList.owner) {
+    if (user === shoppingList.owner) {
+      alert("You cannot remove yourself from the list. Please transfer ownership to another user first.");
+    } else {
       setUsers(users.filter((u) => u !== user));
     }
   };
 
   return (
-    <div className="modal">
-      <div className="modal-content">
-        <h2 className="black-text">Edit Permissions</h2>
-        <p className="black-text">Users:</p>
-        <ul className="user-list">
+    <div className="epm-modal">
+      <div className="epm-modal-content">
+        <h2 className="epm-black-text">Edit Permissions</h2>
+        <p className="epm-black-text">Users:</p>
+        <ul className="epm-user-list">
           {users.map((user) => (
-            <li key={user} className="user-item">
-              <div className="user-name">{user}</div>
-              {user !== shoppingList.owner && (
-                <button onClick={() => handleRemoveUser(user)}>Remove</button>
+            <li key={user} className="epm-user-item">
+              <div className="epm-user-name">{user}</div>
+              {currentUser !== shoppingList.owner && (
+                <button className="epm-remove-btn" onClick={() => handleRemoveUser(user)}>Remove</button>
               )}
             </li>
           ))}
         </ul>
         <div>
-          <input type="text" value={newUser} onChange={(e) => setNewUser(e.target.value)} />
-          <button onClick={handleAddUser}>Add User</button>
+          <input 
+            type="text" 
+            value={newUser} 
+            onChange={(e) => setNewUser(e.target.value)} 
+            className="epm-input"
+          />
+          <button className="epm-add-btn" onClick={handleAddUser}>Add User</button>
         </div>
-        <button onClick={onClose}>Close</button>
+        <button className="epm-close-btn" onClick={onClose}>Close</button>
       </div>
     </div>
   );

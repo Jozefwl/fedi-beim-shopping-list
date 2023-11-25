@@ -1,26 +1,106 @@
-.black-text {
-  color: black;
+.epm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
 }
 
-.user-list {
+.epm-modal-content {
+  /* Modal content box styling */
+  background-color: white;
+  font-size: 24px;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 400px; /* Adjust as needed */
+  max-width: 90%; /* Ensures responsiveness */
+  z-index: 1001;
+}
+
+.epm-black-text {
+  color: black;
+  margin-bottom: 10px; /* Spacing for text elements */
+  z-index: 1002;
+}
+
+.epm-user-list {
   list-style: none;
   padding: 0;
+  margin-bottom: 20px; /* Spacing for list */
+  z-index: 1003;
 }
 
-.user-name {
-  flex-grow: 1;
-}
 
-.user-item {
+.epm-user-item {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   margin-bottom: 5px;
   color: black;
+  border-bottom: 1px solid #000000; /* Adds a bottom border line */
+  padding-bottom: 5px; /* Adds some space between text and the line */
+  z-index: 1004;
+
 }
 
-.user-item button {
+.epm-user-name {
+  flex-grow: 1;
+  text-align: left;
+  font-size:24px;
+  z-index: 1005;
+}
+
+.epm-user-item .epm-remove-btn {
   margin-left: 10px;
+  color: white;
+  background-color: #dc3545; /* Bootstrap 'danger' color */
+  border: none;
+  font-size:24px;
+  border-radius: 3px;
+  padding: 5px 10px;
+  cursor: pointer;
+  z-index: 1006;
 }
 
+.epm-user-item .epm-remove-btn:hover {
+  background-color: #c82333; /* Darker shade for hover effect */
+  z-index: 1007;
+}
 
+.epm-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  z-index: 1008;
+}
+
+.epm-add-btn, .epm-close-btn {
+  background-color: #007bff; /* Bootstrap 'primary' color */
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 8px 16px;
+  margin-right: 10px;
+  cursor: pointer;
+  z-index: 1009;
+}
+
+.epm-add-btn:hover, .epm-close-btn:hover {
+  background-color: #000ed9; /* Darker shade for hover effect */
+  z-index: 1010;
+}
+
+.epm-close-btn {
+  margin-top: 10px;
+  
+}
+
+/* Add any additional styling as needed for your application */

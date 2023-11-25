@@ -46,6 +46,7 @@ const App = () => {
             <Route path="/" element={<HomePage username={username}/>} />
             <Route path="/shoppinglist/:shoppingListId" element={<ShoppingList username={username}/>} />
             <Route path="/edit/:shoppingListId" element={<EditList username={username} />} />
+            <Route path="/create" element={<EditList username={username}  shoppingListId={1000} isCreation={true} />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           
