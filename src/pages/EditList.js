@@ -12,71 +12,53 @@ import shoppingListsData from "../data/shoppinglists.json"; // Importing the sho
 const ParentComponent = () => {
   const username = useContext(UserContext);
   const params = useParams();
+  const shoppingListId = params.shoppingListId; // Get shoppingListId from params
   const isCreation = params.isCreation;
 
   let shoppingList;
-  let shoppingListSharedTo;
-  let shoppingListId;
   let isSharedWith;
 
   const isSharedWithOwner = (username, shoppingListSharedTo) => {
-    let isSharedWithOwner = false;
-
-    for (let i = 0; i < shoppingListSharedTo.length; i++) {
-      if (username === shoppingListSharedTo[i]) {
-        isSharedWithOwner = true;
-        break; // Exit the loop if a match is found
-      }
-    }
-
-    return isSharedWithOwner;
+    return shoppingListSharedTo.includes(username);
   }
-  console.log("Moffukin params: ", isCreation)
 
   if (isCreation) {
     shoppingList = {
       "shoppingListName": "",
       "owner": username,
       "sharedTo": [],
-      "state": "private", // default value
+      "state": "private", 
       "name": {},
       "category": {},
       "quantity": {},
       "checked": {}
-    }
+    };
   } else {
-    shoppingList = shoppingListsData[shoppingListId];
-    shoppingListSharedTo = shoppingList.sharedTo;
-    shoppingListId = params.shoppingListId;
-    isSharedWith = isSharedWithOwner(username, shoppingListSharedTo);
+    shoppingList = shoppingListsData[shoppingListId]; // Access shopping list using shoppingListId
+    if (shoppingList) {
+      isSharedWith = isSharedWithOwner(username, shoppingList.sharedTo);
+    }
   }
 
-
+  if (!shoppingList && !isCreation) {
+    return <div className="unauthorized">Shopping list not found.</div>;
+  }
 
   if (isCreation && username) {
-    // If creating a new list and the user is logged in
     return <EditList shoppingList={shoppingList} shoppingListId={params.shoppingListId} isCreation={true} />;
   } else if (!isCreation) {
-    // If not creating a new list, check if the user is the owner or a shared user
-    if (username === shoppingList.owner || shoppingList.sharedTo.includes(username)) {
+    if (username === shoppingList.owner || isSharedWith) {
       return <EditList shoppingList={shoppingList} shoppingListId={params.shoppingListId} isCreation={false} />;
     } else {
-      // User is not the owner or a shared user, and not creating a new list
       return <div className="unauthorized">You are not authorized to edit this shopping list.</div>;
     }
   } else if (!username) {
-    // User is not logged in
     return <div className="unauthorized">Log in to create or edit a list.</div>;
   } else {
-    // Other cases: Typically, this condition should not be reached
     return <div className="unauthorized">You are not authorized to access this page.</div>;
   }
-
-
-
-
-
 };
+
 
 const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
 
