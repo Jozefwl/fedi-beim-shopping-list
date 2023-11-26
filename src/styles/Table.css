@@ -57,7 +57,13 @@ td {
   padding: 10px;
   text-align: center;
   width: 100%;
+  transition: 0.1s ease-in-out
 }
+
+.expand-button:hover { 
+  background: #0051a8;
+}
+
 
 .expand-button:focus {
   outline: none;

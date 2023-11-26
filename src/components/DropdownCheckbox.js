@@ -1,17 +1,18 @@
-import  React, { useState } from "react";
+import  React, { useState, useEffect } from "react";
 import "../styles/DropdownCheckbox.css"; // Path to your CSS file
 
 const DropdownCheckbox = ({ options, onSelectionChange }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedOptions, setSelectedOptions] = useState([]);
+    const defaultSelectedOptions = ['public', 'mine']; // Default selected options
+    const [selectedOptions, setSelectedOptions] = useState(defaultSelectedOptions);
 
     const toggleDropdown = () => setIsOpen(!isOpen);
 
-    const handleCheckboxChange = (option) => {
-        if (selectedOptions.includes(option)) {
-            setSelectedOptions(selectedOptions.filter(item => item !== option));
+    const handleCheckboxChange = (optionValue) => {
+        if (selectedOptions.includes(optionValue)) {
+            setSelectedOptions(selectedOptions.filter(item => item !== optionValue));
         } else {
-            setSelectedOptions([...selectedOptions, option]);
+            setSelectedOptions([...selectedOptions, optionValue]);
         }
     };
 
@@ -19,6 +20,11 @@ const DropdownCheckbox = ({ options, onSelectionChange }) => {
         onSelectionChange(selectedOptions);
         setIsOpen(false);
     };
+
+    // Use Effect to ensure the default selection is communicated to the parent component
+    useEffect(() => {
+        onSelectionChange(defaultSelectedOptions);
+    }, []); // Empty dependency array to run only on the component's first render
 
     return (
         <div className="dropdown-checkbox">

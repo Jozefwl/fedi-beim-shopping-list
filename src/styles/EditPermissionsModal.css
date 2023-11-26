@@ -103,4 +103,26 @@
   
 }
 
-/* Add any additional styling as needed for your application */
+.epm-visibility-select {
+  margin-bottom: 15px;
+}
+
+.epm-visibility-select label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.epm-visibility-select select {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+}
+
+.epm-visibility-select select:focus {
+  outline: none;
+  border-color: #007bff; 
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); 
+}
+

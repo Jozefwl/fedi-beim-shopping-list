@@ -92,7 +92,7 @@
     font-size: 24px;
     padding: 10px;
     margin-top: 10px;
-    background-color: rgb(160, 36, 36);
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 3px;
@@ -102,11 +102,11 @@
   }
   
   .view-button:hover {
-    background-color: rgb(95, 22, 22);
+    background-color: #0051a8;
     
   }
   
-  @media (max-width: 600px) {
+  @media (max-width: 1024px) {
     .list-viewer {
       margin-left: 0%;  
       margin-right: 0%;
@@ -128,7 +128,7 @@
       font-size: 14px; 
     width: 97%; 
     height: 60px;
-    margin-top: 5%;
+    margin-top: 20%;
     }
 
     #button {

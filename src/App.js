@@ -11,16 +11,18 @@ import UserContext from "./components/UserContext";
 
 const App = () => {
   const [showModal, setShowModal] = useState(false);
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(localStorage.getItem('username') || '')
 
   const handleLogin = (username, password) => {
     console.log(`Logged in as ${username}`);
     setUsername(username);
+    localStorage.setItem('username', username);
     handleCloseModal();
   };
 
   const handleLogout = () => {
     setUsername("");
+    localStorage.removeItem('username'); // Clear username from localStorage
   };
 
   const handleCloseModal = () => {
@@ -41,15 +43,15 @@ const App = () => {
             onLogoutClick={handleLogout}
           />
           <LoginModal isOpen={showModal} onRequestClose={handleCloseModal} onLogin={handleLogin} />
-          
+
           <Routes>
-            <Route path="/" element={<HomePage username={username}/>} />
-            <Route path="/shoppinglist/:shoppingListId" element={<ShoppingList username={username}/>} />
+            <Route path="/" element={<HomePage username={username} />} />
+            <Route path="/shoppinglist/:shoppingListId" element={<ShoppingList username={username} />} />
             <Route path="/edit/:shoppingListId" element={<EditList username={username} />} />
-            <Route path="/create" element={<EditList username={username}  shoppingListId={1000} isCreation={true} />} />
+            <Route path="/create/:isCreation" element={<EditList username={username} />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-          
+
         </div>
       </UserContext.Provider>
     </Router>

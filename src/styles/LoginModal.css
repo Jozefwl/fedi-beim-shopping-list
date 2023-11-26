@@ -26,8 +26,8 @@
 .close-btn {
   position: absolute;
   top: 10px;
-  left: auto; /* change left to auto */
-  right: 10px; /* add right: 10px */
+  left: auto;
+  right: 10px; 
   background-color: #000;
   color: #fff;
   border: none;
