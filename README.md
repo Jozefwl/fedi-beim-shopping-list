@@ -18,17 +18,13 @@ git clone https://github.com/Jozefwl/fedi-beim-shopping-list
 ```
 2. Navigate into the repository
 ```bash
-cd shopping-list-app
+cd fedi-beim-shopping-list
 ```
-3. Navigate into the repository
-```bash
-cd shopping-list-app
-```
-4. Install the necessary packages
+3. Install the necessary packages
 ```bash
 npm install
 ```
-5. Run server
+4. Run server
 ```bash
 npm start
 ```
