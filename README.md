@@ -7,6 +7,7 @@ Features include user authentication, list editing, and permission handling.
 
 Before you begin, make sure you have:
 - Node.js
+- node package manager (npm)
 
 ## Installation
 
