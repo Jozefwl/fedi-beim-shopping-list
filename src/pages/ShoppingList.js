@@ -1,60 +1,66 @@
-import React, { useState, useContext } from "react";
-import { useParams } from "react-router-dom";
-import shoppinglists from "../data/shoppinglists.json";
+import React, { useState, useEffect, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../styles/ErrorMsg.css";
 import "../styles/Table.css";
 import UserContext from "../components/UserContext";
-import { useNavigate } from "react-router-dom";
 
+const ParentComponent = () => {
+  const { shoppingListId } = useParams();
+  const [shoppingList, setShoppingList] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const token = (localStorage.getItem('token') || null)
+  const hreflink = "/edit/" + shoppingListId;
+  console.log(token)
 
-const ParentComponent = ({username}) => {
-  const params = useParams();
-  const shoppingList = shoppinglists[params.shoppingListId];
+  useEffect(() => {
+    const fetchShoppingList = async () => {
+      setLoading(true);
+      try {
+        const authHeader = token ? `Bearer ${token}` : 'Bearer ';
+        const response = await axios.get(`http://194.182.91.65:3000/getList/${shoppingListId}`, {
+          headers: { Authorization: authHeader }
+        });
+        setShoppingList(response.data);
+      } catch (error) {
+        console.error("Error fetching shopping list", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchShoppingList();
+  }, [shoppingListId, token]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   if (!shoppingList) {
     return <div className="unauthorized"><h1>Shopping list not found.</h1></div>;
   }
-  const shoppingListId = params.shoppingListId;
-  const hreflink = "/edit/" + shoppingListId;
-  const shoppingListState = shoppingList.state;
-  const shoppingListOwner = shoppingList.owner;
-  const shoppingListSharedTo = shoppingList.sharedTo;
-  const isSharedWithOwner = (username, shoppingListSharedTo) => {
-    let isSharedWithOwner = false;
-  
-    for (let i = 0; i < shoppingListSharedTo.length; i++) {
-      if (username === shoppingListSharedTo[i]) {
-        isSharedWithOwner = true;
-        break; // Exit the loop if a match is found
-      }
-    }
-  
-    return isSharedWithOwner;
-  }
-  const isSharedWith = isSharedWithOwner(username, shoppingListSharedTo);
 
-
-  return (<ShoppingList id={params.shoppingListId} hreflink={hreflink} shoppingListState={shoppingListState} isSharedWith={isSharedWith} shoppingListOwner={shoppingListOwner} />);
+  return (
+    <ShoppingList
+      shoppingList={shoppingList}
+      hreflink={hreflink}
+      token={token}
+    />
+  );
 };
 
-const Table = ({ id, hreflink }) => {
-  const shoppingList = shoppinglists[id];
-  const shoppingListName = shoppingList.shoppingListName;
+
+const Table = ({ shoppingList, hreflink }) => {
   const navigate = useNavigate();
 
-  const items = Object.keys(shoppingList["name"]).map((key) => ({
-    id: key,
-    name: shoppingList["name"][key],
-    state: shoppingList["state"][key],
-    sharedTo: shoppingList["sharedTo"][key],
-    category: shoppingList["category"][key],
-    quantity: shoppingList["quantity"][key],
-  }));
+  // each item in the shopping list has its own unique ID
+  const items = shoppingList.items;
 
   const [visibleCategories, setVisibleCategories] = useState([items[0].category]);
 
   const [checkedItems, setCheckedItems] = useState(
     items.reduce((acc, item) => {
-      acc[item.id] = false;
+      acc[item._id] = item.checked; // each item has a 'checked' property
       return acc;
     }, {})
   );
@@ -82,10 +88,8 @@ const Table = ({ id, hreflink }) => {
   const renderTableRows = () => {
     const categories = [...new Set(items.map((item) => item.category))];
     const filteredItems = filter === "checked"
-      ? items.filter((item) => checkedItems[item.id])
-      : items.filter((item) => !checkedItems[item.id]);
-
-
+      ? items.filter((item) => checkedItems[item._id])
+      : items.filter((item) => !checkedItems[item._id]);
 
     return categories.map((category, index) => (
       <React.Fragment key={index}>
@@ -111,13 +115,13 @@ const Table = ({ id, hreflink }) => {
             </tr>
             {filteredItems
               .filter((item) => item.category === category)
-              .map((item, index) => (
-                <tr key={index}>
+              .map((item) => (
+                <tr key={item._id}>
                   <td>
                     <input
                       type="checkbox"
-                      value={item.id}
-                      checked={checkedItems[item.id]}
+                      value={item._id}
+                      checked={checkedItems[item._id]}
                       onChange={handleCheckboxChange}
                       className="checkbox"
                     />
@@ -139,12 +143,12 @@ const Table = ({ id, hreflink }) => {
       <div className="table-header">
         <div className="header-content">
           <div className="tableName">
-            <p className="table-header-text">{shoppingListName}</p>
+            <p className="table-header-text">{shoppingList.shoppingListName}</p>
           </div>
           <div className="header-buttons">
             <button
               className="table-header-button"
-              onClick={() => navigate(hreflink)} // Use navigate to redirect to the edit route
+              onClick={() => navigate(hreflink)}
             >
               Edit
             </button>
@@ -164,26 +168,19 @@ const Table = ({ id, hreflink }) => {
   );
 };
 
-const ShoppingList = (props) => {
-  /*
-  console.log(props.shoppingListState);
-  console.log(props.shoppingListOwner);
-  console.log(props.isSharedWith);
-  */
-  const username = useContext(UserContext);
 
-  if (props.shoppingListState === "public" || username === props.shoppingListOwner || props.isSharedWith === true) {
+const ShoppingList = ({ shoppingList, hreflink, token }) => {
+  const username = useContext(UserContext);
+  const isSharedWith = shoppingList.sharedTo.includes(username);
+
+  if (shoppingList.isPublic || username === shoppingList.ownerId || isSharedWith) {
     return (
       <div>
-        <Table id={props.id} hreflink={props.hreflink} />
+        <Table shoppingList={shoppingList} hreflink={hreflink} />
       </div>
     );
   } else {
-    return (
-      <div className="unauthorized">
-        You are not authorized to view this shopping list.
-      </div>
-    );
+    return <div className="unauthorized">You are not authorized to view this shopping list.</div>;
   }
 };
 

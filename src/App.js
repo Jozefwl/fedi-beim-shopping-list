@@ -8,20 +8,57 @@ import ShoppingList from './pages/ShoppingList';
 import NotFoundPage from './pages/NoPage';
 import EditList from './pages/EditList';
 import UserContext from "./components/UserContext";
+import axios from "axios";
+
 
 const App = () => {
   const [showModal, setShowModal] = useState(false);
   const [username, setUsername] = useState(localStorage.getItem('username') || '')
+  const [token, setToken] = useState(localStorage.getItem('token') || false)
+  const [loading, setLoading] = useState(false);
+  const [isLoginInProgress, setIsLoginInProgress] = useState(false);
 
-  const handleLogin = (username, password) => {
-    console.log(`Logged in as ${username}`);
-    setUsername(username);
-    localStorage.setItem('username', username);
-    handleCloseModal();
+  const handleLogin = async (username, password) => {
+    if (loading) { window.alert("Logging in, please wait.") }; // Prevents function from proceeding if already loading
+    setLoading(true);
+    try {
+      const response = await axios.post(`http://194.182.91.65:3000/login`, {
+        username,
+        password
+      });
+
+      if (response.status === 200) {
+        const token = response.data.userToken;
+        // Save the token to local storage
+        localStorage.setItem('username', username);
+        localStorage.setItem('token', token);
+        // Update the username state
+        setUsername(username);
+        handleCloseModal();
+      } else {
+        // Handle login errors
+        window.alert('Login failed. Please check your username and password.');
+        console.error('Login failed');
+      }
+    } catch (error) {
+      console.error('Login request failed', error);
+      let errorMessage = "Login failed. Please check your username and password.";
+      if (error.response) {
+        if (error.response.status === 401) {
+          errorMessage = "Unauthorized: Incorrect username or password.";
+        } else if (error.response.status === 500) {
+          errorMessage = "Server error. Please try again later.";
+        }
+      }
+
+      window.alert(errorMessage);
+    }
+    setLoading(false);
   };
 
   const handleLogout = () => {
     setUsername("");
+    localStorage.removeItem('token');
     localStorage.removeItem('username'); // Clear username from localStorage
   };
 
@@ -35,7 +72,7 @@ const App = () => {
 
   return (
     <Router>
-      <UserContext.Provider value={username}>
+      <UserContext.Provider value={token}>
         <div className="App">
           <Navbar
             username={username}
@@ -45,10 +82,10 @@ const App = () => {
           <LoginModal isOpen={showModal} onRequestClose={handleCloseModal} onLogin={handleLogin} />
 
           <Routes>
-            <Route path="/" element={<HomePage username={username} />} />
-            <Route path="/shoppinglist/:shoppingListId" element={<ShoppingList username={username} />} />
-            <Route path="/edit/:shoppingListId" element={<EditList username={username} />} />
-            <Route path="/create/:isCreation" element={<EditList username={username} />} />
+            <Route path="/" element={<HomePage token={token} />} />
+            <Route path="/shoppinglist/:shoppingListId" element={<ShoppingList token={token} />} />
+            <Route path="/edit/:shoppingListId" element={<EditList token={token} />} />
+            <Route path="/create/:isCreation" element={<EditList token={token} />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
 

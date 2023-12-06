@@ -1,21 +1,77 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../styles/ShoppingListViewer.css";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import DropdownCheckbox from "./DropdownCheckbox";
+import { jwtDecode } from 'jwt-decode';
 
-const ListViewer = ({ shoppingLists, username }) => {
-    const initialFilters = username ? ['public', 'mine'] : ['public'];
-    const [selectedFilters, setSelectedFilters] = useState(initialFilters);
-    const currentUser = username;
+const ListViewer = ({ token }) => {
+    const [shoppingLists, setShoppingLists] = useState([]);
+    const [selectedFilters, setSelectedFilters] = useState(['public']);
+    const [loading, setLoading] = useState(true);
+    const [userId, setUserId] = useState(null);
 
     useEffect(() => {
-        setSelectedFilters(username ? ['mine'] : ['public']);
-    }, [username]); // Depend on username
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                setUserId(decoded.userId);
+            } catch (error) {
+                console.error('Error decoding token:', error);
+                setUserId(null);
+            }
+        } else {
+            setUserId(null);
+        }
+    }, [token]);
 
-    const calculateTotalItems = (quantityObj) => {
-        return Object.values(quantityObj).reduce((total, qty) => total + parseInt(qty, 10), 0);
+    useEffect(() => {
+        const fetchLists = async () => {
+            setLoading(true);
+            try {
+                const publicListsResponse = await axios.get('http://194.182.91.65:3000/getAllPublicLists');
+                let allLists = publicListsResponse.data;
+
+                if (userId) {
+                    const config = { headers: { Authorization: `Bearer ${token}` } };
+                    const myListsResponse = await axios.get('http://194.182.91.65:3000/getMyLists', config);
+                    allLists = [...allLists, ...myListsResponse.data];
+                }
+
+                setShoppingLists(allLists);
+            } catch (error) {
+                console.error('Error fetching lists', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchLists();
+    }, [userId, token]);
+
+    console.log(token);
+    useEffect(() => {
+        setSelectedFilters(userId ? ['mine'] : ['public']);
+    }, [userId]);
+
+    const calculateTotalItems = (items) => {
+        if (!Array.isArray(items)) {
+            console.error('Invalid items array:', items);
+            return 0; // Return 0 if items is not an array
+        }
+
+        return items.reduce((total, item) => {
+            if (typeof item.quantity === 'number') {
+                return total + item.quantity;
+            } else {
+                console.error('Invalid item quantity:', item);
+                return total;
+            }
+        }, 0);
     };
+
+
 
     const options = [
         { value: 'public', label: 'Public' },
@@ -34,20 +90,14 @@ const ListViewer = ({ shoppingLists, username }) => {
 
     const filteredShoppingLists = () => {
         return shoppingLists.filter(list => {
-            if (!username && list.state !== "public") {
-                // If not logged in, only show public lists
-                return false;
-            }
-
-            const isPublic = list.state === "public";
-            const isMine = list.owner === username;
-            const isShared = list.sharedTo.includes(username);
-            const isArchived = list.state === "archived"; // Example
+            // Update with the correct property names
+            const isPublic = list.isPublic;
+            const isMine = list.ownerId === userId; // Use ownerId for comparison
+            const isShared = list.sharedTo.includes(userId);
 
             return (selectedFilters.includes('public') && isPublic) ||
-                   (selectedFilters.includes('mine') && isMine) ||
-                   (selectedFilters.includes('shared') && isShared) ||
-                   (selectedFilters.includes('archived') && isArchived);
+                (selectedFilters.includes('mine') && isMine) ||
+                (selectedFilters.includes('shared') && isShared);
         });
     };
 
@@ -72,12 +122,12 @@ const ListViewer = ({ shoppingLists, username }) => {
             </div>
             <div className="list-tiles">
                 {filteredShoppingLists().map((list) => {
-                    const totalItems = calculateTotalItems(list.quantity);
-                    const firstCategory = Object.values(list.category)[0];
-                    const firstTwoItems = Object.entries(list.name).slice(0, 2).map(([id, name]) => ({ id, name }));
+                    const totalItems = calculateTotalItems(list.items);
+                    const firstCategory = list.items && list.items.length > 0 ? list.items[0].category : 'N/A';
+                    const firstTwoItems = list.items ? list.items.slice(0, 2) : [];
 
                     return (
-                        <div key={list.id} className="list-tile">
+                        <div key={list._id} className="list-tile">
                             <div className="tile-header">
                                 <span className="list-name">{list.shoppingListName}</span>
                                 <span className="item-count">{totalItems} items</span>
@@ -93,7 +143,7 @@ const ListViewer = ({ shoppingLists, username }) => {
                             <div className="list-owner">
                                 Owned by: {list.owner}
                             </div>
-                            <Link to={"/shoppinglist/" + list.id}><Button className="view-button">View</Button></Link>
+                            <Link to={"/shoppinglist/" + list._id}><Button className="view-button">View</Button></Link>
                         </div>
                     );
                 })}

@@ -1,131 +1,101 @@
 import React, { useState, useContext, useEffect } from "react";
+import axios from "axios";
 import { useParams } from "react-router-dom";
-import { FaEdit, FaCheck, FaTrash } from "react-icons/fa";
-
 import UserContext from "../components/UserContext";
+import { FaEdit, FaCheck, FaTrash } from "react-icons/fa";
+import Button from 'react-bootstrap/Button';
+import EditPermissionsModal from "../components/EditPermissionsModal";
 import "../styles/ErrorMsg.css";
 import "../styles/EditList.css";
-import EditPermissionsModal from "../components/EditPermissionsModal";
-import Button from 'react-bootstrap/Button';
-import shoppingListsData from "../data/shoppinglists.json"; // Importing the shopping lists
 
 const ParentComponent = () => {
-  const username = useContext(UserContext);
-  const params = useParams();
-  const shoppingListId = params.shoppingListId; // Get shoppingListId from params
-  const isCreation = params.isCreation;
+  const { userId } = useContext(UserContext);
+  const { shoppingListId, isCreation } = useParams();
+  const [shoppingList, setShoppingList] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  let shoppingList;
-  let isSharedWith;
+  useEffect(() => {
+    const fetchShoppingList = async () => {
+      if (isCreation === 'true') {
+        setShoppingList({
+          shoppingListName: "",
+          ownerId: userId,
+          sharedTo: [],
+          items: []
+        });
+        setLoading(false);
+      } else {
+        try {
+          setLoading(true);
+          const token = localStorage.getItem('token');
+          const authHeader = token ? `Bearer ${token}` : 'Bearer ';
+          const response = await axios.get(`http://194.182.91.65:3000/getList/${shoppingListId}`, {
+            headers: { Authorization: authHeader }
+          });
+          setShoppingList(response.data);
+        } catch (error) {
+          console.error("Error fetching shopping list", error);
+          setError(error);
+        } finally {
+          setLoading(false);
 
-  const isSharedWithOwner = (username, shoppingListSharedTo) => {
-    return shoppingListSharedTo.includes(username);
-  }
-
-  if (isCreation) {
-    shoppingList = {
-      "shoppingListName": "",
-      "owner": username,
-      "sharedTo": [],
-      "state": "private", 
-      "name": {},
-      "category": {},
-      "quantity": {},
-      "checked": {}
+        }
+      }
     };
-  } else {
-    shoppingList = shoppingListsData[shoppingListId]; // Access shopping list using shoppingListId
-    if (shoppingList) {
-      isSharedWith = isSharedWithOwner(username, shoppingList.sharedTo);
-    }
-  }
 
-  if (!shoppingList && !isCreation) {
-    return <div className="unauthorized">Shopping list not found.</div>;
-  }
+    fetchShoppingList();
+  }, [shoppingListId, isCreation, userId]);
 
-  if (isCreation && username) {
-    return <EditList shoppingList={shoppingList} shoppingListId={params.shoppingListId} isCreation={true} />;
-  } else if (!isCreation) {
-    if (username === shoppingList.owner || isSharedWith) {
-      return <EditList shoppingList={shoppingList} shoppingListId={params.shoppingListId} isCreation={false} />;
-    } else {
-      return <div className="unauthorized">You are not authorized to edit this shopping list.</div>;
-    }
-  } else if (!username) {
-    return <div className="unauthorized">Log in to create or edit a list.</div>;
-  } else {
-    return <div className="unauthorized">You are not authorized to access this page.</div>;
-  }
+
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error loading shopping list: {error.message}</div>;
+  if (!shoppingList) return <div>Shopping list not found.</div>;
+
+  return (
+    <EditList
+      shoppingList={shoppingList}
+      setShoppingList={setShoppingList}
+      isCreation={isCreation === 'true'}
+    />
+  );
 };
 
 
-const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
-
-  const [listName, setListName] = useState(isCreation ? '' : shoppingList.shoppingListName);
-  const [items, setItems] = useState(
-    isCreation
-      ? []
-      : shoppingList.name
-        ? Object.entries(shoppingList.name).map(([id, name]) => ({
-          id,
-          name,
-          category: shoppingList.category[id],
-          quantity: shoppingList.quantity[id],
-        }))
-        : []
-  );
+const EditList = ({ shoppingList, setShoppingList, isCreation }) => {
+  const [listName, setListName] = useState(shoppingList.shoppingListName);
+  const [items, setItems] = useState(shoppingList.items || []);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
-
-
-  const handlePermissionsClick = () => {
-    setShowPermissionsModal(true);
-  };
-
-  const handlePermissionsClose = () => {
-    setShowPermissionsModal(false);
-  };
-
-  const handleListNameChange = () => {
-    const newName = prompt("Enter new shopping list name:");
-    if (newName) {
-      setListName(newName);
-    }
-  };
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
   const handleItemChange = (itemId, field, newValue) => {
-    // Capitalize first letter if the field is 'category'
-    const updatedValue = field === 'category' ? capitalizeFirstLetter(newValue) : newValue;
-
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === itemId ? { ...item, [field]: updatedValue } : item
-      )
+    const updatedItems = items.map((item) =>
+      item.id === itemId ? { ...item, [field]: newValue } : item
     );
+    setItems(updatedItems);
   };
 
   const handleItemDelete = (itemId) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+    const updatedItems = items.filter((item) => item.id !== itemId);
+    setItems(updatedItems);
   };
 
   const handleItemEditToggle = (itemId) => {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === itemId ? { ...item, isEditing: !item.isEditing } : item
-      )
+    const updatedItems = items.map((item) =>
+      item.id === itemId ? { ...item, isEditing: !item.isEditing } : item
     );
+    setItems(updatedItems);
   };
 
   const handleItemEditFinish = (itemId) => {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === itemId ? { ...item, isEditing: false } : item
-      )
+    const updatedItems = items.map((item) =>
+      item.id === itemId ? { ...item, isEditing: false } : item
     );
+    setItems(updatedItems);
   };
 
   const handleItemAdd = () => {
@@ -136,49 +106,38 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
       quantity: "",
       isEditing: true,
     };
-    setItems((prevItems) => [...prevItems, newItem]);
+    setItems([...items, newItem]);
   };
 
+  const handleListNameChange = () => {
+    const newName = prompt("Enter new shopping list name:", listName);
+    if (newName !== null) {
+      setListName(newName);
+    }
+  };
   const handleListDelete = () => {
     if (window.confirm("Are you sure you want to delete this list?")) {
       // Delete the list
     }
   };
 
-  const handleListUpdate = (shoppingListId) => {
+  const handleListUpdate = async () => {
+    //  logic to update the shopping list
+    console.log("Updated list:", listName, items);
+    // Update the shoppingList state in the parent component
+    setShoppingList({ ...shoppingList, shoppingListName: listName, items });
+  };
 
-    if (!listName.trim()) {
-      alert("Please enter a name for the shopping list.");
-      return;
-    }
+  const handlePermissionsClick = () => {
+    setShowPermissionsModal(true);
+  };
 
-    const hasEmptyFields = items.some(item => !item.name.trim() || !item.category.trim() || !item.quantity.trim());
-
-    if (hasEmptyFields) {
-      alert("Please fill in all item fields (shopping list name, item name, category, quantity) before saving.");
-      return;
-    }
-    if (window.confirm("Save changes to list?")) {
-      // Convert the updated list to JSON
-      const updatedList = {
-        ...shoppingList,
-        shoppingListName: listName,
-        name: items.reduce((acc, curr) => ({ ...acc, [curr.id]: curr.name }), {}),
-        category: items.reduce((acc, curr) => ({ ...acc, [curr.id]: curr.category }), {}),
-        quantity: items.reduce((acc, curr) => ({ ...acc, [curr.id]: curr.quantity }), {}),
-      };
-
-      // Save updated list to local storage
-      console.log(`shoppingList-${shoppingListId}`, JSON.stringify(updatedList));
-
-      alert("List updated!");
-    }
-  }
-
+  const handlePermissionsClose = () => {
+    setShowPermissionsModal(false);
+  };
 
   return (
     <div>
-
       <h1>
         {listName}{" "}
         <Button className="btn-square" onClick={handleListNameChange}>
@@ -200,7 +159,8 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
             <tr key={item.id}>
               <td>
                 {item.isEditing ? (
-                  <input className="inputbox"
+                  <input
+                    className="inputbox"
                     type="text"
                     value={item.name}
                     onChange={(e) =>
@@ -213,7 +173,8 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
               </td>
               <td>
                 {item.isEditing ? (
-                  <input className="inputbox"
+                  <input
+                    className="inputbox"
                     type="text"
                     value={item.category}
                     onChange={(e) =>
@@ -221,12 +182,13 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
                     }
                   />
                 ) : (
-                  item.category
+                  capitalizeFirstLetter(item.category)
                 )}
               </td>
               <td>
                 {item.isEditing ? (
-                  <input className="inputbox"
+                  <input
+                    className="inputbox"
                     type="number"
                     value={item.quantity}
                     onChange={(e) =>
@@ -258,18 +220,17 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
         </tbody>
       </table>
       <div className="button-group">
-        <Button className="button-default" id="addItem" onClick={handleItemAdd}>Add Item</Button>
-        <div>
-          {showPermissionsModal && (
-            <EditPermissionsModal shoppingList={shoppingList} onClose={handlePermissionsClose} />
-          )}
-          <Button className="button-default" onClick={handlePermissionsClick}>Edit Permissions</Button>
-          <Button className="button-default" id="deleteList" onClick={handleListDelete}>Delete List</Button>
-          <Button className="button-default" >Archive List</Button>
-          <Button className="button-default" disabled={items.length === 0 || shoppingList.name === ""} onClick={() => handleListUpdate(shoppingListId)}>Finish Changes</Button>
-
-        </div>
+        <Button className="button-default" onClick={handlePermissionsClick}>Edit Permissions</Button>
+        <Button className="button-default" id="deleteList" onClick={handleListDelete}>Delete List</Button>
+        <Button className="button-default" >Archive List</Button>
+        <Button className="button-default" disabled={items.length === 0 || shoppingList.name === ""} onClick={() => handleListUpdate()}>Finish Changes</Button>
       </div>
+      {showPermissionsModal && (
+        <EditPermissionsModal
+          shoppingList={shoppingList}
+          onClose={handlePermissionsClose}
+        />
+      )}
     </div>
   );
 };
