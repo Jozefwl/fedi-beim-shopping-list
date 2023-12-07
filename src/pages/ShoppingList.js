@@ -11,7 +11,7 @@ const ParentComponent = () => {
   const [loading, setLoading] = useState(true);
   const token = (localStorage.getItem('token') || null)
   const hreflink = "/edit/" + shoppingListId;
-  console.log(token)
+  
 
   useEffect(() => {
     const fetchShoppingList = async () => {
@@ -170,10 +170,13 @@ const Table = ({ shoppingList, hreflink }) => {
 
 
 const ShoppingList = ({ shoppingList, hreflink, token }) => {
-  const username = useContext(UserContext);
-  const isSharedWith = shoppingList.sharedTo.includes(username);
+  const { userId } = useContext(UserContext);
+  console.log( userId )
 
-  if (shoppingList.isPublic || username === shoppingList.ownerId || isSharedWith) {
+  const isSharedWith = shoppingList.sharedTo.includes(userId);
+
+
+  if (shoppingList.isPublic || userId === shoppingList.ownerId || isSharedWith) {
     return (
       <div>
         <Table shoppingList={shoppingList} hreflink={hreflink} />

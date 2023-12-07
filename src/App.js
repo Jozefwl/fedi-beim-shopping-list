@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import LoginModal from "./components/LoginModal";
 import "./styles/App.css";
@@ -9,6 +9,7 @@ import NotFoundPage from './pages/NoPage';
 import EditList from './pages/EditList';
 import UserContext from "./components/UserContext";
 import axios from "axios";
+import { jwtDecode } from 'jwt-decode';
 
 
 const App = () => {
@@ -16,8 +17,7 @@ const App = () => {
   const [username, setUsername] = useState(localStorage.getItem('username') || '')
   const [token, setToken] = useState(localStorage.getItem('token') || false)
   const [loading, setLoading] = useState(false);
-  const [isLoginInProgress, setIsLoginInProgress] = useState(false);
-
+  
   const handleLogin = async (username, password) => {
     if (loading) { window.alert("Logging in, please wait.") }; // Prevents function from proceeding if already loading
     setLoading(true);
@@ -35,6 +35,7 @@ const App = () => {
         // Update the username state
         setUsername(username);
         handleCloseModal();
+        window.location.reload();
       } else {
         // Handle login errors
         window.alert('Login failed. Please check your username and password.');
@@ -60,6 +61,7 @@ const App = () => {
     setUsername("");
     localStorage.removeItem('token');
     localStorage.removeItem('username'); // Clear username from localStorage
+    window.location.reload();
   };
 
   const handleCloseModal = () => {
@@ -70,9 +72,50 @@ const App = () => {
     setShowModal(true);
   };
 
+  // userId for userContext
+  let userId;
+  if (token) {
+    const decoded = jwtDecode(token);
+    userId = decoded.userId;
+  }
+
+// Token refresh function
+const refreshToken = async () => {
+  try {
+    const response = await axios.post('http://194.182.91.65:3000/refreshToken', {}, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (response.status === 200) {
+      const newToken = response.data.newToken;
+      localStorage.setItem('token', newToken);
+      setToken(newToken);
+    }
+  } catch (error) {
+    console.error('Token refresh failed:', error);
+  }
+};
+
+useEffect(() => {
+  const checkTokenExpiry = () => {
+    if (token) {
+      const decoded = jwtDecode(token);
+      const currentTime = Date.now() / 1000; 
+      const timeLeft = decoded.exp - currentTime; 
+
+      if (timeLeft < 60) { // Less than 1 minute remaining
+        refreshToken();
+      }
+    }
+  };
+
+  const interval = setInterval(checkTokenExpiry, 60000); // Check every minute
+
+  return () => clearInterval(interval);
+}, [token]);
+
   return (
     <Router>
-      <UserContext.Provider value={token}>
+      <UserContext.Provider value={{token, userId}} >
         <div className="App">
           <Navbar
             username={username}

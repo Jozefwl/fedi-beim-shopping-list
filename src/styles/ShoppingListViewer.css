@@ -1,165 +1,146 @@
 .list-viewer {
-    font-family: Arial, sans-serif;
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #b8b8b8;
+  font-family: Arial, sans-serif;
+  margin: 10px 10%; /* Unified margin */
+  padding: 10px;
+  background-color: #b8b8b8;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+.list-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #000000;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.filter-text {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: white; /* Added for consistency */
+}
+
+.navbar-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.navbar-controls select,
+.navbar-controls input,
+.navbar-controls button {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.list-tiles {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.list-tile {
+  background-color: rgb(77, 77, 77);
+  border: 1px solid #000000;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  color: white;
+}
+
+.tile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.list-name {
+  font-size: 1.4em;
+  font-weight: bold;
+}
+
+.item-count {
+  font-size: 28px;
+}
+
+.list-preview {
+  font-size: 20px;
+  text-align: left;
+}
+
+.list-owner {
+  text-align: right;
+  font-size: 20px;
+}
+
+.view-button {
+  display: block;
+  width: 100%;
+  font-size: 24px;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.1s ease;
+}
+
+.view-button:hover {
+  background-color: #0051a8;
+}
+
+@media (max-width: 1024px) {
+  .list-viewer {
+    margin: 10px 3%; /* Adjusted for mobile view */
   }
 
-  a {
-    color: white;
-    text-decoration: none; /* Optional: removes the underline */
-}
-  
-  .list-navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background-color: #000000;
-    border-radius: 5px;
-    margin-bottom: 20px;
-  }
-  
-  .filter-text {
-    font-size: 1.2em;
-    font-weight: bold;
-  }
-  
-  .navbar-controls {
-    display: flex;
-    gap: 10px; /* Space between controls */
-  }
-  
+  .list-navbar,
+  .list-owner,
   .navbar-controls select,
   .navbar-controls input,
-  .navbar-controls button {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    background-color: white;
-    cursor: pointer;
-  }
-  
-  .list-tiles {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .list-tile {
-    background-color: rgb(77, 77, 77);
-    border: 1px solid #000000;
-    border-radius: 12px;
-    padding: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    color: white;
-  }
-  
+  .navbar-controls button,
+  .list-name,
+  .list-tile,
+  .list-tiles,
   .tile-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .list-name {
-    font-size: 1.4em;
-    font-weight: bold;
-    color: white;
-  }
-  
-  .item-count {
-    font-size: 28px;
-    color: white;
-  }
-  
-  .list-preview {
-    font-size: 20px;
-    color: white;
-    text-align: left;
+    width: 94%; /* Consistent width for mobile view */
+    margin: 10px auto; /* Centering and spacing */
   }
 
-  .list-owner{
-    text-align: right;
-    font-size: 20px;
+  .navbar-controls button {
+    font-size: 14px;
+    height: 50px; /* Adjusted for mobile view */
   }
-  
+
+  .list-name,
+  .item-count,
+  .list-preview,
   .view-button {
-    display: block;
-    width: 100%;
-    font-size: 24px;
-    padding: 10px;
-    margin-top: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    text-align: center;
-    transition: background-color 0.1s ease;
+    font-size: 18px; /* Smaller font size for better readability on mobile */
   }
-  
-  .view-button:hover {
-    background-color: #0051a8;
-    
+
+  .item-count,
+  .list-owner {
+    margin-top: 5px; /* Spacing for vertically stacked items */
   }
-  
-  @media (max-width: 1024px) {
-    .list-viewer {
-      margin-left: 0%;  
-      margin-right: 0%;
-    }
-  
-    .list-navbar,
-    .list-owner,
-    .navbar-controls select,
-    .navbar-controls input
-     {
-      width: 97%; 
-      margin-bottom: 10px;
-      height: 50px;
-      margin-top: 5%;
 
-    }
+  .list-tile {
+    padding: 10px; /* Adjusted padding for mobile view */
+  }
 
-    .navbar-controls button{
-      font-size: 14px; 
-    width: 97%; 
-    height: 60px;
-    margin-top: 20%;
-    }
-
-    #button {
-      margin-top: 5%;
-    }
-  
-    .list-name,
-    .list-tile,
-    .list-tiles,
-    .tile-header {
-      width: 97%; /* fit on mobile */
-    }
-  
-    .list-name,
-    .item-count,
-    .list-preview,
-    .view-button {
-      font-size: 18px; /* smaller font size for better fit */
-    }
-
-  
-    .item-count,
-    .list-owner {
-      margin-top: 5px; /* spacing for vertically stacked items */
-    }
-  
-    .list-tile {
-      padding: 10px; /* padding for better spacing */
-    }
-  
-    .view-button {
-      font-size: 16px; /*  button font size */
-    }
-  }  
+  .view-button {
+    font-size: 16px; /* Adjusted button font size for mobile view */
+  }
+}

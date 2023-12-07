@@ -1,11 +1,28 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/EditPermissionsModal.css";
+import axios from "axios";
 
-const EditPermissionsModal = ({ shoppingList, onClose, currentUser }) => {
-  const [users, setUsers] = useState([...shoppingList.sharedTo, shoppingList.owner]);
+const EditPermissionsModal = ({ shoppingList, onClose }) => {
+  const [users, setUsers] = useState([...shoppingList.sharedTo]);
   const [newUser, setNewUser] = useState("");
-  // Declare listVisibility state and its setter function
-  const [listVisibility, setListVisibility] = useState(shoppingList.state); // Assuming 'state' holds 'Public' or 'Private'
+  const [usernames, setUsernames] = useState({});
+  const [isPublic, setIsPublic] = useState(shoppingList.isPublic);
+
+  useEffect(() => {
+    // Function to fetch usernames for user IDs
+    const fetchUsernames = async (userIds) => {
+      try {
+        const response = await axios.post('http://194.182.91.65:3000/getUsernames', userIds);
+        setUsernames(response.data); // Update the usernames state
+      } catch (error) {
+        console.error('Error fetching usernames:', error);
+      }
+    };
+
+    if (users.length > 0) {
+      fetchUsernames(users);
+    }
+  }, [users]);
 
   const handleAddUser = () => {
     if (newUser && !users.includes(newUser)) {
@@ -14,35 +31,35 @@ const EditPermissionsModal = ({ shoppingList, onClose, currentUser }) => {
     }
   };
 
-  const handleRemoveUser = (user) => {
-    if (user === shoppingList.owner) {
-      alert("You cannot remove yourself from the list. Please transfer ownership to another user first.");
-    } else {
-      setUsers(users.filter((u) => u !== user));
-    }
+    const handleRemoveUser = (user) => {
+    setUsers(users.filter((u) => u !== user));
   };
 
   const handleVisibilityChange = (e) => {
-    setListVisibility(e.target.value);
+    setIsPublic(e.target.value === "Public"); // Update based on selection
   };
 
-  const handleSaveChanges = () => {
-
-    // Check if the shopping list has at least one item
-    const itemEntries = Object.entries(shoppingList.name);
-    if (itemEntries.length === 0) {
-      alert("The shopping list must have at least one item.");
-      return;
-    }
-  
+  const handleSaveChanges = async () => {
     const updatedShoppingList = {
-      ...shoppingList,
-      sharedTo: users.filter(user => user !== shoppingList.owner),
-      state: listVisibility
+      sharedTo: users,
+      isPublic: isPublic
     };
-
-    console.log("Updated Shopping List:", updatedShoppingList);
-    onClose(); 
+  
+    try {
+      const token = localStorage.getItem('token'); // Assuming you store the token in localStorage
+      const response = await axios.put(`http://194.182.91.65:3000/updateList/${shoppingList.id}`, updatedShoppingList, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      console.log("Updated Shopping List Response:", response.data);
+      onClose(); // Close the modal after successful update
+    } catch (error) {
+      console.error('Error updating shopping list:', error);
+      // Handle error (maybe show a message to the user)
+    }
   };
 
   return (
@@ -51,7 +68,7 @@ const EditPermissionsModal = ({ shoppingList, onClose, currentUser }) => {
         <h2 className="epm-black-text">Edit Permissions</h2>
         <div className="epm-visibility-select">
           <label className="epm-black-text">Visibility: </label>
-          <select value={listVisibility} onChange={handleVisibilityChange}>
+          <select value={isPublic ? "Public" : "Private"} onChange={handleVisibilityChange}>
             <option value="Public">Public</option>
             <option value="Private">Private</option>
           </select>
@@ -60,8 +77,8 @@ const EditPermissionsModal = ({ shoppingList, onClose, currentUser }) => {
         <ul className="epm-user-list">
           {users.map((user) => (
             <li key={user} className="epm-user-item">
-              <div className="epm-user-name">{user}</div>
-              {currentUser !== shoppingList.owner && (
+              <div className="epm-user-name">{usernames[user] || user}</div>
+              {user !== shoppingList.ownerId && (
                 <button className="epm-remove-btn" onClick={() => handleRemoveUser(user)}>Remove</button>
               )}
             </li>
@@ -77,7 +94,8 @@ const EditPermissionsModal = ({ shoppingList, onClose, currentUser }) => {
           />
           <button className="epm-add-btn" onClick={handleAddUser}>Add User</button>
         </div>
-        <button className="epm-close-btn" onClick={onClose}>Discard</button> <button className="epm-close-btn" onClick={handleSaveChanges}>Save Changes</button>
+        <button className="epm-close-btn" onClick={onClose}>Discard</button>
+        <button className="epm-close-btn" onClick={handleSaveChanges}>Save Changes</button>
       </div>
     </div>
   );
