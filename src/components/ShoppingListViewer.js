@@ -100,10 +100,6 @@ const ListViewer = ({ token }) => {
         fetchLists();
     }, [userId, token]);
 
-    useEffect(() => {
-        setSelectedFilters(userId ? ['mine'] : ['public']);
-    }, [userId]);
-
     const calculateTotalItems = (items) => {
         if (!Array.isArray(items)) {
             console.error('Invalid items array:', items);
@@ -120,7 +116,9 @@ const ListViewer = ({ token }) => {
         }, 0);
     };
 
-
+    useEffect(() => {
+        setSelectedFilters(userId ? ['mine'] : ['public']);
+    }, [userId]);
 
     const options = [
         { value: 'public', label: 'Public' },
@@ -143,17 +141,24 @@ const ListViewer = ({ token }) => {
 
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
-    };    
+    };
 
     const filteredShoppingLists = () => {
         return shoppingLists.filter(list => {
             const isPublic = selectedFilters.includes('public') && list.isPublic;
             const isMine = selectedFilters.includes('mine') && list.ownerId === userId;
             const isSharedWithMe = selectedFilters.includes('shared') && list.sharedTo.includes(userId);
-    
+            const isArchived = selectedFilters.includes('archived') && list.isArchived;
+
+            // Make list 
+            if (isArchived) {
+                return list.isArchived;
+            }
+
+            // Searching logic
             const matchesSearchQuery = list.shoppingListName.toLowerCase().includes(searchQuery.toLowerCase());
-    
-            return (isPublic || isMine || isSharedWithMe) && matchesSearchQuery;
+
+            return (isPublic || isMine || isSharedWithMe) && matchesSearchQuery && !list.isArchived;
         });
     };
 
@@ -172,9 +177,11 @@ const ListViewer = ({ token }) => {
                 <div className="navbar-controls">
                     <DropdownCheckbox options={options} onSelectionChange={handleFilterChange} />
                     <Link to="/create/true" className="navbar-btn"><button>Create Shopping List</button></Link>
-                    <input type="text" placeholder="Search..." onChange={handleSearchChange} />
                 </div>
             </div>
+            <div className="search-bar">
+                        <input className="searchbar-input" type="text" placeholder="Search..." onChange={handleSearchChange} />
+                    </div>
             <div className="list-tiles">
                 {filteredShoppingLists().map((list) => {
                     const totalItems = calculateTotalItems(list.items);

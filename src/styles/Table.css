@@ -110,6 +110,18 @@ td {
   border-radius: 4px;
 }
 
+.table-header-savechanges-button{
+  height: 50px;
+  width: 220px;
+  font-size: 25px;
+  float: left;
+  margin: 10px;
+  background-color: #ff0000; 
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
 .table-header-dropdown {
   height: 50px;
   width: 150px;
@@ -137,14 +149,35 @@ td {
   color: white; 
 }
 
+.everything-checked{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.everything-checked-button{
+  height: 50px;
+  width: 220px;
+  font-size: 25px;
+  margin: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
 
 
 @media (max-width: 1024px) {
 
   th,
   td {
-    font-size: 20px;
+    font-size: 18px;
     overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .expand-button {

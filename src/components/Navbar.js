@@ -2,7 +2,7 @@ import React from "react";
 import "../styles/Navbar.css";
 import { useNavigate } from "react-router-dom";
 
-const Navbar = ({ username, onLoginClick, onLogoutClick }) => {
+const Navbar = ({ username, onLoginClick, onLogoutClick, onRegisterClick }) => {
   const navigate = useNavigate();
 
   return (
@@ -24,13 +24,18 @@ const Navbar = ({ username, onLoginClick, onLogoutClick }) => {
 
         <div className="navbar-right">
           {username ? (
-            <button className="navbar-btn" onClick={onLogoutClick}>
+            <button className="navbar-btn-login" onClick={onLogoutClick}>
               Logout
             </button>
           ) : (
-            <button className="navbar-btn" onClick={onLoginClick}>
+            <>
+            <button className="navbar-btn-login" onClick={onLoginClick}>
               Login
             </button>
+            <button className="navbar-btn-register" onClick={onRegisterClick}>
+              Register
+            </button>
+          </>
           )}
         </div>
 

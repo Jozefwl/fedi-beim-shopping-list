@@ -34,10 +34,10 @@ const ParentComponent = () => {
           const response = await axios.get(`http://194.182.91.65:3000/getList/${shoppingListId}`, {
             headers: { Authorization: authHeader }
           });
-          const fetchedItems = response.data.items.map((item, index) => ({
+          const fetchedItems = response.data.items.map((item) => ({
             ...item,
-            id: item.id || `item-${index}`, // Assign a unique ID if not present
-            isEditing: false, // Initialize isEditing state
+            _id: item._id, // Use _id from the database as the key identifier
+            isEditing: false,
           }));
 
           setShoppingList({
@@ -103,11 +103,12 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
   const [items, setItems] = useState(shoppingList?.items || []);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const categories = ['Groceries', 'Beverages', 'Supplies', 'Belongings', 'Other'];
+  const [deletedItems, setDeletedItems] = useState([]);
 
   const updateItem = (itemId, updateCallback) => {
     setItems((prevItems) =>
       prevItems.map((item) =>
-        item.id === itemId ? { ...item, ...updateCallback(item) } : item
+        item._id === itemId ? { ...item, ...updateCallback(item) } : item
       )
     );
   };
@@ -121,9 +122,21 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
   };
 
   const handleItemDelete = (itemId) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+    
+    console.log("Deleting item with _id:", itemId);
+    setItems((prevItems) => prevItems.filter(item => item._id !== itemId));
+    setDeletedItems((prevDeletedItems) => {
+      // Find the item that is being deleted
+      const deletedItem = items.find(item => item._id === itemId);
+      // If the item is an existing item in the database, mark it as deleted
+      if (deletedItem && deletedItem._id) {
+        return [...prevDeletedItems, { ...deletedItem, quantity: 0 }];
+      }
+      return prevDeletedItems;
+    });
   };
-
+  
+ 
   const handleItemEditToggle = (itemId) => {
     updateItem(itemId, (item) => ({ isEditing: !item.isEditing }));
   };
@@ -132,14 +145,17 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
     updateItem(itemId, (item) => ({ isEditing: false }));
   };
 
+  let newItemCounter = items.length;
+
   const handleItemAdd = () => {
+    newItemCounter += 1;
     const newItem = {
-      id: `${items.length + 1}`,
+      id: `new-${newItemCounter}`, // Unique temporary identifier
       name: "",
-      category: "Other", // Default category
+      category: "Other",
       quantity: "",
       isEditing: true,
-      checked: false, // Default checked to false for every item
+      checked: false,
     };
     setItems([...items, newItem]);
   };
@@ -205,15 +221,18 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
     // Construct the request payload
     const payload = {
       shoppingListName: listName,
-      items: items.map(item => ({
+      // Merge items with deletedItems
+      items: [...items, ...deletedItems].map(item => ({
+        ...item._id && { _id: item._id },
         name: item.name,
-        category: item.category || 'Other', //Default if nothing is selected
+        category: item.category || 'Other',
         quantity: item.quantity,
         checked: item.checked
-      })),
+      })).filter(item => item.name),
       sharedTo: shoppingList.sharedTo,
       isPublic: shoppingList.isPublic
-    };
+    };    
+  
     if (isCreation) {
       try {
         // Send the POST request
@@ -256,7 +275,57 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
     }
   };
 
-
+  const handleListArchive = async (shoppingList) => {
+    const shoppingListId = shoppingList._id;
+    if (shoppingList.isArchived) {
+      if (window.confirm("List is already archived, do you want to unarchive the list?")) {
+      try {
+        const token = localStorage.getItem('token'); // Get the auth token
+        const header = {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          }
+        };
+        const response = await axios.put(`http://194.182.91.65:3000/updateList/${shoppingListId}`, {
+          isArchived: false
+        }, header);
+  
+        if (response.status === 200) {
+          console.log('List un-archived successfully');
+          window.location.href = '/'; 
+        } else {
+          console.error('Error un-archiving list:', response);
+        }
+      } catch (error) {
+        console.error('Error while un-archiving the list:', error);
+      }
+      
+    } } else {
+      if (window.confirm("Are you sure you want to archive this list?")) {
+        try {
+          const token = localStorage.getItem('token'); // Get the auth token
+          const header = {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            }
+          };
+          const response = await axios.put(`http://194.182.91.65:3000/updateList/${shoppingListId}`, {
+            isArchived: true
+          }, header);
+    
+          if (response.status === 200) {
+            console.log('List archived successfully');
+            window.location.href = '/'; 
+          } else {
+            console.error('Error archiving list:', response);
+          }
+        } catch (error) {
+          console.error('Error while archiving the list:', error);
+        }
+      }
+    }    
+  };
+  
   const handlePermissionsClick = () => {
     setShowPermissionsModal(true);
   };
@@ -285,7 +354,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
         </thead>
         <tbody>
           {items.map((item) => (
-            <tr key={item.id}>
+            <tr key={item._id || item.id}>
               <td>
                 {item.isEditing ? (
                   <input
@@ -293,7 +362,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
                     type="text"
                     value={item.name}
                     onChange={(e) =>
-                      handleItemChange(item.id, "name", e.target.value)
+                      handleItemChange(item._id, "name", e.target.value)
                     }
                   />
                 ) : (
@@ -305,7 +374,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
                   <select
                     className="inputbox"
                     value={item.category}
-                    onChange={(e) => handleCategoryChange(item.id, e.target.value)}
+                    onChange={(e) => handleCategoryChange(item._id, e.target.value)}
                   >
                     {categories.map(category => (
                       <option key={category} value={category}>{category}</option>
@@ -322,7 +391,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
                     type="number"
                     value={item.quantity}
                     onChange={(e) =>
-                      handleItemChange(item.id, "quantity", e.target.value)
+                      handleItemChange(item._id, "quantity", e.target.value)
                     }
                   />
                 ) : (
@@ -331,17 +400,17 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
               </td>
               <td>
                 {item.isEditing ? (
-                  <Button className="btn-square" onClick={() => handleItemEditFinish(item.id)}>
+                  <Button className="btn-square" onClick={() => handleItemEditFinish(item._id)}>
                     <FaCheck />
                   </Button>
                 ) : (
-                  <Button className="btn-square" onClick={() => handleItemEditToggle(item.id)}>
+                  <Button className="btn-square" onClick={() => handleItemEditToggle(item._id)}>
                     <FaEdit />
                   </Button>
                 )}
               </td>
               <td>
-                <Button className="btn-square" onClick={() => handleItemDelete(item.id)}>
+                <Button className="btn-square" onClick={() => handleItemDelete(item._id)}>
                   <FaTrash />
                 </Button>
               </td>
@@ -357,7 +426,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
             Delete List
           </Button>
         )}
-        <Button className="button-default" >Archive List</Button>
+        <Button className="button-default" onClick={() => handleListArchive(shoppingList)}>Archive List</Button>
         <Button
           className="button-default"
           onClick={() => {

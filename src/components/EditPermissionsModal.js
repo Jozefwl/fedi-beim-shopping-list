@@ -7,12 +7,19 @@ const EditPermissionsModal = ({ shoppingList, onClose }) => {
   const [newUser, setNewUser] = useState("");
   const [usernames, setUsernames] = useState({});
   const [isPublic, setIsPublic] = useState(shoppingList.isPublic);
+  const username = localStorage.getItem('username');
+
+
+  useEffect(() => {
+    setUsers([...shoppingList.sharedTo]);
+    setIsPublic(shoppingList.isPublic);
+  }, [shoppingList]);
 
   useEffect(() => {
     // Function to fetch usernames for user IDs
     const fetchUsernames = async (userIds) => {
       try {
-        const response = await axios.post('http://194.182.91.65:3000/getUsernames', userIds);
+        const response = await axios.post('http://194.182.91.65:3000/getUsernames', { userIds: userIds });
         setUsernames(response.data); // Update the usernames state
       } catch (error) {
         console.error('Error fetching usernames:', error);
@@ -25,20 +32,23 @@ const EditPermissionsModal = ({ shoppingList, onClose }) => {
   }, [users]);
 
   const handleAddUser = () => {
-    if (newUser && !users.includes(newUser)) {
+    if (newUser && !users.includes(newUser) && newUser !== username) {
       setUsers([...users, newUser]);
       setNewUser("");
     }
   };
 
     const handleRemoveUser = (user) => {
-    setUsers(users.filter((u) => u !== user));
+      if (user !== shoppingList.ownerId) {
+        setUsers(users.filter((u) => u !== user));
+      }
   };
 
   const handleVisibilityChange = (e) => {
-    setIsPublic(e.target.value === "Public"); // Update based on selection
+    console.log("New visibility selected:", e.target.value);
+    setIsPublic(e.target.value === "Public");
   };
-
+  
   const handleSaveChanges = async () => {
     const updatedShoppingList = {
       sharedTo: users,
@@ -46,19 +56,19 @@ const EditPermissionsModal = ({ shoppingList, onClose }) => {
     };
   
     try {
-      const token = localStorage.getItem('token'); // Assuming you store the token in localStorage
-      const response = await axios.put(`http://194.182.91.65:3000/updateList/${shoppingList.id}`, updatedShoppingList, {
+      const token = localStorage.getItem('token');
+      const response = await axios.put(`http://194.182.91.65:3000/updateList/${shoppingList._id}`, updatedShoppingList, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
-  
+
       console.log("Updated Shopping List Response:", response.data);
-      onClose(); // Close the modal after successful update
+      onClose();
+      window.location.reload();
     } catch (error) {
       console.error('Error updating shopping list:', error);
-      // Handle error (maybe show a message to the user)
     }
   };
 

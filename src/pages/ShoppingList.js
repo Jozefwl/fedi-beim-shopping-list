@@ -11,7 +11,6 @@ const ParentComponent = () => {
   const [loading, setLoading] = useState(true);
   const token = (localStorage.getItem('token') || null)
   const hreflink = "/edit/" + shoppingListId;
-  
 
   useEffect(() => {
     const fetchShoppingList = async () => {
@@ -50,9 +49,44 @@ const ParentComponent = () => {
 };
 
 
-const Table = ({ shoppingList, hreflink }) => {
+const Table = ({ shoppingList, hreflink, canEdit }) => {
+  const token = (localStorage.getItem('token') || null)
   const navigate = useNavigate();
+  const handleUpdateList = async () => {
+    if (window.confirm("Are you sure you want to update the list?")) {
+      try {
+        const updatedItems = items.map(item => ({
+          _id: item._id,
+          checked: checkedItems[item._id]
+        }));
 
+        const authHeader = token ? `Bearer ${token}` : 'Bearer ';
+        await axios.put(`http://194.182.91.65:3000/updateList/${shoppingList._id}`, { items: updatedItems }, {
+          headers: { Authorization: authHeader }
+        });
+
+        window.alert('List updated successfully.');
+      } catch (error) {
+        console.error("Error updating list", error);
+        window.alert('Error updating the list.');
+      }
+    }
+  };
+
+  //Check if all items are checked
+  const renderDeletePrompt = () => {
+    const allChecked = items.every(item => checkedItems[item._id]);
+    if (allChecked) {
+      return (
+        <div className="everything-checked">
+          <h1 >All items are checked</h1>
+          <button className="everything-checked-button" onClick={handleDeleteList}>Delete list?</button>
+        </div>
+      );
+    }
+    return null;
+  };
+  
   // each item in the shopping list has its own unique ID
   const items = shoppingList.items;
 
@@ -85,14 +119,44 @@ const Table = ({ shoppingList, hreflink }) => {
     setFilter(event.target.value);
   };
 
+  const handleDeleteList = async () => {
+    if (window.confirm("Are you sure you want to delete this list?")) {
+      try {
+        const authHeader = token ? `Bearer ${token}` : 'Bearer ';
+        await axios.delete(`http://194.182.91.65:3000/deleteList/${shoppingList._id}`, {
+          headers: { Authorization: authHeader }
+        });
+  
+        window.alert('List deleted successfully.');
+        navigate('/');
+        window.location.reload();
+      } catch (error) {
+        console.error("Error deleting list", error);
+        if (error.response && error.response.status === 403) {
+          window.alert('Error deleting the list: You are not the owner.');
+        } else {
+          window.alert('Error deleting the list.');
+        }
+      }
+    }
+  };
+
   const renderTableRows = () => {
     const categories = [...new Set(items.map((item) => item.category))];
     const filteredItems = filter === "checked"
       ? items.filter((item) => checkedItems[item._id])
       : items.filter((item) => !checkedItems[item._id]);
 
-    return categories.map((category, index) => (
-      <React.Fragment key={index}>
+    return categories.map((category, index) => {
+      const categoryItems = items.filter((item) => item.category === category);
+      // Check if all items are checked only if 'unchecked' filter is selected
+      const areAllItemsChecked = filter === "unchecked" && categoryItems.every((item) => checkedItems[item._id]);
+
+      if (areAllItemsChecked) {
+        return null;
+      }
+
+      return (<React.Fragment key={index}>
         <tr>
           <td className="category-cell">
             Category: {category} ({filteredItems.filter((item) => item.category === category).length})
@@ -135,8 +199,10 @@ const Table = ({ shoppingList, hreflink }) => {
           </React.Fragment>
         )}
       </React.Fragment>
-    ));
+      );
+    });
   };
+
 
   return (
     <>
@@ -145,41 +211,48 @@ const Table = ({ shoppingList, hreflink }) => {
           <div className="tableName">
             <p className="table-header-text">{shoppingList.shoppingListName}</p>
           </div>
-          <div className="header-buttons">
-            <button
-              className="table-header-button"
-              onClick={() => navigate(hreflink)}
-            >
-              Edit
-            </button>
-            <div className="filter-dropdown-wrapper">
-              <select className="table-header-dropdown" id="filterDropdown" onChange={handleFilterChange} value={filter}>
-                <option value="unchecked">Unchecked</option>
-                <option value="checked">Checked</option>
-              </select>
+          {canEdit && (
+            <div className="header-buttons">
+              <button className="table-header-savechanges-button" onClick={handleUpdateList}>
+                Save Changes
+              </button>
+              <button
+                className="table-header-button"
+                onClick={() => navigate(hreflink)}
+              >
+                Edit
+              </button>
             </div>
+          )}
+          <div className="filter-dropdown-wrapper">
+            <select className="table-header-dropdown" id="filterDropdown" onChange={handleFilterChange} value={filter}>
+              <option value="unchecked">Unchecked</option>
+              <option value="checked">Checked</option>
+            </select>
           </div>
         </div>
       </div>
+      {renderDeletePrompt()}
       <table className="table">
         <tbody>{renderTableRows()}</tbody>
       </table>
     </>
+
   );
 };
 
 
-const ShoppingList = ({ shoppingList, hreflink, token }) => {
+const ShoppingList = ({ shoppingList, hreflink, canEdit }) => {
   const { userId } = useContext(UserContext);
-  console.log( userId )
+  console.log(userId)
 
   const isSharedWith = shoppingList.sharedTo.includes(userId);
-
+  const isOwnerOrShared = userId === shoppingList.ownerId || shoppingList.sharedTo.includes(userId);
 
   if (shoppingList.isPublic || userId === shoppingList.ownerId || isSharedWith) {
     return (
       <div>
-        <Table shoppingList={shoppingList} hreflink={hreflink} />
+        <Table shoppingList={shoppingList} hreflink={hreflink} canEdit={isOwnerOrShared} />
       </div>
     );
   } else {

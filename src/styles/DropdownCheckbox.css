@@ -57,3 +57,14 @@
 .dropdown-content button:hover {
     background-color: #444; /* Slightly lighter on hover */
 }
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+    .dropdown-checkbox button {
+        padding: 8px; /* Adjust button padding for smaller screens */
+    }
+
+    .dropdown-content {
+        min-width: 140px; /* Reduce the minimum width for the dropdown */
+    }
+}

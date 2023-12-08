@@ -101,10 +101,23 @@ a {
   background-color: #0051a8;
 }
 
+.search-bar {
+  font-size: 24px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.searchbar-input{
+  height: 30px;
+}
+
 @media (max-width: 1024px) {
   .list-viewer {
     margin: 10px 3%; /* Adjusted for mobile view */
   }
+
+
 
   .list-navbar,
   .list-owner,
@@ -116,12 +129,12 @@ a {
   .list-tiles,
   .tile-header {
     width: 94%; /* Consistent width for mobile view */
-    margin: 10px auto; /* Centering and spacing */
+    margin: 15px auto; /* Centering and spacing */
   }
 
   .navbar-controls button {
     font-size: 14px;
-    height: 50px; /* Adjusted for mobile view */
+    height: 70px; /* Adjusted for mobile view */
   }
 
   .list-name,
@@ -142,5 +155,9 @@ a {
 
   .view-button {
     font-size: 16px; /* Adjusted button font size for mobile view */
+  }
+
+  .search-bar {
+    margin-bottom: 5px;
   }
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import LoginModal from "./components/LoginModal";
+import RegisterModal from "./components/RegisterModal";
 import "./styles/App.css";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
@@ -17,6 +18,42 @@ const App = () => {
   const [username, setUsername] = useState(localStorage.getItem('username') || '')
   const [token, setToken] = useState(localStorage.getItem('token') || false)
   const [loading, setLoading] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+
+  const handleRegister = async (username, password) => {
+    if (loading) {
+      window.alert("Processing your request, please wait.");
+      return;
+    }
+  
+    setLoading(true);
+  
+    try {
+      const response = await axios.post('http://194.182.91.65:3000/register', {
+        username,
+        password
+      });
+  
+      if (response.status === 201) {
+        window.alert('Registration successful. You can now login.');
+        handleCloseRegisterModal();
+        // Optionally, redirect to login page or log the user in automatically
+      }
+    } catch (error) {
+      console.error('Registration request failed', error);
+      let errorMessage = 'Registration failed. Please try again.';
+      if (error.response) {
+        if (error.response.status === 400) {
+          errorMessage = 'Username already exists. Please choose a different username.';
+        } else if (error.response.status === 500) {
+          errorMessage = 'Server error. Please try again later.';
+        }
+      }
+      window.alert(errorMessage);
+    }
+  
+    setLoading(false);
+  }; 
   
   const handleLogin = async (username, password) => {
     if (loading) { window.alert("Logging in, please wait.") }; // Prevents function from proceeding if already loading
@@ -68,9 +105,18 @@ const App = () => {
     setShowModal(false);
   };
 
-  const handleShowModal = () => {
+  const handleShowLoginModal = () => {
     setShowModal(true);
   };
+
+  const handleShowRegisterModal = () => {
+    setShowRegisterModal(true);
+    setShowModal(false); // Hide login modal if it's open
+  };
+
+  const handleCloseRegisterModal = () => {
+    setShowRegisterModal(false);
+  };  
 
   // userId for userContext
   let userId;
@@ -99,7 +145,7 @@ useEffect(() => {
   const checkTokenExpiry = () => {
     if (token) {
       const decoded = jwtDecode(token);
-      const currentTime = Date.now() / 1000; 
+      const currentTime = Date.now() / 1000; // Unix time
       const timeLeft = decoded.exp - currentTime; 
 
       if (timeLeft < 60) { // Less than 1 minute remaining
@@ -111,7 +157,7 @@ useEffect(() => {
   const interval = setInterval(checkTokenExpiry, 60000); // Check every minute
 
   return () => clearInterval(interval);
-}, [token]);
+});
 
   return (
     <Router>
@@ -119,11 +165,12 @@ useEffect(() => {
         <div className="App">
           <Navbar
             username={username}
-            onLoginClick={handleShowModal}
+            onLoginClick={handleShowLoginModal}
             onLogoutClick={handleLogout}
+            onRegisterClick={handleShowRegisterModal}
           />
           <LoginModal isOpen={showModal} onRequestClose={handleCloseModal} onLogin={handleLogin} />
-
+          <RegisterModal isOpen={showRegisterModal} onRequestClose={handleCloseRegisterModal} onRegister={handleRegister} />
           <Routes>
             <Route path="/" element={<HomePage token={token} />} />
             <Route path="/shoppinglist/:shoppingListId" element={<ShoppingList token={token} />} />

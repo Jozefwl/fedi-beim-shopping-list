@@ -2,9 +2,7 @@
     display: flex;
     margin: 10px;
     justify-content: center;
-
 }
-
 
 .editIcon,
 .checkIcon,
@@ -40,6 +38,9 @@
     touch-action: manipulation;
     vertical-align: baseline;
     width: auto;
+    @media (max-width: 768px) {
+        flex-direction: row; /* Stack buttons horizontally on smaller screens */
+      }
 }
 
 .button-default:hover,
@@ -86,4 +87,14 @@
 
     .return {
         text-align: left;
+    }
+
+    @media (max-width: 768px) {
+        .button-group {
+        flex-direction: column;
+        margin: 20px;
+      }
+      .button-default {
+        margin-top: 10px; 
+      }
     }
