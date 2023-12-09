@@ -50,8 +50,10 @@ const EditPermissionsModal = ({ shoppingList, onClose }) => {
   };
   
   const handleSaveChanges = async () => {
+    const updatedUsernames = users.map((userId) => usernames[userId] || userId);
+    
     const updatedShoppingList = {
-      sharedTo: users,
+      sharedTo: updatedUsernames,
       isPublic: isPublic
     };
   

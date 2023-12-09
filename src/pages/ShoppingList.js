@@ -90,15 +90,6 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
   // each item in the shopping list has its own unique ID
   const items = shoppingList.items;
 
-  const [visibleCategories, setVisibleCategories] = useState([items[0].category]);
-
-  const [checkedItems, setCheckedItems] = useState(
-    items.reduce((acc, item) => {
-      acc[item._id] = item.checked; // each item has a 'checked' property
-      return acc;
-    }, {})
-  );
-
   const [filter, setFilter] = useState("unchecked");
 
   const toggleCategoryVisibility = (category) => {
@@ -140,6 +131,16 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
       }
     }
   };
+
+  const initialCategory = items.length > 0 ? [items[0].category] : [];
+  const [visibleCategories, setVisibleCategories] = useState(initialCategory);
+
+  const [checkedItems, setCheckedItems] = useState(
+    items.reduce((acc, item) => {
+      acc[item._id] = item.checked; // each item has a 'checked' property
+      return acc;
+    }, {})
+  );
 
   const renderTableRows = () => {
     const categories = [...new Set(items.map((item) => item.category))];

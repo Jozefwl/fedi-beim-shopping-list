@@ -145,15 +145,13 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
     updateItem(itemId, (item) => ({ isEditing: false }));
   };
 
-  let newItemCounter = items.length;
-
   const handleItemAdd = () => {
-    newItemCounter += 1;
+    const newItemId = `new-${Date.now()}`;
     const newItem = {
-      id: `new-${newItemCounter}`, // Unique temporary identifier
+      _id: newItemId, // Unique temporary identifier
       name: "",
       category: "Other",
-      quantity: "",
+      quantity: 1,
       isEditing: true,
       checked: false,
     };
@@ -221,18 +219,15 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
     // Construct the request payload
     const payload = {
       shoppingListName: listName,
-      // Merge items with deletedItems
-      items: [...items, ...deletedItems].map(item => ({
-        ...item._id && { _id: item._id },
+      items: items.map((item) => ({
         name: item.name,
         category: item.category || 'Other',
         quantity: item.quantity,
-        checked: item.checked
-      })).filter(item => item.name),
-      sharedTo: shoppingList.sharedTo,
-      isPublic: shoppingList.isPublic
-    };    
-  
+        checked: item.checked,
+        ...(item._id && !item._id.startsWith('new-') && { _id: item._id }), // Include _id only if it exists and is not a temporary ID
+      }))
+    };
+    
     if (isCreation) {
       try {
         // Send the POST request
@@ -420,7 +415,15 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
       </table>
       <div className="button-group">
         <Button className="button-default" onClick={handleItemAdd}>Add Item</Button>
-        <Button className="button-default" onClick={handlePermissionsClick}>Edit Permissions</Button>
+        <Button className="button-default" id="editPermissions"
+  onClick={() => {
+    if (isCreation) {
+      alert('You can only edit permissions after creating the list');
+    } else {
+      handlePermissionsClick();
+    }
+  }}
+>Edit Permissions</Button>
         {!isCreation && (
           <Button className="button-default" id="deleteList" onClick={() => handleListDelete(shoppingListId)}>
             Delete List
