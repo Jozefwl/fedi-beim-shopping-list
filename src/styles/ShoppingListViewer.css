@@ -158,11 +158,10 @@ a {
 }
 
 @media (max-width: 1024px) {
-  .list-viewer {
+  .list-viewer,
+  .list-viewer-light {
     margin: 10px 3%; /* Adjusted for mobile view */
   }
-
-
 
   .list-navbar,
   .list-owner,

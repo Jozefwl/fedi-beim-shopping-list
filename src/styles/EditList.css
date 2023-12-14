@@ -39,7 +39,8 @@
     vertical-align: baseline;
     width: auto;
     @media (max-width: 768px) {
-        flex-direction: row; /* Stack buttons horizontally on smaller screens */
+        flex-direction: row;
+        margin-top: 10px; /* Stack buttons horizontally on smaller screens */
       }
 }
 
@@ -71,6 +72,7 @@
     width: auto;
     @media (max-width: 768px) {
         flex-direction: row; /* Stack buttons horizontally on smaller screens */
+        margin-top: 10px;
       }
 }
 
@@ -125,14 +127,14 @@
     }
 
     @media (max-width: 768px) {
-        .button-group {
+        .button-group, .table-light .button-group {
         flex-direction: column;
         margin: 20px;
       }
-      .button-default {
+      .button-default, .table-light .button-default {
         margin-top: 10px; 
       }
-      th, td {
+      .table-light th, .table-light td, th, td {
         font-size: 14px; /* Smaller font size for mobile */
         overflow: hidden; /* Allow overflow */
         white-space: normal; /* Allow text wrapping */

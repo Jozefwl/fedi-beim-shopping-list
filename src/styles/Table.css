@@ -226,7 +226,9 @@ td {
 
   
   .table-header-button,
-  .table-header-savechanges-button {
+  .table-header-savechanges-button,
+  .table-light .table-header-button,
+  .table-light .table-header-savechanges-button  {
     font-size: 18px;
     width: 80px;
     height: 55px;
@@ -241,12 +243,13 @@ td {
   }
 
 
-  .table-header {
+  .table-header, .table-light .table-header {
     margin-top: 100px;
   }
 
-  .table-header-text {
+  .table-light .table-header-text, .table-header-text-light, .table-header-text {
     font-size: 12px;
+    width: 100px;
   }
 
 }

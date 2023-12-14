@@ -120,7 +120,7 @@ const ListViewer = ({ token }) => {
 
     useEffect(() => {
         setSelectedFilters(userId ? ['mine'] : ['public']);
-    }, [userId]);
+    },[userId]);
 
     const options = [
         { value: 'public', label: 'Public' },
