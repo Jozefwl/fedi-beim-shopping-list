@@ -1,6 +1,13 @@
-.unauthorized{
-
-    text-align:center;
-    margin-top:10%;
+.unauthorized {
+    text-align: center;
+    margin-top: 10%;
     font-size: 48px;
-}
+    color: #fff;
+  }
+
+  .unauthorized-light {
+    text-align: center;
+    margin-top: 10%;
+    font-size: 48px;
+    color: #000000;
+  }

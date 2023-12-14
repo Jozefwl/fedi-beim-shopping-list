@@ -1,8 +1,19 @@
 body {
-  background-color: #636363; /* Grey background color */
-  color: #ffffff; /* White text color */
+  background-color: #000; 
+  color: #fff; 
   margin: 0;
   padding: 0;
   position: relative;
-  top: 10vh; /* Set the starting point 10% from the top */
+  top: 10vh;
+}
+
+.body-light {
+  background-color: #fffbf2;
+  color: #000000;
+}
+
+@media (max-width: 768px) {
+.UnderNavbar {
+  padding-top: 10%
+}
 }

@@ -1,8 +1,22 @@
 .navbar {
   width: 100%;
-  height: 60px; 
-  background: linear-gradient(to bottom, #333333, #929292);
-  color: white;
+  height: 10%;
+  background: linear-gradient(to bottom, #000, #444);
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-light {
+  width: 100%;
+  height: 10%;
+  background: linear-gradient(to bottom, #ffffff, #0076f5);
+  color: #000000;
   position: fixed;
   top: 0;
   left: 0;
@@ -54,6 +68,17 @@
   transition: font-size 0.2s ease-in-out;
 }
 
+.navbar-light .navbar-btn,
+.navbar-light .navbar-home {
+  background-color: transparent;
+  color: rgb(0, 0, 0);
+  border: none;
+  font-size: 24px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: font-size 0.2s ease-in-out;
+}
+
 .navbar-btn:hover,
 .navbar-home:hover {
   text-decoration: underline;
@@ -72,6 +97,19 @@
   border-radius: 5px;
 }
 
+.navbar-light .navbar-right .navbar-btn-login  {
+  background-color: transparent;
+  color: rgb(0, 0, 0);
+  border: none;
+  font-size: 24px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: font-size 0.2s ease-in-out;
+  background-color: #56d41c;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
 .navbar-right .navbar-btn-register {
   background-color: transparent;
   color: white;
@@ -85,6 +123,32 @@
   border-radius: 5px;
 }
 
+.navbar-right .navbar-theme-toggle-dark {
+  background-color: transparent;
+  color: white;
+  border: none;
+  font-size: 24px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: font-size 0.2s ease-in-out;
+  background-color: #030029;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.navbar-right .navbar-theme-toggle-light {
+  background-color: transparent;
+  color: rgb(0, 0, 0);
+  border: none;
+  font-size: 24px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: font-size 0.2s ease-in-out;
+  background-color: #0076f5;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
 .navbar-text {
   font-size: 24px;
   transition: font-size 0.2s ease-in-out;
@@ -94,6 +158,11 @@
 }
 
 @media (max-width: 768px) {
+
+  .page-content {
+    padding-top: 20%;
+  }
+
   .navbar-content {
     flex-direction: column;
     align-items: center;

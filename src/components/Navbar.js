@@ -1,12 +1,17 @@
 import React from "react";
 import "../styles/Navbar.css";
 import { useNavigate } from "react-router-dom";
+import { FaMoon, FaSun } from "react-icons/fa";
 
-const Navbar = ({ username, onLoginClick, onLogoutClick, onRegisterClick }) => {
+const Navbar = ({ username, onLoginClick, onLogoutClick, onRegisterClick, onThemeClick }) => {
   const navigate = useNavigate();
+  const appTheme = localStorage.getItem("appTheme") || "dark";
+  const selectedTheme = appTheme === 'dark' ? '' : '-light';
+
+  //{`button-default${selectedTheme}`}
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar${selectedTheme}`}>
       <div className="navbar-content">
 
         <div className="navbar-left">
@@ -23,6 +28,9 @@ const Navbar = ({ username, onLoginClick, onLogoutClick, onRegisterClick }) => {
         </div>
 
         <div className="navbar-right">
+        
+            {appTheme === "light" ? <button className="navbar-theme-toggle-light" onClick={onThemeClick}><FaSun /></button> : <button className="navbar-theme-toggle-dark" onClick={onThemeClick}><FaMoon /></button>}
+          
           {username ? (
             <button className="navbar-btn-login" onClick={onLogoutClick}>
               Logout

@@ -25,7 +25,7 @@ const DropdownCheckbox = ({ options, onSelectionChange }) => {
     useEffect(() => {
         onSelectionChange(defaultSelectedOptions);
     }, []); // Empty dependency array to run only on the component's first render
-
+   
     return (
         <div className="dropdown-checkbox">
             <button onClick={toggleDropdown}>Filter</button>
@@ -45,7 +45,6 @@ const DropdownCheckbox = ({ options, onSelectionChange }) => {
                 </div>
             )}
         </div>
-    );
-};
+    );} 
 
 export default DropdownCheckbox;

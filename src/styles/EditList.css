@@ -43,6 +43,37 @@
       }
 }
 
+.button-default-light {
+    align-items: center;
+    background-color: #000000;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: .25rem;
+    box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+    box-sizing: border-box;
+    color: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    display: inline-flex;
+    font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    justify-content: center;
+    line-height: 1.25;
+    margin-left: 10px;
+    min-height: 3rem;
+    padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+    position: relative;
+    text-decoration: none;
+    transition: all 250ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: baseline;
+    width: auto;
+    @media (max-width: 768px) {
+        flex-direction: row; /* Stack buttons horizontally on smaller screens */
+      }
+}
+
 .button-default:hover,
 .button-default:focus {
     border-color: rgba(0, 0, 0, 0.15);
@@ -68,6 +99,10 @@
 
 #deleteList{
     background-color: rgb(255, 151, 151);
+}
+
+#deleteList-light{
+    background-color: rgb(155, 0, 0);
 }
 
 .btn-square {
@@ -96,5 +131,11 @@
       }
       .button-default {
         margin-top: 10px; 
+      }
+      th, td {
+        font-size: 14px; /* Smaller font size for mobile */
+        overflow: hidden; /* Allow overflow */
+        white-space: normal; /* Allow text wrapping */
+        text-overflow: clip; /* Remove ellipsis */
       }
     }

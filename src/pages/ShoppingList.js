@@ -50,6 +50,8 @@ const ParentComponent = () => {
 
 
 const Table = ({ shoppingList, hreflink, canEdit }) => {
+  const appTheme = localStorage.getItem('appTheme') || "dark";
+  const selectedTheme = appTheme === 'dark' ? '' : '-light';
   const token = (localStorage.getItem('token') || null)
   const navigate = useNavigate();
   const handleUpdateList = async () => {
@@ -207,13 +209,13 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
 
   return (
     <>
-      <div className="table-header">
+      <div className={`table-header${selectedTheme}`}>
         <div className="header-content">
           <div className="tableName">
-            <p className="table-header-text">{shoppingList.shoppingListName}</p>
+            <p className={`table-header-text${selectedTheme}`}>{shoppingList.shoppingListName}</p>
           </div>
           {canEdit && (
-            <div className="header-buttons">
+            <div className={`header-buttons${selectedTheme}`}>
               <button className="table-header-savechanges-button" onClick={handleUpdateList}>
                 Save Changes
               </button>
@@ -234,7 +236,7 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
         </div>
       </div>
       {renderDeletePrompt()}
-      <table className="table">
+      <table className={`table${selectedTheme}`}>
         <tbody>{renderTableRows()}</tbody>
       </table>
     </>

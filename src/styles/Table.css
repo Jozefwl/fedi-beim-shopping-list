@@ -4,12 +4,21 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-color: #000;
 }
 
 table {
   margin-top: auto;
-  background-color: #3a3a3a; 
+  background-color: #000000; 
   border-collapse: collapse;
+  border-radius: 8px; /* Rounded corners */
+  overflow: hidden; 
+}
+
+.table-light {
+  margin-top: auto;
+  background-color: #dfd8d8; 
+  border-collapse: collapse;  
   border-radius: 8px; /* Rounded corners */
   overflow: hidden; 
 }
@@ -18,6 +27,16 @@ thead {
   display: block;
   background-color: #242424; 
   color: white;
+}
+
+.table-light thead {
+  background-color: #242424; 
+  color: black;
+}
+
+.table-light tr {
+  background-color: #ffffff; 
+  color: black;
 }
 
 tbody {
@@ -41,6 +60,17 @@ td {
   overflow: hidden;
   transition: font-size 0.2s ease-in-out;
 }
+
+.table-light th,
+.table-light td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #000000; 
+  font-size: 48px;
+  overflow: hidden;
+  transition: font-size 0.2s ease-in-out;
+}
+
 
 .expand-cell {
   padding: 10px;
@@ -129,10 +159,20 @@ td {
   border-radius: 4px;
 }
 
-.table-header {
+.table-header-text-light{
+  color:black;
+}
+
+.table-header{
   margin-top: 1%;
   height: 70px;
-  background-color: #343a40; 
+  background-color: #05001a; 
+}
+
+.table-header-light{
+  margin-top: 1%;
+  height: 70px;
+  background-color: #cccccc; 
 }
 
 .header-content {
@@ -176,7 +216,7 @@ td {
   td {
     font-size: 18px;
     overflow: hidden;
-    white-space: nowrap;
+    white-space: break-word;
     text-overflow: ellipsis;
   }
 
@@ -184,11 +224,20 @@ td {
     font-size: 24px;
   }
 
-  .table-header-dropdown,
-  .table-header-button {
+  
+  .table-header-button,
+  .table-header-savechanges-button {
     font-size: 18px;
-    width: 100px;
+    width: 80px;
     height: 55px;
+    margin: 2px;
+  }
+
+  .table-header-dropdown{
+    font-size: 12px;
+    width: 90px;
+    height: 55px;
+    margin: 2px;
   }
 
 
@@ -196,8 +245,8 @@ td {
     margin-top: 100px;
   }
 
-  p {
-    font-size: 18px;
+  .table-header-text {
+    font-size: 12px;
   }
 
 }

@@ -5,13 +5,22 @@
 }
 
 .dropdown-checkbox button {
-    background-color: #333; /* Dark background for the button */
-    color: #fff; /* Light text */
+    background-color: #000;
+    color: #fff;
     padding: 10px;
     border: none;
     cursor: pointer;
     border-radius: 4px;
-}
+  }
+
+  .dropdown-checkbox-light button {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
 
 .dropdown-checkbox button:hover {
     background-color: #444; /* Slightly lighter on hover */

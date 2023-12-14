@@ -19,6 +19,8 @@ const App = () => {
   const [token, setToken] = useState(localStorage.getItem('token') || false)
   const [loading, setLoading] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [appTheme, setAppTheme] = useState(localStorage.getItem("appTheme") || "dark");;
+  const selectedTheme = appTheme === 'dark' ? '' : '-light';
 
   const handleRegister = async (username, password) => {
     if (loading) {
@@ -69,7 +71,8 @@ const App = () => {
         // Save the token to local storage
         localStorage.setItem('username', username);
         localStorage.setItem('token', token);
-        // Update the username state
+        localStorage.setItem('loginTime', Date.now());
+        // Login time for token refresh
         setUsername(username);
         handleCloseModal();
         window.location.reload();
@@ -97,7 +100,8 @@ const App = () => {
   const handleLogout = () => {
     setUsername("");
     localStorage.removeItem('token');
-    localStorage.removeItem('username'); // Clear username from localStorage
+    localStorage.removeItem('username'); 
+    localStorage.removeItem('loginTime');
     window.location.reload();
   };
 
@@ -118,6 +122,26 @@ const App = () => {
     setShowRegisterModal(false);
   };  
 
+  const handleChangeTheme = () => {
+    const themeSelection = appTheme === "light" ? "dark" : "light";
+    localStorage.setItem("appTheme", themeSelection); // Correctly use localStorage.setItem with key and value
+    setAppTheme(themeSelection); // Update the appTheme state
+  }
+    // Effect to apply the theme to the body tag
+    useEffect(() => {
+      // Apply the 'body-light' class to the body tag if the theme is light
+      if (appTheme === "light") {
+        document.body.classList.add("body-light");
+      } else {
+        document.body.classList.remove("body-light");
+      }
+  
+      // Clean up: Remove the class when the component unmounts
+      return () => {
+        document.body.classList.remove("body-light");
+      };
+    }, [appTheme]); // Run the effect when appTheme changes
+
   // userId for userContext
   let userId;
   if (token) {
@@ -134,7 +158,7 @@ const refreshToken = async () => {
     if (response.status === 200) {
       const newToken = response.data.newToken;
       localStorage.setItem('token', newToken);
-      setToken(newToken);
+      localStorage.setItem('loginTime', Date.now()); // Update login time after refreshing token
     }
   } catch (error) {
     console.error('Token refresh failed:', error);
@@ -143,12 +167,12 @@ const refreshToken = async () => {
 
 useEffect(() => {
   const checkTokenExpiry = () => {
-    if (token) {
-      const decoded = jwtDecode(token);
-      const currentTime = Date.now() / 1000; // Unix time
-      const timeLeft = decoded.exp - currentTime; 
+    const loginTime = localStorage.getItem('loginTime');
+    if (token && loginTime) {
+      const currentTime = Date.now(); 
+      const timeElapsed = currentTime - parseInt(loginTime); // Time elapsed since login in milliseconds
 
-      if (timeLeft < 60) { // Less than 1 minute remaining
+      if (timeElapsed >= 3300000) { // 3300000 milliseconds = 55 minutes
         refreshToken();
       }
     }
@@ -157,7 +181,7 @@ useEffect(() => {
   const interval = setInterval(checkTokenExpiry, 60000); // Check every minute
 
   return () => clearInterval(interval);
-});
+}, [token]);
 
   return (
     <Router>
@@ -168,7 +192,10 @@ useEffect(() => {
             onLoginClick={handleShowLoginModal}
             onLogoutClick={handleLogout}
             onRegisterClick={handleShowRegisterModal}
+            onThemeClick={handleChangeTheme}
+            appTheme={appTheme}
           />
+          <div className="UnderNavbar">
           <LoginModal isOpen={showModal} onRequestClose={handleCloseModal} onLogin={handleLogin} />
           <RegisterModal isOpen={showRegisterModal} onRequestClose={handleCloseRegisterModal} onRegister={handleRegister} />
           <Routes>
@@ -178,7 +205,7 @@ useEffect(() => {
             <Route path="/create/:isCreation" element={<EditList token={token} />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-
+          </div>
         </div>
       </UserContext.Provider>
     </Router>

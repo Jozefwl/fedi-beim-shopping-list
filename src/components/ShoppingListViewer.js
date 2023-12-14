@@ -13,6 +13,8 @@ const ListViewer = ({ token }) => {
     const [userId, setUserId] = useState(null);
     const [usernames, setUsernames] = useState({});
     const [searchQuery, setSearchQuery] = useState('');
+    const appTheme = localStorage.getItem("appTheme") || "dark";
+    const selectedTheme = appTheme === 'dark' ? '' : '-light';
 
 
     useEffect(() => {
@@ -169,8 +171,8 @@ const ListViewer = ({ token }) => {
     };
 
     return (
-        <div className="list-viewer">
-            <div className="list-navbar">
+        <div className={`list-viewer${selectedTheme}`}>
+            <div className={`list-navbar${selectedTheme}`}>
                 <div className="filter-text">
                     {getFilterLabels(selectedFilters).join(", ")} Shopping Lists
                 </div>
@@ -189,7 +191,7 @@ const ListViewer = ({ token }) => {
                     const firstTwoItems = list.items ? list.items.slice(0, 2) : [];
 
                     return (
-                        <div key={list._id} className="list-tile">
+                        <div key={list._id} className={`list-tile${selectedTheme}`}>
                             <div className="tile-header">
                                 <span className="list-name">{list.shoppingListName}</span>
                                 <span className="item-count">{totalItems} items</span>
@@ -205,7 +207,7 @@ const ListViewer = ({ token }) => {
                             <div className="list-owner">
                                 Owned by: {usernames[list.ownerId] || "Loading..."}
                             </div>
-                            <Link to={"/shoppinglist/" + list._id}><Button className="view-button">View</Button></Link>
+                            <Link to={"/shoppinglist/" + list._id}><Button className={`view-button${selectedTheme}`}>View</Button></Link>
                         </div>
                     );
                 })}

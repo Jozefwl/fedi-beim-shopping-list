@@ -38,25 +38,25 @@ const EditPermissionsModal = ({ shoppingList, onClose }) => {
     }
   };
 
-    const handleRemoveUser = (user) => {
-      if (user !== shoppingList.ownerId) {
-        setUsers(users.filter((u) => u !== user));
-      }
+  const handleRemoveUser = (user) => {
+    if (user !== shoppingList.ownerId) {
+      setUsers(users.filter((u) => u !== user));
+    }
   };
 
   const handleVisibilityChange = (e) => {
     console.log("New visibility selected:", e.target.value);
     setIsPublic(e.target.value === "Public");
   };
-  
+
   const handleSaveChanges = async () => {
     const updatedUsernames = users.map((userId) => usernames[userId] || userId);
-    
+
     const updatedShoppingList = {
       sharedTo: updatedUsernames,
       isPublic: isPublic
     };
-  
+
     try {
       const token = localStorage.getItem('token');
       const response = await axios.put(`http://194.182.91.65:3000/updateList/${shoppingList._id}`, updatedShoppingList, {
@@ -70,7 +70,11 @@ const EditPermissionsModal = ({ shoppingList, onClose }) => {
       onClose();
       window.location.reload();
     } catch (error) {
-      console.error('Error updating shopping list:', error);
+      // Check if the error response has data and a message
+      const errorMessage = error.response && error.response.data && error.response.data.message
+        ? error.response.data.message
+        : 'Error updating shopping list. Please try again later.';
+      alert(errorMessage);
     }
   };
 

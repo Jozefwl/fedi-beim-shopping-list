@@ -104,6 +104,8 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const categories = ['Groceries', 'Beverages', 'Supplies', 'Belongings', 'Other'];
   const [deletedItems, setDeletedItems] = useState([]);
+  const appTheme = localStorage.getItem('appTheme') || "dark";
+  const selectedTheme = appTheme === 'dark' ? '' : '-light';
 
   const updateItem = (itemId, updateCallback) => {
     setItems((prevItems) =>
@@ -122,15 +124,24 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
   };
 
   const handleItemDelete = (itemId) => {
-    
-    console.log("Deleting item with _id:", itemId);
-    setItems((prevItems) => prevItems.filter(item => item._id !== itemId));
+    // Update the quantity of the item to 0
+    if (isCreation) {
+      // If creating a new list, remove the item from the array
+      setItems(prevItems => prevItems.filter(item => item._id !== itemId));
+    } else {
+      if (itemId.toString().startsWith('new-')){
+        setItems(prevItems => prevItems.filter(item => item._id !== itemId));
+      } else {
+        updateItem(itemId, item => ({ ...item, quantity: 0 }));
+      }
+      // If editing an existing list, set quantity to 0      
+    }
+  
+    // Add the item to the deletedItems array
     setDeletedItems((prevDeletedItems) => {
-      // Find the item that is being deleted
       const deletedItem = items.find(item => item._id === itemId);
-      // If the item is an existing item in the database, mark it as deleted
-      if (deletedItem && deletedItem._id) {
-        return [...prevDeletedItems, { ...deletedItem, quantity: 0 }];
+      if (deletedItem && !prevDeletedItems.some(item => item._id === itemId)) {
+        return [...prevDeletedItems, deletedItem];
       }
       return prevDeletedItems;
     });
@@ -142,8 +153,18 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
   };
 
   const handleItemEditFinish = (itemId) => {
-    updateItem(itemId, (item) => ({ isEditing: false }));
+    const itemIndex = items.findIndex(item => item._id === itemId);
+    if (itemIndex !== -1) {
+      const item = items[itemIndex];
+      // Check if name is empty or quantity is invalid
+      if (!item.name.trim() || isNaN(item.quantity) || item.quantity <= 0) {
+        alert(`Please enter a valid name and quantity for item ${itemIndex + 1}.`);
+        return;
+      }
+      updateItem(itemId, (item) => ({ isEditing: false }));
+    }
   };
+  
 
   const handleItemAdd = () => {
     const newItemId = `new-${Date.now()}`;
@@ -165,28 +186,25 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
     }
   };
 
-
-  const handleListDelete = async (shoppingListId) => {
-
+  const handleListDelete = async () => {
     if (window.confirm("Are you sure you want to delete this list?")) {
       try {
         const token = localStorage.getItem('token'); // Get the auth token
-        const response = await axios.delete(`http://194.182.91.65:3000/deleteList/${shoppingListId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          }
+        const authHeader = token ? `Bearer ${token}` : 'Bearer ';
+        await axios.delete(`http://194.182.91.65:3000/deleteList/${shoppingList._id}`, {
+          headers: { Authorization: authHeader }
         });
-
-        if (response.status === 200) {
-          console.log('List deleted successfully');
-          window.location.href = '/'; // Redirect to homepage with full page reload
-        } else {
-          console.error('Error deleting list:', response);
-          // Handle unsuccessful deletion here (show error message, etc.)
-        }
+  
+        window.alert('List deleted successfully.');
+        window.location.href = '/';
+        window.location.reload();
       } catch (error) {
-        console.error('Error while deleting the list:', error);
-        // Handle error while making the request (show error message, etc.)
+        console.error("Error deleting list", error);
+        if (error.response && error.response.status === 403) {
+          window.alert('Error deleting the list: You are not the owner.');
+        } else {
+          window.alert('Error deleting the list.');
+        }
       }
     }
   };
@@ -206,7 +224,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
           if (!item.name.trim()) {
             alert(`Item ${index + 1} is missing a name.`);
             return false;
-          } if (!item.quantity || item.quantity <= 0) {
+          } if (isNaN(item.quantity) || item.quantity<0) {
             alert(`Item ${index + 1} has an invalid quantity.`);
             return false;
           }
@@ -242,7 +260,6 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
         // Handle the response
         console.log('List created:', response.data);
         window.location.href = `/shoppingList/${response.data.list._id}`;
-        // You might want to navigate to the new list or update the state
       } catch (error) {
         console.error('Error creating list', error);
         // Handle error (show error message to user, etc.)
@@ -337,7 +354,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
           <FaEdit />
         </Button>
       </h1>
-      <table>
+      <table className={`table${selectedTheme}`}>
         <thead>
           <tr>
             <th>Name</th>
@@ -348,7 +365,9 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
           </tr>
         </thead>
         <tbody>
-          {items.map((item) => (
+        {items
+        .filter(item => item.isEditing || item.quantity > 0)
+        .map((item) => (
             <tr key={item._id || item.id}>
               <td>
                 {item.isEditing ? (
@@ -386,7 +405,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
                     type="number"
                     value={item.quantity}
                     onChange={(e) =>
-                      handleItemChange(item._id, "quantity", e.target.value)
+                      handleItemChange(item._id, "quantity", parseInt(e.target.value))
                     }
                   />
                 ) : (
@@ -414,8 +433,8 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
         </tbody>
       </table>
       <div className="button-group">
-        <Button className="button-default" onClick={handleItemAdd}>Add Item</Button>
-        <Button className="button-default" id="editPermissions"
+        <Button className={`button-default${selectedTheme}`} onClick={handleItemAdd}>Add Item</Button>
+        <Button className={`button-default${selectedTheme}`} id="editPermissions"
   onClick={() => {
     if (isCreation) {
       alert('You can only edit permissions after creating the list');
@@ -425,13 +444,13 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
   }}
 >Edit Permissions</Button>
         {!isCreation && (
-          <Button className="button-default" id="deleteList" onClick={() => handleListDelete(shoppingListId)}>
+          <Button className={`button-default${selectedTheme}`} id={`deleteList${selectedTheme}`} onClick={() => handleListDelete(shoppingListId)}>
             Delete List
           </Button>
         )}
-        <Button className="button-default" onClick={() => handleListArchive(shoppingList)}>Archive List</Button>
+        <Button className={`button-default${selectedTheme}`} onClick={() => handleListArchive(shoppingList)}>Archive List</Button>
         <Button
-          className="button-default"
+          className={`button-default${selectedTheme}`}
           onClick={() => {
             if (window.confirm("Are you sure you want to finish changes?")) {
               if (!validateInputs()) {
