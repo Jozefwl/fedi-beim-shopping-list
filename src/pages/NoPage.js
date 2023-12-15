@@ -1,7 +1,12 @@
-export default function noPage(){
-    return(
-    <>
-    <h1>This page does not exist, 404.</h1>
-    </>
-    )
+import React from "react";
+import { useTranslation } from "react-i18next";
+
+export default function NoPage() {
+    const { t, i18n } = useTranslation("global");
+
+    return (
+        <>
+            <h1>{t("errors.pageNotFound")}</h1>
+        </>
+    );
 }

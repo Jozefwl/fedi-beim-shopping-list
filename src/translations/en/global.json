@@ -1,0 +1,103 @@
+{
+    "homepage": {
+        "welcome": "Welcome to the fedi-beim shopping list!"
+    },
+    "appjs": {
+        "processingWait": "Processing your request, please wait.",
+        "registerSuccess": "Registration successful. You can now log in.",
+        "loggingInWait": "Logging in, please wait."
+    },
+    "listViewer": {
+        "viewBtn": "View",
+        "newList": "Create Shopping List",
+        "filterBtn": "Filter",
+        "public": "Public",
+        "mine": "My",
+        "archived": "Archived",
+        "shared": "Shared with me",
+        "apply": "Apply",
+        "search": "Search...",
+        "expandBtn": "Expand",
+        "checked": "Checked",
+        "unchecked": "Unchecked",
+        "loadingLists": "Loading shopping lists...",
+        "shoppingLists": "Shopping Lists",
+        "items": "items",
+        "ownedBy": "Owner:"
+    },
+    "shoppingList": {
+        "updateConfirmation": "Are you sure you want to update the list?",
+        "updateSuccess": "List successfully updated.",
+        "updateFail": "Error updating the list.",
+        "allChecked": "All items are checked.",
+        "deleteQuestion": "Delete list?",
+        "itemName": "Name",
+        "itemQty": "Quantity",
+        "itemCtg": "Category",
+        "categories": {
+            "Groceries": "Groceries",
+            "Beverages": "Beverages",
+            "Supplies": "Supplies",
+            "Belongings": "Personal Belongings",
+            "Other": "Other"
+        },
+        "expand": "Expand",
+        "edit": "Edit",
+        "saveChanges": "Save Changes",
+        "delete": "Delete"
+    },
+    "listEditor": {
+        "addItem": "Add Item",
+        "editPerms": "Edit Permissions",
+        "archiveList": "Archive List",
+        "deleteList": "Delete List",
+        "finishChanges": "Finish Changes",
+        "deleteConfirmation": "Are you sure you want to delete this list?",
+        "deleteSuccess": "List successfully deleted.",
+        "finishChangesConfirmation": "Are you sure you want to finish changes?",
+        "archiveConfirmation": "Are you sure you want to archive this list?",
+        "unarchiveConfirmation": "The list is already archived, do you want to unarchive it?",
+        "unarchiveSuccess": "List successfully unarchived.",
+        "archiveSuccess": "List successfully archived.",
+        "enterNewName": "Enter new name for the shopping list:"
+    },
+    "navbar": {
+        "plsLogin": "Please log in",
+        "welcome": "Welcome",
+        "login": "Log In",
+        "register": "Register",
+        "home": "Home",
+        "logout": "Log Out"
+    },
+    "errors": {
+        "pageNotFound": "This page does not exist, 404.",
+        "notFound": "Not found",
+        "errorFetching": "Error fetching shopping list",
+        "unauthorizedEdit": "You do not have permission to edit this list.",
+        "errorLoading": "Error loading shopping list.",
+        "listNotFound": "Shopping list not found.",
+        "loading": "Loading...",
+        "deleteNotOwner": "Error deleting the list: You are not the owner.",
+        "deleteError": "Error deleting the list.",
+        "unauthorizedView": "You do not have permission to view this shopping list.",
+        "listsUnavailable": "No shopping lists available.",
+        "invalidItemParams": "Please enter correct name and quantity for item ",
+        "permsAfterCreation": "You can edit permissions only after creating the list.",
+        "errorArchiving": "Error archiving the list.",
+        "errorUnarchiving": "Error unarchiving the list.",
+        "errorUpdating": "Error updating the list.",
+        "noListName": "The shopping list must have a name.",
+        "noListItems": "The shopping list must have at least one item.",
+        "itemBegin": "Item",
+        "itemNoName": "is missing a name.",
+        "itemNoQty": "has an invalid quantity.",
+        "errorNameTooLong": "The name of the shopping list must be less than 128 characters",
+        "errorWordTooLong": "A word in the shopping list cannot have more than 20 characters",
+        "usernameExists": "Username already exists, please choose another.",
+        "serverError": "Server error, please try again later.",
+        "registerFailed": "Registration failed, please try again.",
+        "loginWrongNamePass": "Login failed, please check the name and password.",
+        "wrongPassword": "Unauthorized: wrong name or password.",
+        "pwNotMatch": "Passwords do not match!"
+    }
+}

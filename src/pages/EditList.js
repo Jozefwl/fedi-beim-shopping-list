@@ -8,6 +8,13 @@ import EditPermissionsModal from "../components/EditPermissionsModal";
 import "../styles/ErrorMsg.css";
 import "../styles/EditList.css";
 
+//Translation
+import { useTranslation } from "react-i18next";
+// const [t, i18n] = useTranslation("global")
+// shoppingList, listViewer, listEditor, navbar
+// {t("location.access")}
+//-----
+
 const ParentComponent = () => {
   const { userId } = useContext(UserContext);
   const { shoppingListId, isCreation } = useParams();
@@ -15,6 +22,7 @@ const ParentComponent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [t, i18n] = useTranslation("global")
 
   useEffect(() => {
     const fetchShoppingList = async () => {
@@ -51,7 +59,7 @@ const ParentComponent = () => {
             setIsAuthorized(false);
           }
         } catch (error) {
-          console.error("Error fetching shopping list", error);
+          console.error(t("errors.errorFetching"), error);
           setError(error);
         } finally {
           setLoading(false);
@@ -78,14 +86,14 @@ const ParentComponent = () => {
 
 
   if (!isAuthorized || isCreation) {
-    return <div className="unauthorized">You are not authorized to edit this list.</div>;
+    return <div className="unauthorized">{t("errors.unauthorizedEdit")}</div>;
   }
 
 
-  if (loading) return <div className="unauthorized">Loading...</div>;
-  if (!userId) return <div className="unauthorized">Please Log In.</div>;
-  if (error) return <div className="unauthorized">Error loading shopping list: {error.message}</div>;
-  if (!shoppingList) return <div className="unauthorized">Shopping list not found.</div>;
+  if (loading) return <div className="unauthorized">{t("errors.loading")}</div>;
+  if (!userId) return <div className="unauthorized">{t("navbar.plsLogin")}</div>;
+  if (error) return <div className="unauthorized">{t("errors.errorLoading")} {error.message}</div>;
+  if (!shoppingList) return <div className="unauthorized">{t("errors.listNotFound")}</div>;
 
   return (
     <EditList
@@ -106,6 +114,14 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
   const [deletedItems, setDeletedItems] = useState([]);
   const appTheme = localStorage.getItem('appTheme') || "dark";
   const selectedTheme = appTheme === 'dark' ? '' : '-light';
+  const [t, i18n] = useTranslation("global")
+
+
+  // Translated categories for display
+  const translatedCategories = categories.map(category => ({
+    label: t(`shoppingList.categories.${category}`), // Translated label
+    value: category // Internal value
+  }));
 
   const updateItem = (itemId, updateCallback) => {
     setItems((prevItems) =>
@@ -129,14 +145,14 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
       // If creating a new list, remove the item from the array
       setItems(prevItems => prevItems.filter(item => item._id !== itemId));
     } else {
-      if (itemId.toString().startsWith('new-')){
+      if (itemId.toString().startsWith('new-')) {
         setItems(prevItems => prevItems.filter(item => item._id !== itemId));
       } else {
         updateItem(itemId, item => ({ ...item, quantity: 0 }));
       }
       // If editing an existing list, set quantity to 0      
     }
-  
+
     // Add the item to the deletedItems array
     setDeletedItems((prevDeletedItems) => {
       const deletedItem = items.find(item => item._id === itemId);
@@ -146,8 +162,8 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
       return prevDeletedItems;
     });
   };
-  
- 
+
+
   const handleItemEditToggle = (itemId) => {
     updateItem(itemId, (item) => ({ isEditing: !item.isEditing }));
   };
@@ -158,13 +174,13 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
       const item = items[itemIndex];
       // Check if name is empty or quantity is invalid
       if (!item.name.trim() || isNaN(item.quantity) || item.quantity <= 0) {
-        alert(`Please enter a valid name and quantity for item ${itemIndex + 1}.`);
+        alert(t("errors.invalidItemParams")+`${itemIndex + 1}.`);
         return;
       }
       updateItem(itemId, (item) => ({ isEditing: false }));
     }
   };
-  
+
 
   const handleItemAdd = () => {
     const newItemId = `new-${Date.now()}`;
@@ -180,30 +196,46 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
   };
 
   const handleListNameChange = () => {
-    const newName = prompt("Enter new shopping list name:", listName);
+    const newName = prompt(t("listEditor.enterNewName"), listName);
+  
     if (newName !== null) {
+      // Check if name is longer than 128 characters
+      if (newName.length > 128) {
+        alert(t("errors.errorNameTooLong"));
+        return;
+      }  
+      // check if word is longer than 20 characters
+      const words = newName.split(/\s+/); // Split by any whitespace
+      const wordTooLong = words.some(word => word.length > 20);
+  
+      if (wordTooLong) {
+        alert(t("errors.errorWordTooLong"));
+        return;
+      }
+
       setListName(newName);
     }
   };
+  
 
   const handleListDelete = async () => {
-    if (window.confirm("Are you sure you want to delete this list?")) {
+    if (window.confirm(t("listEditor.deleteConfirmation"))) {
       try {
         const token = localStorage.getItem('token'); // Get the auth token
         const authHeader = token ? `Bearer ${token}` : 'Bearer ';
         await axios.delete(`http://194.182.91.65:3000/deleteList/${shoppingList._id}`, {
           headers: { Authorization: authHeader }
         });
-  
-        window.alert('List deleted successfully.');
+
+        window.alert(t("listEditor.deleteSuccess"));
         window.location.href = '/';
         window.location.reload();
       } catch (error) {
         console.error("Error deleting list", error);
         if (error.response && error.response.status === 403) {
-          window.alert('Error deleting the list: You are not the owner.');
+          window.alert(t("errors.deleteNotOwner"));
         } else {
-          window.alert('Error deleting the list.');
+          window.alert(t("errors.deleteError"));
         }
       }
     }
@@ -211,21 +243,24 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
 
 
   const validateInputs = () => {
+    let alertMsg = "";
     if (!listName.trim()) {
-      alert("Shopping list name is required.");
+      alert(t("errors.noListName"));
       return false;
     } else
 
       if (items.length === 0) {
-        alert("Shopping list must have at least one item.");
+        alert(t("errors.noListItems"));
         return false;
       } else {
         items.forEach((item, index) => {
           if (!item.name.trim()) {
-            alert(`Item ${index + 1} is missing a name.`);
+            alertMsg = `${t("errors.itemBegin")} ${index+1} ${t("errors.itemNoName")}`;
+            alert(alertMsg);
             return false;
-          } if (isNaN(item.quantity) || item.quantity<0) {
-            alert(`Item ${index + 1} has an invalid quantity.`);
+          } if (isNaN(item.quantity) || item.quantity < 0) {
+            alertMsg = `${t("errors.itemBegin")} ${index+1} ${t("errors.itemNoQty")}`;
+            alert(alertMsg);
             return false;
           }
         });
@@ -245,7 +280,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
         ...(item._id && !item._id.startsWith('new-') && { _id: item._id }), // Include _id only if it exists and is not a temporary ID
       }))
     };
-    
+
     if (isCreation) {
       try {
         // Send the POST request
@@ -281,7 +316,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
         window.location.href = `/shoppingList/${response.data._id}`
         // Additional logic to handle the updated list (e.g., updating UI, redirecting)
       } catch (error) {
-        console.error('Error updating list', error);
+        console.error(t("errors.errorUpdating"), error);
         // Error handling logic
       }
     }
@@ -290,30 +325,31 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
   const handleListArchive = async (shoppingList) => {
     const shoppingListId = shoppingList._id;
     if (shoppingList.isArchived) {
-      if (window.confirm("List is already archived, do you want to unarchive the list?")) {
-      try {
-        const token = localStorage.getItem('token'); // Get the auth token
-        const header = {
-          headers: {
-            'Authorization': `Bearer ${token}`,
+      if (window.confirm(t("listEditor.unarchiveConfirmation"))) {
+        try {
+          const token = localStorage.getItem('token'); // Get the auth token
+          const header = {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            }
+          };
+          const response = await axios.put(`http://194.182.91.65:3000/updateList/${shoppingListId}`, {
+            isArchived: false
+          }, header);
+
+          if (response.status === 200) {
+            console.log(t("listEditor.unarchiveSuccess"));
+            window.location.href = '/';
+          } else {
+            console.error(t("errors.errorUnarchiving"), response);
           }
-        };
-        const response = await axios.put(`http://194.182.91.65:3000/updateList/${shoppingListId}`, {
-          isArchived: false
-        }, header);
-  
-        if (response.status === 200) {
-          console.log('List un-archived successfully');
-          window.location.href = '/'; 
-        } else {
-          console.error('Error un-archiving list:', response);
+        } catch (error) {
+          console.error(t("errors.errorUnarchiving"), error);
         }
-      } catch (error) {
-        console.error('Error while un-archiving the list:', error);
+
       }
-      
-    } } else {
-      if (window.confirm("Are you sure you want to archive this list?")) {
+    } else {
+      if (window.confirm(t("listEditor.archiveConfirmation"))) {
         try {
           const token = localStorage.getItem('token'); // Get the auth token
           const header = {
@@ -324,20 +360,20 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
           const response = await axios.put(`http://194.182.91.65:3000/updateList/${shoppingListId}`, {
             isArchived: true
           }, header);
-    
+
           if (response.status === 200) {
-            console.log('List archived successfully');
-            window.location.href = '/'; 
+            console.log(t("listEditor.archiveSuccess"));
+            window.location.href = '/';
           } else {
-            console.error('Error archiving list:', response);
+            console.error(t("errors.errorArchiving"), response);
           }
         } catch (error) {
-          console.error('Error while archiving the list:', error);
+          console.error(t("errors.errorArchiving"), error);
         }
       }
-    }    
+    }
   };
-  
+
   const handlePermissionsClick = () => {
     setShowPermissionsModal(true);
   };
@@ -348,7 +384,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
 
   return (
     <div>
-      <h1>
+      <h1 className="header-name-text">
         {listName}{" "}
         <Button className="btn-square" onClick={handleListNameChange}>
           <FaEdit />
@@ -357,102 +393,104 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
       <table className={`table${selectedTheme}`}>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Quantity</th>
-            <th>Edit</th>
-            <th>Delete</th>
+            <th>{t("shoppingList.itemName")}</th>
+            <th>{t("shoppingList.itemCtg")}</th>
+            <th>{t("shoppingList.itemQty")}</th>
+            <th>{t("shoppingList.edit")}</th>
+            <th>{t("shoppingList.delete")}</th>
           </tr>
         </thead>
         <tbody>
-        {items
-        .filter(item => item.isEditing || item.quantity > 0)
-        .map((item) => (
-            <tr key={item._id || item.id}>
-              <td>
-                {item.isEditing ? (
-                  <input
-                    className="inputbox"
-                    type="text"
-                    value={item.name}
-                    onChange={(e) =>
-                      handleItemChange(item._id, "name", e.target.value)
-                    }
-                  />
-                ) : (
-                  item.name
-                )}
-              </td>
-              <td>
-                {item.isEditing ? (
-                  <select
-                    className="inputbox"
-                    value={item.category}
-                    onChange={(e) => handleCategoryChange(item._id, e.target.value)}
-                  >
-                    {categories.map(category => (
-                      <option key={category} value={category}>{category}</option>
-                    ))}
-                  </select>
-                ) : (
-                  item.category
-                )}
-              </td>
-              <td>
-                {item.isEditing ? (
-                  <input
-                    className="inputbox"
-                    type="number"
-                    value={item.quantity}
-                    onChange={(e) =>
-                      handleItemChange(item._id, "quantity", parseInt(e.target.value))
-                    }
-                  />
-                ) : (
-                  item.quantity
-                )}
-              </td>
-              <td>
-                {item.isEditing ? (
-                  <Button className="btn-square" onClick={() => handleItemEditFinish(item._id)}>
-                    <FaCheck />
+          {items
+            .filter(item => item.isEditing || item.quantity > 0)
+            .map((item) => (
+              <tr key={item._id || item.id}>
+                <td>
+                  {item.isEditing ? (
+                    <input
+                      className="inputbox"
+                      type="text"
+                      value={item.name}
+                      onChange={(e) =>
+                        handleItemChange(item._id, "name", e.target.value)
+                      }
+                    />
+                  ) : (
+                    item.name
+                  )}
+                </td>
+                <td>
+                  {item.isEditing ? (
+                    <select
+                      className="inputbox"
+                      value={item.category}
+                      onChange={(e) => handleCategoryChange(item._id, e.target.value)}
+                    >
+                      {translatedCategories.map(category => (
+                        <option key={category.value} value={category.value}>
+                          {category.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    item.category
+                  )}
+                </td>
+                <td>
+                  {item.isEditing ? (
+                    <input
+                      className="inputbox"
+                      type="number"
+                      value={item.quantity}
+                      onChange={(e) =>
+                        handleItemChange(item._id, "quantity", parseInt(e.target.value))
+                      }
+                    />
+                  ) : (
+                    item.quantity
+                  )}
+                </td>
+                <td>
+                  {item.isEditing ? (
+                    <Button className="btn-square" onClick={() => handleItemEditFinish(item._id)}>
+                      <FaCheck />
+                    </Button>
+                  ) : (
+                    <Button className="btn-square" onClick={() => handleItemEditToggle(item._id)}>
+                      <FaEdit />
+                    </Button>
+                  )}
+                </td>
+                <td>
+                  <Button className="btn-square" onClick={() => handleItemDelete(item._id)}>
+                    <FaTrash />
                   </Button>
-                ) : (
-                  <Button className="btn-square" onClick={() => handleItemEditToggle(item._id)}>
-                    <FaEdit />
-                  </Button>
-                )}
-              </td>
-              <td>
-                <Button className="btn-square" onClick={() => handleItemDelete(item._id)}>
-                  <FaTrash />
-                </Button>
-              </td>
-            </tr>
-          ))}
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
       <div className="button-group">
-        <Button className={`button-default${selectedTheme}`} onClick={handleItemAdd}>Add Item</Button>
+        <Button className={`button-default${selectedTheme}`} onClick={handleItemAdd}>{t("listEditor.addItem")}</Button>
         <Button className={`button-default${selectedTheme}`} id="editPermissions"
-  onClick={() => {
-    if (isCreation) {
-      alert('You can only edit permissions after creating the list');
-    } else {
-      handlePermissionsClick();
-    }
-  }}
->Edit Permissions</Button>
+          onClick={() => {
+            if (isCreation) {
+              alert(t("errors.permsAfterCreation"));
+            } else {
+              handlePermissionsClick();
+            }
+          }}
+        >{t("listEditor.editPerms")}</Button>
         {!isCreation && (
           <Button className={`button-default${selectedTheme}`} id={`deleteList${selectedTheme}`} onClick={() => handleListDelete(shoppingListId)}>
-            Delete List
+            {t("listEditor.deleteList")}
           </Button>
         )}
-        <Button className={`button-default${selectedTheme}`} onClick={() => handleListArchive(shoppingList)}>Archive List</Button>
+        <Button className={`button-default${selectedTheme}`} onClick={() => handleListArchive(shoppingList)}>{t("listEditor.archiveList")}</Button>
         <Button
           className={`button-default${selectedTheme}`}
           onClick={() => {
-            if (window.confirm("Are you sure you want to finish changes?")) {
+            if (window.confirm(t("listEditor.finishChangesConfirmation"))) {
               if (!validateInputs()) {
                 // hihi
               } else {
@@ -460,7 +498,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
               }
             }
           }}
-        >Finish Changes</Button>
+        >{t("listEditor.finishChanges")}</Button>
       </div>
       {showPermissionsModal && (
         <EditPermissionsModal

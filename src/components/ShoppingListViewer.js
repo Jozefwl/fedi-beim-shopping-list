@@ -5,8 +5,10 @@ import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import DropdownCheckbox from "./DropdownCheckbox";
 import { jwtDecode } from 'jwt-decode';
+import { useTranslation } from "react-i18next";
 
 const ListViewer = ({ token }) => {
+    const [t, i18n] = useTranslation("global")
     const [shoppingLists, setShoppingLists] = useState([]);
     const [selectedFilters, setSelectedFilters] = useState(['public']);
     const [loading, setLoading] = useState(true);
@@ -123,18 +125,18 @@ const ListViewer = ({ token }) => {
     },[userId]);
 
     const options = [
-        { value: 'public', label: 'Public' },
-        { value: 'shared', label: 'Shared with Me' },
-        { value: 'mine', label: 'My Lists' },
-        { value: 'archived', label: 'Archived' }
+        { value: 'public', label: t("listViewer.public") },
+        { value: 'shared', label: t("listViewer.shared") },
+        { value: 'mine', label: t("listViewer.mine") },
+        { value: 'archived', label: t("listViewer.archived") }
     ];
 
     if (loading) {
-        return <div>Loading shopping lists...</div>
+        return <div>{t("listViewer.loadingLists")}</div>
     }
 
     if (!Array.isArray(shoppingLists) || shoppingLists.length === 0) {
-        return <div>No shopping lists available.</div>;
+        return <div>{t("errors.listsUnavailable")}</div>;
     }
 
     const handleFilterChange = (selectedOptions) => {
@@ -174,15 +176,15 @@ const ListViewer = ({ token }) => {
         <div className={`list-viewer${selectedTheme}`}>
             <div className={`list-navbar${selectedTheme}`}>
                 <div className="filter-text">
-                    {getFilterLabels(selectedFilters).join(", ")} Shopping Lists
+                    {getFilterLabels(selectedFilters).join(", ")} {t("listViewer.shoppingLists")}
                 </div>
                 <div className="navbar-controls">
                     <DropdownCheckbox options={options} onSelectionChange={handleFilterChange} />
-                    <Link to="/create/true" className="navbar-btn"><button>Create Shopping List</button></Link>
+                    <Link to="/create/true" className="navbar-btn"><button>{t("listViewer.newList")}</button></Link>
                 </div>
             </div>
             <div className="search-bar">
-                        <input className="searchbar-input" type="text" placeholder="Search..." onChange={handleSearchChange} />
+                        <input className="searchbar-input" type="text" placeholder={t("listViewer.search")} onChange={handleSearchChange} />
                     </div>
             <div className="list-tiles">
                 {filteredShoppingLists().map((list) => {
@@ -194,10 +196,10 @@ const ListViewer = ({ token }) => {
                         <div key={list._id} className={`list-tile${selectedTheme}`}>
                             <div className="tile-header">
                                 <span className="list-name">{list.shoppingListName}</span>
-                                <span className="item-count">{totalItems} items</span>
+                                <span className="item-count">{totalItems} {t("listViewer.items")}</span>
                             </div>
                             <div className="list-preview">
-                                <p>Category: {firstCategory}</p>
+                                <p>{t("shoppingList.itemCtg")}: {t("shoppingList.categories."+firstCategory)}</p>
                                 <ul>
                                     {firstTwoItems.map((item, index) => (
                                         <li key={item.id || index}>{item.name}</li>
@@ -205,9 +207,9 @@ const ListViewer = ({ token }) => {
                                 </ul>
                             </div>
                             <div className="list-owner">
-                                Owned by: {usernames[list.ownerId] || "Loading..."}
+                            {t("listViewer.ownedBy")} {usernames[list.ownerId] || "Loading..."}
                             </div>
-                            <Link to={"/shoppinglist/" + list._id}><Button className={`view-button${selectedTheme}`}>View</Button></Link>
+                            <Link to={"/shoppinglist/" + list._id}><Button className={`view-button${selectedTheme}`}>{t("listViewer.viewBtn")}</Button></Link>
                         </div>
                     );
                 })}

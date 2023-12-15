@@ -3,10 +3,18 @@ import "../styles/Navbar.css";
 import { useNavigate } from "react-router-dom";
 import { FaMoon, FaSun } from "react-icons/fa";
 
+//Translation
+import { useTranslation } from "react-i18next";
+// const [t, i18n] = useTranslation("global")
+// shoppingList, listViewer, listEditor, navbar
+// {t("location.access")}
+//-----
+
 const Navbar = ({ username, onLoginClick, onLogoutClick, onRegisterClick, onThemeClick }) => {
   const navigate = useNavigate();
   const appTheme = localStorage.getItem("appTheme") || "dark";
   const selectedTheme = appTheme === 'dark' ? '' : '-light';
+  const [t, i18n] = useTranslation("global")
 
   //{`button-default${selectedTheme}`}
 
@@ -15,14 +23,14 @@ const Navbar = ({ username, onLoginClick, onLogoutClick, onRegisterClick, onThem
       <div className="navbar-content">
 
         <div className="navbar-left">
-          {username && <h1 className="navbar-text">Welcome {username}</h1>}
-          {!username && <h1 className="navbar-text">Please log in</h1>}
+          {username && <h1 className="navbar-text">{t("navbar.welcome")} {username}</h1>}
+          {!username && <h1 className="navbar-text">{t("navbar.plsLogin")}</h1>}
         </div>
 
         <div className="navbar-center-container">
           <div className="navbar-center">
             <button className="navbar-home" onClick={() => navigate('/')}>
-              Home
+            {t("navbar.home")}
             </button>
           </div>
         </div>
@@ -33,15 +41,15 @@ const Navbar = ({ username, onLoginClick, onLogoutClick, onRegisterClick, onThem
           
           {username ? (
             <button className="navbar-btn-login" onClick={onLogoutClick}>
-              Logout
+              {t("navbar.logout")}
             </button>
           ) : (
             <>
             <button className="navbar-btn-login" onClick={onLoginClick}>
-              Login
+            {t("navbar.login")}
             </button>
             <button className="navbar-btn-register" onClick={onRegisterClick}>
-              Register
+            {t("navbar.register")}
             </button>
           </>
           )}

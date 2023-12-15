@@ -4,6 +4,7 @@ import axios from "axios";
 import "../styles/ErrorMsg.css";
 import "../styles/Table.css";
 import UserContext from "../components/UserContext";
+import { useTranslation } from "react-i18next";
 
 const ParentComponent = () => {
   const { shoppingListId } = useParams();
@@ -11,6 +12,7 @@ const ParentComponent = () => {
   const [loading, setLoading] = useState(true);
   const token = (localStorage.getItem('token') || null)
   const hreflink = "/edit/" + shoppingListId;
+  const [t, i18n] = useTranslation("global")
 
   useEffect(() => {
     const fetchShoppingList = async () => {
@@ -22,7 +24,7 @@ const ParentComponent = () => {
         });
         setShoppingList(response.data);
       } catch (error) {
-        console.error("Error fetching shopping list", error);
+        console.error(t("errors.errorFetching"), error);
       } finally {
         setLoading(false);
       }
@@ -32,11 +34,11 @@ const ParentComponent = () => {
   }, [shoppingListId, token]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>{t("errors.loading")}</div>;
   }
 
   if (!shoppingList) {
-    return <div className="unauthorized"><h1>Shopping list not found.</h1></div>;
+    return <div className="unauthorized"><h1>{t("errors.listNotFound")}</h1></div>;
   }
 
   return (
@@ -50,12 +52,13 @@ const ParentComponent = () => {
 
 
 const Table = ({ shoppingList, hreflink, canEdit }) => {
+  const [t, i18n] = useTranslation("global")
   const appTheme = localStorage.getItem('appTheme') || "dark";
   const selectedTheme = appTheme === 'dark' ? '' : '-light';
   const token = (localStorage.getItem('token') || null)
   const navigate = useNavigate();
   const handleUpdateList = async () => {
-    if (window.confirm("Are you sure you want to update the list?")) {
+    if (window.confirm(t("shoppingList.updateConfirmation"))) {
       try {
         const updatedItems = items.map(item => ({
           _id: item._id,
@@ -67,10 +70,10 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
           headers: { Authorization: authHeader }
         });
 
-        window.alert('List updated successfully.');
+        window.alert(t("shoppingList.updateSuccess"));
       } catch (error) {
         console.error("Error updating list", error);
-        window.alert('Error updating the list.');
+        window.alert(t("shoppingList.updateFail"));
       }
     }
   };
@@ -81,8 +84,8 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
     if (allChecked) {
       return (
         <div className="everything-checked">
-          <h1 >All items are checked</h1>
-          <button className="everything-checked-button" onClick={handleDeleteList}>Delete list?</button>
+          <h1 >{t("shoppingList.allChecked")}</h1>
+          <button className="everything-checked-button" onClick={handleDeleteList}>{t("shoppingList.deleteQuestion")}</button>
         </div>
       );
     }
@@ -113,22 +116,22 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
   };
 
   const handleDeleteList = async () => {
-    if (window.confirm("Are you sure you want to delete this list?")) {
+    if (window.confirm(t("listEditor.deleteConfirmation"))) {
       try {
         const authHeader = token ? `Bearer ${token}` : 'Bearer ';
         await axios.delete(`http://194.182.91.65:3000/deleteList/${shoppingList._id}`, {
           headers: { Authorization: authHeader }
         });
   
-        window.alert('List deleted successfully.');
+        window.alert(t("listEditor.deleteSuccess"));
         navigate('/');
         window.location.reload();
       } catch (error) {
-        console.error("Error deleting list", error);
+        console.error(t("errors.deleteError"), error);
         if (error.response && error.response.status === 403) {
-          window.alert('Error deleting the list: You are not the owner.');
+          window.alert(t("errors.deleteNotOwner"));
         } else {
-          window.alert('Error deleting the list.');
+          window.alert(t("errors.deleteError"));
         }
       }
     }
@@ -151,6 +154,8 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
       : items.filter((item) => !checkedItems[item._id]);
 
     return categories.map((category, index) => {
+      const translatedCategory = t(`shoppingList.categories.${category}`);
+
       const categoryItems = items.filter((item) => item.category === category);
       // Check if all items are checked only if 'unchecked' filter is selected
       const areAllItemsChecked = filter === "unchecked" && categoryItems.every((item) => checkedItems[item._id]);
@@ -159,17 +164,19 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
         return null;
       }
 
+      
+
       return (<React.Fragment key={index}>
         <tr>
           <td className="category-cell">
-            Category: {category} ({filteredItems.filter((item) => item.category === category).length})
+          {t("shoppingList.itemCtg")}: {translatedCategory} ({filteredItems.filter((item) => item.category === category).length})
           </td>
           <td className="expand-cell">
             <button
               className={`expand-button ${visibleCategories.includes(category) ? "expanded" : ""}`}
               onClick={() => toggleCategoryVisibility(category)}
             >
-              {visibleCategories.includes(category) ? "▼" : "►"} Expand
+              {visibleCategories.includes(category) ? "▼" : "►"} {t("shoppingList.expand")}
             </button>
           </td>
         </tr>
@@ -177,8 +184,8 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
           <React.Fragment>
             <tr>
               <th></th>
-              <th>Name</th>
-              <th>Quantity</th>
+              <th>{t("shoppingList.itemName")}</th>
+              <th>{t("shoppingList.itemQty")}</th>
             </tr>
             {filteredItems
               .filter((item) => item.category === category)
@@ -194,9 +201,7 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
                     />
                   </td>
                   <td>{item.name}</td>
-                  <td>
-                    {item.quantity} {item.quantity === 1 ? "piece" : "pieces"}
-                  </td>
+                  <td>{item.quantity}</td>
                 </tr>
               ))}
           </React.Fragment>
@@ -217,20 +222,20 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
           {canEdit && (
             <div className={`header-buttons${selectedTheme}`}>
               <button className="table-header-savechanges-button" onClick={handleUpdateList}>
-                Save Changes
+              {t("shoppingList.saveChanges")}
               </button>
               <button
                 className="table-header-button"
                 onClick={() => navigate(hreflink)}
               >
-                Edit
+                {t("shoppingList.edit")}
               </button>
             </div>
           )}
           <div className="filter-dropdown-wrapper">
             <select className="table-header-dropdown" id="filterDropdown" onChange={handleFilterChange} value={filter}>
-              <option value="unchecked">Unchecked</option>
-              <option value="checked">Checked</option>
+              <option value="unchecked">{t("listViewer.unchecked")}</option>
+              <option value="checked">{t("listViewer.checked")}</option>
             </select>
           </div>
         </div>
@@ -248,6 +253,7 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
 const ShoppingList = ({ shoppingList, hreflink, canEdit }) => {
   const { userId } = useContext(UserContext);
   console.log(userId)
+  const [t, i18n] = useTranslation("global")
 
   const isSharedWith = shoppingList.sharedTo.includes(userId);
   const isOwnerOrShared = userId === shoppingList.ownerId || shoppingList.sharedTo.includes(userId);
@@ -259,7 +265,7 @@ const ShoppingList = ({ shoppingList, hreflink, canEdit }) => {
       </div>
     );
   } else {
-    return <div className="unauthorized">You are not authorized to view this shopping list.</div>;
+    return <div className="unauthorized">{t("errors.unauthorizedView")}</div>;
   }
 };
 

@@ -1,10 +1,20 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import "../styles/LoginModal.css";
+import { useTranslation } from "react-i18next";
+
 
 Modal.setAppElement("#root");
 
+//Translation
+
+// 
+// shoppingList, listViewer, listEditor, navbar
+// {t("location.access")}
+//-----
+
 const RegisterModal = ({ isOpen, onRequestClose, onRegister }) => {
+  const [t, i18n] = useTranslation("global")
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -15,7 +25,7 @@ const RegisterModal = ({ isOpen, onRequestClose, onRegister }) => {
       onRegister(username, password);
     } else {
       setPasswordsMatch(false);
-      window.alert("Passwords do not match!");
+      window.alert(t("errors.pwNotMatch"));
     }
   };
 

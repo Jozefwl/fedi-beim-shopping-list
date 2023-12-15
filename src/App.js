@@ -12,6 +12,12 @@ import UserContext from "./components/UserContext";
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
 
+//Translation
+import { useTranslation } from "react-i18next";
+// const [t, i18n] = useTranslation("global")
+// shoppingList, listViewer, listEditor, navbar
+// {t("location.access")}
+//-----
 
 const App = () => {
   const [showModal, setShowModal] = useState(false);
@@ -21,10 +27,11 @@ const App = () => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [appTheme, setAppTheme] = useState(localStorage.getItem("appTheme") || "dark");;
   const selectedTheme = appTheme === 'dark' ? '' : '-light';
+  const [t, i18n] = useTranslation("global")
 
   const handleRegister = async (username, password) => {
     if (loading) {
-      window.alert("Processing your request, please wait.");
+      window.alert(t("appjs.processingWait"));
       return;
     }
   
@@ -37,18 +44,18 @@ const App = () => {
       });
   
       if (response.status === 201) {
-        window.alert('Registration successful. You can now login.');
+        window.alert(t("appjs.registerSuccess"));
         handleCloseRegisterModal();
         // Optionally, redirect to login page or log the user in automatically
       }
     } catch (error) {
       console.error('Registration request failed', error);
-      let errorMessage = 'Registration failed. Please try again.';
+      let errorMessage = t("errors.registerFailed");
       if (error.response) {
         if (error.response.status === 400) {
-          errorMessage = 'Username already exists. Please choose a different username.';
+          errorMessage = t("errors.usernameExists");
         } else if (error.response.status === 500) {
-          errorMessage = 'Server error. Please try again later.';
+          errorMessage = t("errors.serverError");
         }
       }
       window.alert(errorMessage);
@@ -58,7 +65,7 @@ const App = () => {
   }; 
   
   const handleLogin = async (username, password) => {
-    if (loading) { window.alert("Logging in, please wait.") }; // Prevents function from proceeding if already loading
+    if (loading) { window.alert(t("appjs.loggingInWait")) }; // Prevents function from proceeding if already loading
     setLoading(true);
     try {
       const response = await axios.post(`http://194.182.91.65:3000/login`, {
@@ -78,17 +85,17 @@ const App = () => {
         window.location.reload();
       } else {
         // Handle login errors
-        window.alert('Login failed. Please check your username and password.');
+        window.alert(t("errors.logingWrongNamePass"));
         console.error('Login failed');
       }
     } catch (error) {
       console.error('Login request failed', error);
-      let errorMessage = "Login failed. Please check your username and password.";
+      let errorMessage = t("errors.logingWrongNamePass");
       if (error.response) {
         if (error.response.status === 401) {
-          errorMessage = "Unauthorized: Incorrect username or password.";
+          errorMessage = t("errors.wrongPassword");
         } else if (error.response.status === 500) {
-          errorMessage = "Server error. Please try again later.";
+          errorMessage = t("errors.serverError");
         }
       }
 

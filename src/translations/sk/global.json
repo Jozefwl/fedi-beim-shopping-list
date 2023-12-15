@@ -1,0 +1,103 @@
+{
+    "homepage":{
+        "welcome": "Vitajte v zozname fedi-beim!"
+    },
+    "appjs":{
+    "processingWait":"Spracovávanie Vašej požiadavky, počkajte prosím.",
+    "registerSuccess":"Registrácia úspešná. Môžete sa prihlásiť.",
+    "loggingInWait":"Prihlasovanie, čakajte prosím"
+    },
+    "listViewer":{
+        "viewBtn": "Zobraziť",
+        "newList": "Vytvoriť nákupný zoznam",
+        "filterBtn": "Filter",
+        "public": "Verejné",
+        "mine": "Moje",
+        "archived": "Archivované",
+        "shared": "Zdieľané so mnou",
+        "apply": "Použiť",
+        "search": "Hľadať...",
+        "expandBtn":"Rozšíriť",
+        "checked":"Zaškrtnuté",
+        "unchecked":"Nezaškrtnuté",
+        "loadingLists":"Načítavanie nákupných zoznamov...",
+        "shoppingLists": "Nákupné zoznamy",
+        "items": "vecí",
+        "ownedBy": "Vlastník:"
+    },
+    "shoppingList":{
+        "updateConfirmation":"Ste si istý, že chcete aktualizovať zoznam?",
+        "updateSuccess":"Zoznam bol úspešne aktualizovaný.",
+        "updateFail":"Chyba pri aktualizácii zoznamu.",
+        "allChecked":"Všetky položky sú zaškrtnuté.",
+        "deleteQuestion":"Zmazať zoznam?",
+        "itemName":"Názov",
+        "itemQty":"Množstvo",
+        "itemCtg": "Kategória",
+            "categories":{
+                "Groceries":"Potraviny",
+                "Beverages":"Nápoje",
+                "Supplies":"Zásoby",
+                "Belongings":"Osobné veci",
+                "Other": "Iné"
+        },
+        "expand":"Rozšíriť",
+        "edit": "Upraviť",
+        "saveChanges":"Uložiť zmeny",
+        "delete": "Vymazať"
+    },
+    "listEditor":{
+        "addItem": "Pridať položku",
+        "editPerms": "Upraviť oprávnenia",
+        "archiveList": "Archivovať zoznam",
+        "deleteList": "Vymazať zoznam",
+        "finishChanges": "Dokončiť zmeny",
+        "deleteConfirmation":"Ste si istý, že chcete zmazať tento zoznam?",
+        "deleteSuccess":"Zoznam bol úspešne zmazaný.",
+        "finishChangesConfirmation": "Ste si istý, že chcete ukončiť zmeny?",
+        "archiveConfirmation": "Ste si istý, že chcete archivovať tento zoznam?",
+        "unarchiveConfirmation": "List je už archivovaný, chcete ho odarchivovať?",
+        "unarchiveSuccess": "List úspešne odarchivovaný.",
+        "archiveSuccess": "List úspešne archivovaný.",
+        "enterNewName": "Napíš nové meno nákupného zoznamu:"
+    },
+    "navbar":{
+        "plsLogin": "Prosím, prihláste sa",
+        "welcome": "Vitajte",
+        "login": "Prihlásiť",
+        "register": "Registrovať",
+        "home": "Domov",
+        "logout": "Odhlásiť"
+    },
+    "errors": {
+        "pageNotFound": "Táto stránka neexistuje, 404.",
+        "notFound": "Nenájdené",
+        "errorFetching": "Chyba pri načítaní nákupného zoznamu",
+        "unauthorizedEdit": "Nemáte oprávnenie upravovať tento zoznam.",
+        "errorLoading": "Chyba pri načítaní nákupného zoznamu.",
+        "listNotFound": "Nákupný zoznam nenájdený.",
+        "loading": "Načítavanie...",
+        "deleteNotOwner": "Chyba pri mazaní zoznamu: Nie ste vlastníkom.",
+        "deleteError": "Chyba pri mazaní zoznamu.",
+        "unauthorizedView":"Nemáte oprávnenie zobraziť tento nákupný zoznam.",
+        "listsUnavailable": "Nie sú dostupné žiadne nákupné zoznamy.",
+        "invalidItemParams": "Prosím vložte správny názov a množstvo pre vec ",
+        "permsAfterCreation":"Práva môžete upraviť až po vytvorení zoznamu.",
+        "errorArchiving":"Chyba pri archivovaní zoznamu.",
+        "errorUnarchiving": "Chyba pri odarchivovaní zoznamu.",
+        "errorUpdating":"Chyba pri aktualizovaní listu.",
+        "noListName": "Nákupný zoznam musí mať názov.",
+        "noListItems": "Nákupný zoznam musí mať aspoň jednu položku.",
+        "itemBegin": "Položke",
+        "itemNoName": "chýba meno.",
+        "itemNoQty": "má chybné množstvo.",
+        "errorNameTooLong": "Meno nákupného zoznamu musí mať menej ako 128 znakov",
+        "errorWordTooLong": "Slovo v nákupnom zozname nemôže mať viac ako 20 znakov",
+        "usernameExists":"Užívateľské meno už existuje, vyberte si prosím iné.",
+        "serverError":"Chyba servera, skúste to neskôr prosím.",
+        "registerFailed":"Registrácia zlyhala, prosím skúste znova.",
+        "loginWrongNamePass":"Prihlasovanie zlyhalo, prosím skontrolujte meno a heslo.",
+        "wrongPassword": "Neautorizovaný: zlé meno alebo heslo.",
+        "pwNotMatch": "Heslá sa nezhodujú!"
+    }
+}
