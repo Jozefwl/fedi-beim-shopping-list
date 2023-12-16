@@ -49,13 +49,19 @@ a {
 
 .navbar-controls {
   display: flex;
-  gap: 10px;
+  justify-content: center;
+  align-items: center;
+    gap: 15px;
+    padding: 2px;
+}
+.navbar-btn {
+  margin-top: 4px;
 }
 
 .navbar-controls select,
 .navbar-controls input,
 .navbar-controls button {
-  padding: 5px;
+  padding: 8px;
   border: 1px solid #ccc;
   border-radius: 3px;
   background-color: white;
@@ -157,12 +163,14 @@ a {
   height: 30px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   .list-viewer,
   .list-viewer-light {
-    margin: 10px 3%; /* Adjusted for mobile view */
+    margin: 10px 2%; /* Adjusted for mobile view */
   }
-
+.navbar-controls {
+  height: 85px;
+}
   .list-navbar,
   .list-owner,
   .navbar-controls select,
@@ -172,13 +180,15 @@ a {
   .list-tile,
   .list-tiles,
   .tile-header {
-    width: 94%; /* Consistent width for mobile view */
-    margin: 15px auto; /* Centering and spacing */
+    width: 94%; 
+    margin: 15px auto;
   }
 
   .navbar-controls button {
     font-size: 14px;
-    height: 70px; /* Adjusted for mobile view */
+    height: 70px; 
+    width: 70px;
+    margin: 0px;
   }
 
   .list-name,

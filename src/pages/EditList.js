@@ -115,6 +115,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
   const appTheme = localStorage.getItem('appTheme') || "dark";
   const selectedTheme = appTheme === 'dark' ? '' : '-light';
   const [t, i18n] = useTranslation("global")
+  const isMobile = window.innerWidth <= 768;
 
 
   // Translated categories for display
@@ -133,6 +134,15 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
 
   const handleItemChange = (itemId, field, newValue) => {
     updateItem(itemId, (item) => ({ [field]: newValue }));
+  };
+
+  const handleInputClick = (item, field) => {
+    if (isMobile) {
+      const newValue = window.prompt(`Enter new value for ${field}`, item[field]);
+      if (newValue !== null) {
+        handleItemChange(item._id, field, newValue);
+      }
+    }
   };
 
   const handleCategoryChange = (itemId, newCategory) => {
@@ -293,10 +303,10 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
         });
 
         // Handle the response
-        console.log('List created:', response.data);
+        // console.log('List created:', response.data);
         window.location.href = `/shoppingList/${response.data.list._id}`;
       } catch (error) {
-        console.error('Error creating list', error);
+        alert(t("listEditor.failedCreation"), error);
         // Handle error (show error message to user, etc.)
       }
     } else {
@@ -312,7 +322,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
         });
 
         // Handle the response
-        console.log('List updated:', response.data);
+        // console.log('List updated:', response.data);
         window.location.href = `/shoppingList/${response.data._id}`
         // Additional logic to handle the updated list (e.g., updating UI, redirecting)
       } catch (error) {
@@ -338,7 +348,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
           }, header);
 
           if (response.status === 200) {
-            console.log(t("listEditor.unarchiveSuccess"));
+            alert(t("listEditor.unarchiveSuccess"));
             window.location.href = '/';
           } else {
             console.error(t("errors.errorUnarchiving"), response);
@@ -362,7 +372,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
           }, header);
 
           if (response.status === 200) {
-            console.log(t("listEditor.archiveSuccess"));
+            alert((t("listEditor.archiveSuccess")));
             window.location.href = '/';
           } else {
             console.error(t("errors.errorArchiving"), response);
@@ -408,13 +418,13 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
                 <td>
                   {item.isEditing ? (
                     <input
-                      className="inputbox"
-                      type="text"
-                      value={item.name}
-                      onChange={(e) =>
-                        handleItemChange(item._id, "name", e.target.value)
-                      }
-                    />
+                    className="inputbox"
+                    type="text"
+                    value={item.name}
+                    onClick={() => handleInputClick(item, "name")}
+                    onChange={(e) => handleItemChange(item._id, "name", e.target.value)}
+                    readOnly={isMobile} // Make input readOnly on mobile to prevent keyboard popup
+                  />
                   ) : (
                     item.name
                   )}
@@ -439,13 +449,14 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
                 <td>
                   {item.isEditing ? (
                     <input
-                      className="inputbox"
-                      type="number"
-                      value={item.quantity}
-                      onChange={(e) =>
-                        handleItemChange(item._id, "quantity", parseInt(e.target.value))
-                      }
-                    />
+                    className="inputbox"
+                    type="number"
+                    value={item.quantity}
+                    onClick={() => handleInputClick(item, "quantity")}
+                    onChange={(e) => handleItemChange(item._id, "quantity", parseInt(e.target.value))}
+                    readOnly={isMobile} // Make input readOnly on mobile to prevent keyboard popup
+                    pattern="\d*"
+                  />
                   ) : (
                     item.quantity
                   )}

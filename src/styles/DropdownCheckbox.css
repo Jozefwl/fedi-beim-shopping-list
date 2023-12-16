@@ -2,15 +2,19 @@
     position: relative;
     display: inline-block;
     text-align: left;
+    height: 90%;
 }
 
 .dropdown-checkbox button {
-    background-color: #000;
-    color: #fff;
+    background-color: #ffffff;
+    color: #000000;
     padding: 10px;
+    margin-top: 6px;
+    margin-right: -10px;
     border: none;
     cursor: pointer;
     border-radius: 4px;
+    height: 90%;
   }
 
   .dropdown-checkbox-light button {
@@ -54,7 +58,7 @@
 }
 
 .dropdown-content button {
-    background-color: #333; /* Dark background for buttons */
+    background-color: #272727; /* Dark background for buttons */
     color: #fff; /* Light text for buttons */
     padding: 5px 10px;
     border: none;
@@ -70,10 +74,102 @@
 /* Media query for mobile devices */
 @media (max-width: 768px) {
     .dropdown-checkbox button {
-        padding: 8px; /* Adjust button padding for smaller screens */
+        padding: 5px;
+        font-size: 14px;
+        .dropdown-checkbox {
+    position: relative;
+    display: inline-block;
+    text-align: left;
+    height: 90%;
+}
+
+.dropdown-checkbox button {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 10px;
+    margin-top: 6px;
+    margin-right: -10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    height: 90%;
+  }
+
+  .dropdown-checkbox-light button {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+.dropdown-checkbox button:hover {
+    background-color: #444; /* Slightly lighter on hover */
+}
+
+.dropdown-content {
+    display: block;
+    position: absolute;
+    background-color: #555; /* Dark background for the dropdown */
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.7);
+    z-index: 1;
+    border-radius: 4px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.dropdown-content label {
+    display: block;
+    color: #fff; /* Light text for labels */
+    padding: 5px 0;
+    cursor: pointer;
+}
+
+.dropdown-content label:hover {
+    background-color: #666; /* Slightly lighter on hover */
+}
+
+.dropdown-content input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.dropdown-content button {
+    background-color: #272727; /* Dark background for buttons */
+    color: #fff; /* Light text for buttons */
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.dropdown-content button:hover {
+    background-color: #444; /* Slightly lighter on hover */
+}
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+    .dropdown-checkbox {
+        height: 90%
+    }
+    
+    .dropdown-checkbox button {
+        padding: 5px;
+        font-size: 14px;
     }
 
     .dropdown-content {
         min-width: 140px; /* Reduce the minimum width for the dropdown */
+        text-align: center;
+    }
+}
+
+    }
+
+    .dropdown-content {
+        min-width: 140px; /* Reduce the minimum width for the dropdown */
+        text-align: center;
     }
 }

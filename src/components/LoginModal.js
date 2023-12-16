@@ -15,7 +15,7 @@ Modal.setAppElement("#root");
 const LoginModal = ({ isOpen, onRequestClose, onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [t, i18n] = useTranslation("global")
+  const [t] = useTranslation("global")
 
   const handleLogin = () => {
     onLogin(username, password);
@@ -28,6 +28,13 @@ const LoginModal = ({ isOpen, onRequestClose, onLogin }) => {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
+
+  const handleKeyDown = (e) => {
+    if (e.keyCode === 13) {  // press return key for logging in
+      handleLogin();
+    }
+  };
+
 
   return (
     <Modal
@@ -52,6 +59,7 @@ const LoginModal = ({ isOpen, onRequestClose, onLogin }) => {
           placeholder={t("appjs.password")}
           value={password}
           onChange={handlePasswordChange}
+          onKeyDown={handleKeyDown}
         />
       </div>
       <div className="modal-footer">

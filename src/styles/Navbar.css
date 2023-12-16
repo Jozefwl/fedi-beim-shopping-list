@@ -57,8 +57,7 @@
   align-items: center;
 }
 
-.navbar-btn,
-.navbar-home {
+.navbar-btn {
   background-color: transparent;
   color: white;
   border: none;
@@ -68,21 +67,51 @@
   transition: font-size 0.2s ease-in-out;
 }
 
+.navbar-home {
+  background-color: transparent;
+  color: white;
+  border: 2px solid transparent;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgb(255, 255, 255);
+}
+
+.navbar-home:hover,
+.navbar-home:focus,
+.navbar-light .navbar-home:hover,
+.navbar-light .navbar-home:focus {
+  background-color: #ffffff;
+  border-color: #7e7e7e;
+  color: #000000;
+  text-decoration: none;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
+}
+
 .navbar-light .navbar-btn,
 .navbar-light .navbar-home {
   background-color: transparent;
   color: rgb(0, 0, 0);
-  border: none;
-  font-size: 24px;
-  margin-right: 10px;
-  cursor: pointer;
-  transition: font-size 0.2s ease-in-out;
+  border: 2px solid transparent;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgb(0, 0, 0);
 }
 
-.navbar-btn:hover,
-.navbar-home:hover {
+.navbar-btn:hover {
   text-decoration: underline;
 }
+
+
 
 .navbar-right .navbar-btn-login {
   background-color: transparent;
@@ -177,11 +206,13 @@
     align-items: center;
   }
 
-  .navbar-btn,
+  .navbar-btn, .navbar-btn-login, .navbar-btn-register,
   .navbar-home,
   .navbar-text,
   .navbar-light .navbar-home {
-    font-size: 24px;
+    font-size: 18px;
+    padding: 5px 10px;
+    margin-bottom: 10px;
   }
 
   .navbar,

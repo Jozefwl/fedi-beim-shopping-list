@@ -8,7 +8,8 @@
     "loggingInWait":"Prihlasovanie, čakajte prosím",
     "username": "Meno...",
     "password": "Heslo...",
-    "login": "Prihlásiť sa"
+    "login": "Prihlásiť sa",
+    "inactivity": "Boli ste odhlásení kvôli neaktivite, prosím prihláste sa znova."
     },
     "listViewer":{
         "viewBtn": "Zobraziť",
@@ -62,7 +63,8 @@
         "unarchiveConfirmation": "List je už archivovaný, chcete ho odarchivovať?",
         "unarchiveSuccess": "List úspešne odarchivovaný.",
         "archiveSuccess": "List úspešne archivovaný.",
-        "enterNewName": "Napíš nové meno nákupného zoznamu:"
+        "enterNewName": "Napíš nové meno nákupného zoznamu:",
+        "failedCreation": "Zlyhalo vytvorenie nového zoznamu:"
     },
     "navbar":{
         "plsLogin": "Prosím, prihláste sa",

@@ -8,9 +8,9 @@ import { jwtDecode } from 'jwt-decode';
 import { useTranslation } from "react-i18next";
 
 const ListViewer = ({ token }) => {
-    const [t, i18n] = useTranslation("global")
-    const [shoppingLists, setShoppingLists] = useState([]);
-    const [selectedFilters, setSelectedFilters] = useState(['public']);
+    const [t] = useTranslation("global")
+    const [shoppingLists, setShoppingLists] = useState(['public']);
+    const [selectedFilters, setSelectedFilters] = useState([]);
     const [loading, setLoading] = useState(true);
     const [userId, setUserId] = useState(null);
     const [usernames, setUsernames] = useState({});
@@ -24,12 +24,15 @@ const ListViewer = ({ token }) => {
             try {
                 const decoded = jwtDecode(token);
                 setUserId(decoded.userId);
+                setSelectedFilters(['mine']);
             } catch (error) {
                 console.error('Error decoding token:', error);
                 setUserId(null);
+                setSelectedFilters(['public']);
             }
         } else {
             setUserId(null);
+            setSelectedFilters(['public']);
         }
     }, [token]);
 
@@ -119,10 +122,6 @@ const ListViewer = ({ token }) => {
             }
         }, 0);
     };
-
-    useEffect(() => {
-        setSelectedFilters(userId ? ['mine'] : ['public']);
-    },[userId]);
 
     const options = [
         { value: 'public', label: t("listViewer.public") },

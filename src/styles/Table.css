@@ -23,6 +23,33 @@ table {
   overflow: hidden; 
 }
 
+.table-viewer {
+  margin: auto;
+  background-color: #000000; 
+  border-collapse: collapse;
+  border-radius: 8px; /* Rounded corners */
+  overflow: hidden; 
+  width: 70%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  border: 2px solid #ffffff;
+}
+
+.table-viewer-light {
+  margin: auto;
+  background-color: #ffffff; 
+  border-collapse: collapse;
+  border-radius: 8px; /* Rounded corners */
+  overflow: hidden; 
+  width: 70%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  border: 2px solid #000000;
+}
+
+
 thead {
   display: block;
   background-color: #242424; 
@@ -31,11 +58,6 @@ thead {
 
 .table-light thead {
   background-color: #242424; 
-  color: black;
-}
-
-.table-light tr {
-  background-color: #ffffff; 
   color: black;
 }
 
@@ -51,22 +73,18 @@ tr {
   table-layout: fixed;
 }
 
+.table-light th,
+.table-light td {
+  border-bottom: 1px solid #000000; 
+  background-color: #FFFFFF;
+}
+
 th,
 td {
   padding: 10px;
   text-align: center;
   border-bottom: 1px solid #ddd; 
-  font-size: 48px;
-  overflow: hidden;
-  transition: font-size 0.2s ease-in-out;
-}
-
-.table-light th,
-.table-light td {
-  padding: 10px;
-  text-align: center;
-  border-bottom: 1px solid #000000; 
-  font-size: 48px;
+  font-size: 32px;
   overflow: hidden;
   transition: font-size 0.2s ease-in-out;
 }
@@ -138,9 +156,12 @@ td {
   color: white;
   border: none;
   border-radius: 4px;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word; 
 }
 
-.table-header-savechanges-button{
+.table-header-savechanges-button {
   height: 50px;
   width: 220px;
   font-size: 25px;
@@ -150,7 +171,11 @@ td {
   color: white;
   border: none;
   border-radius: 4px;
+  white-space: normal;
+  word-wrap: break-word; 
+  overflow-wrap: break-word;
 }
+
 
 .table-header-dropdown {
   height: 50px;
@@ -161,17 +186,28 @@ td {
 
 .table-header-text-light{
   color:black;
+  font-size: 5.5vh;
+  margin-bottom: 1px;
+  margin-top: 15px;
+  
+}
+
+.table-header-text{
+  color:rgb(255, 255, 255);
+  font-size: 5.5vh;
+  margin-bottom: 1px;
+  margin-top: 15px;
 }
 
 .table-header{
   margin-top: 1%;
-  height: 70px;
+  height: auto;
   background-color: #05001a; 
 }
 
 .table-header-light{
   margin-top: 1%;
-  height: 70px;
+  height: auto;
   background-color: #cccccc; 
 }
 
@@ -198,9 +234,10 @@ td {
 }
 
 .everything-checked-button{
-  height: 50px;
+  height: 60px auto ;
+  padding: 10px;
   width: 220px;
-  font-size: 25px;
+  font-size: 3vh !important;
   margin: 10px;
   background-color: #28a745;
   color: white;
@@ -210,47 +247,93 @@ td {
 
 
 
-@media (max-width: 1024px) {
+/* Adjustments for mobile devices */
+@media (max-width: 768px) {
+  .table-container {
+    padding: 5px;
+    margin: 0;
+}
 
-  th,
-  td {
-    font-size: 18px;
-    overflow: hidden;
-    white-space: break-word;
-    text-overflow: ellipsis;
-  }
+table,
+.table-light {
+    margin-top: 5px;
+    border-radius: 4px;
+}
 
-  .expand-button {
-    font-size: 24px;
-  }
+thead,
+.table-light thead {
+    background-color: #242424;
+}
 
-  
-  .table-header-button,
-  .table-header-savechanges-button,
-  .table-light .table-header-button,
-  .table-light .table-header-savechanges-button  {
-    font-size: 18px;
-    width: 80px;
-    height: 55px;
-    margin: 2px;
-  }
+tbody {
+  max-height: calc(100vh - 100px); /* Adjusted for smaller screen */
+}
 
-  .table-header-dropdown{
-    font-size: 12px;
-    width: 90px;
-    height: 55px;
-    margin: 2px;
-  }
+td, th {
+  font-size: 2.3vh !important;
+}
 
+tr {
+  table-layout: fixed;
+}
 
-  .table-header, .table-light .table-header {
-    margin-top: 100px;
-  }
-
-  .table-light .table-header-text, .table-header-text-light, .table-header-text {
-    font-size: 12px;
-    width: 100px;
-  }
+.table-viewer {
+border:0;
+  width: 100%;
 
 }
 
+.table-viewer-light {
+  border: 0; 
+  width: 100%;
+  
+}
+
+.expand-cell {
+  padding: 5px;
+}
+  .expand-button {
+      font-size: 18px;
+      padding: 5px;
+  }
+
+  .checkbox {
+      width: 30px;
+      height: 30px;
+  }
+
+  .filter-dropdown-wrapper {
+      margin: 5px;
+  }
+
+  .table-header-button,
+  .table-header-savechanges-button,
+  .table-header-dropdown {
+      height: auto;
+      width: auto;
+      font-size: 2vh;
+      padding: 10px;
+      margin: 5px;
+  }
+
+  .header-content {
+      flex-direction: column;
+  }
+
+  .everything-checked-button {
+      font-size: 12px;
+      padding: 5px;
+      margin: 5px;
+  }
+
+  .table-header-text-light{
+
+    font-size: 4vh;
+
+  }
+  
+  .table-header-text{
+
+    font-size: 4vh;
+  }
+}

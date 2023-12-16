@@ -1,3 +1,7 @@
+.overlay, .modal {
+  z-index: 1050; /* Higher than the navbar's z-index */
+}
+
 .modal {
   position: absolute;
   top: 50%;

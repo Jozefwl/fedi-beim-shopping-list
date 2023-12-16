@@ -31,6 +31,8 @@ const App = () => {
   const selectedTheme = appTheme === 'dark' ? '' : '-light';
   const [t, i18n] = useTranslation("global");
 
+  const debug = true;
+
   useEffect(() => {
     // Retrieve the language from localStorage or default to 'en'
     const storedLanguage = localStorage.getItem("language") || "en";
@@ -113,12 +115,16 @@ const App = () => {
     setLoading(false);
   };
 
-  const handleLogout = () => {
+  const handleLogout = (tokenexpiry) => {
     setUsername("");
     localStorage.removeItem('token');
     localStorage.removeItem('username'); 
     localStorage.removeItem('loginTime');
-    window.location.reload();
+    if(tokenexpiry === true){
+      window.alert(t("appjs.inactivity"));
+    } else {
+      window.location.reload();
+    }
   };
 
   const handleCloseModal = () => {
@@ -161,8 +167,13 @@ const App = () => {
   // userId for userContext
   let userId;
   if (token) {
+    try {
     const decoded = jwtDecode(token);
     userId = decoded.userId;
+  } catch (error) {
+    alert(t("appjs.tokenBad"))
+    handleLogout()
+  }
   }
 
 // Token refresh function
@@ -178,6 +189,7 @@ const refreshToken = async () => {
     }
   } catch (error) {
     console.error('Token refresh failed:', error);
+    handleLogout(true)
   }
 };
 
@@ -194,7 +206,8 @@ useEffect(() => {
     }
   };
 
-  const interval = setInterval(checkTokenExpiry, 60000); // Check every minute
+  const interval = setInterval(checkTokenExpiry, 30000); // Check every 30s or 1/2 min
+  console.log("INTREVALLERY"+interval)
 
   return () => clearInterval(interval);
 }, [token]);

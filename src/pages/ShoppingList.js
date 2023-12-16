@@ -12,7 +12,9 @@ const ParentComponent = () => {
   const [loading, setLoading] = useState(true);
   const token = (localStorage.getItem('token') || null)
   const hreflink = "/edit/" + shoppingListId;
-  const [t, i18n] = useTranslation("global")
+  const [t, i18n] = useTranslation("global");
+  const appTheme = localStorage.getItem('appTheme');
+  const selectedTheme = appTheme === 'dark' ? '' : '-light';
 
   useEffect(() => {
     const fetchShoppingList = async () => {
@@ -33,12 +35,14 @@ const ParentComponent = () => {
     fetchShoppingList();
   }, [shoppingListId, token]);
 
+  console.log("shoppingList."+shoppingList)
+
   if (loading) {
     return <div>{t("errors.loading")}</div>;
   }
 
-  if (!shoppingList) {
-    return <div className="unauthorized"><h1>{t("errors.listNotFound")}</h1></div>;
+  if (!shoppingList || shoppingList === null) {
+    return <div className={`unauthorized${selectedTheme}`}><h1>{t("errors.listNotFound")}</h1></div>;
   }
 
   return (
@@ -128,7 +132,7 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
         window.location.reload();
       } catch (error) {
         console.error(t("errors.deleteError"), error);
-        if (error.response && error.response.status === 403) {
+        if (error.response && error.response.status === (403 || 401)) {
           window.alert(t("errors.deleteNotOwner"));
         } else {
           window.alert(t("errors.deleteError"));
@@ -241,7 +245,7 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
         </div>
       </div>
       {renderDeletePrompt()}
-      <table className={`table${selectedTheme}`}>
+      <table className={`table-viewer${selectedTheme}`}>
         <tbody>{renderTableRows()}</tbody>
       </table>
     </>
@@ -252,8 +256,10 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
 
 const ShoppingList = ({ shoppingList, hreflink, canEdit }) => {
   const { userId } = useContext(UserContext);
-  console.log(userId)
+  //console.log(userId)
   const [t, i18n] = useTranslation("global")
+  const appTheme = localStorage.getItem('appTheme');
+  const selectedTheme = appTheme === 'dark' ? '' : '-light';
 
   const isSharedWith = shoppingList.sharedTo.includes(userId);
   const isOwnerOrShared = userId === shoppingList.ownerId || shoppingList.sharedTo.includes(userId);
@@ -265,7 +271,7 @@ const ShoppingList = ({ shoppingList, hreflink, canEdit }) => {
       </div>
     );
   } else {
-    return <div className="unauthorized">{t("errors.unauthorizedView")}</div>;
+    return <div className={`unauthorized${selectedTheme}`}>{t("errors.unauthorizedView")}</div>;
   }
 };
 

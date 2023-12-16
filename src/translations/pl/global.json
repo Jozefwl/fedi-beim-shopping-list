@@ -8,7 +8,9 @@
         "loggingInWait": "Logowanie, proszę czekać.",
         "username": "Nazwa użytkownika...",
         "password": "Hasło...",
-        "login": "Zaloguj się"
+        "login": "Zaloguj się",
+        "inactivity": "Zostałeś wylogowany z powodu braku aktywności. Zaloguj się ponownie.",
+        "tokenBad": "Token jest uszkodzony. Zaloguj się ponownie."
     },
     "listViewer": {
         "viewBtn": "Zobacz",
@@ -62,7 +64,8 @@
         "unarchiveConfirmation": "Lista jest już zarchiwizowana, czy chcesz ją przywrócić?",
         "unarchiveSuccess": "Lista pomyślnie przywrócona.",
         "archiveSuccess": "Lista pomyślnie zarchiwizowana.",
-        "enterNewName": "Wprowadź nową nazwę dla listy zakupów:"
+        "enterNewName": "Wprowadź nową nazwę dla listy zakupów:",
+        "failedCreation": "Nie udało się utworzyć nowej listy:"
     },
     "navbar": {
         "plsLogin": "Proszę się zalogować",

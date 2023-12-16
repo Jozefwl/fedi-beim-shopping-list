@@ -1,10 +1,17 @@
-import  React, { useState, useEffect } from "react";
-import "../styles/DropdownCheckbox.css"; // Path to your CSS file
+import  React, { useState } from "react";
+import "../styles/DropdownCheckbox.css";
+
+//Translation
+import { useTranslation } from "react-i18next";
+// const [t, i18n] = useTranslation("global")
+// shoppingList, listViewer, listEditor, navbar
+// {t("location.access")}
+//-----
 
 const DropdownCheckbox = ({ options, onSelectionChange }) => {
+    const [t] = useTranslation("global")
     const [isOpen, setIsOpen] = useState(false);
-    const defaultSelectedOptions = ['public', 'mine']; // Default selected options
-    const [selectedOptions, setSelectedOptions] = useState(defaultSelectedOptions);
+    const [selectedOptions, setSelectedOptions] = useState([]);
 
     const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -20,15 +27,10 @@ const DropdownCheckbox = ({ options, onSelectionChange }) => {
         onSelectionChange(selectedOptions);
         setIsOpen(false);
     };
-
-    // Use Effect to ensure the default selection is communicated to the parent component
-    useEffect(() => {
-        onSelectionChange(defaultSelectedOptions);
-    }, []); // Empty dependency array to run only on the component's first render
    
     return (
         <div className="dropdown-checkbox">
-            <button onClick={toggleDropdown}>Filter</button>
+            <button onClick={toggleDropdown}>{t("listViewer.filterBtn")}</button>
             {isOpen && (
                 <div className="dropdown-content">
                     {options.map(option => (

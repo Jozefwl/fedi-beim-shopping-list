@@ -8,7 +8,9 @@
         "loggingInWait": "Logging in, please wait.",
         "username": "Username...",
         "password": "Password...",
-        "login": "Login"
+        "login": "Login",
+        "inactivity": "You have been logged out due to inactivity, please log in again.",
+        "tokenBad": "Token is corrupted, please log in again."
     },
     "listViewer": {
         "viewBtn": "View",
@@ -62,7 +64,8 @@
         "unarchiveConfirmation": "The list is already archived, do you want to unarchive it?",
         "unarchiveSuccess": "List successfully unarchived.",
         "archiveSuccess": "List successfully archived.",
-        "enterNewName": "Enter new name for the shopping list:"
+        "enterNewName": "Enter new name for the shopping list:",
+        "failedCreation": "Failed to create new list:"
     },
     "navbar": {
         "plsLogin": "Please log in",
