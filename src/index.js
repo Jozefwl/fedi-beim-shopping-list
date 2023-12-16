@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import i18next from 'i18next'
-import global_en from "./translations/en/global.json"
-import global_sk from "./translations/sk/global.json"
+import global_en from "./translations/en/global.json";
+import global_sk from "./translations/sk/global.json";
+import global_ua from "./translations/ua/global.json";
+import global_pl from "./translations/pl/global.json";
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 
 i18next.use(initReactI18next).init({
@@ -17,6 +19,12 @@ i18next.use(initReactI18next).init({
   sk: {
     global: global_sk,
   },
+  pl: {
+    global: global_pl,
+  },
+  ua: {
+    global: global_ua
+  }
 },
 })
 

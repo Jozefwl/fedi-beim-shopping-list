@@ -433,7 +433,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
                       ))}
                     </select>
                   ) : (
-                    item.category
+                    t("shoppingList.categories."+item.category)
                   )}
                 </td>
                 <td>

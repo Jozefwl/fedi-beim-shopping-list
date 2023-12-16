@@ -5,7 +5,10 @@
     "appjs":{
     "processingWait":"Spracovávanie Vašej požiadavky, počkajte prosím.",
     "registerSuccess":"Registrácia úspešná. Môžete sa prihlásiť.",
-    "loggingInWait":"Prihlasovanie, čakajte prosím"
+    "loggingInWait":"Prihlasovanie, čakajte prosím",
+    "username": "Meno...",
+    "password": "Heslo...",
+    "login": "Prihlásiť sa"
     },
     "listViewer":{
         "viewBtn": "Zobraziť",

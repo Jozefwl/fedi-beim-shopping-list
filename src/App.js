@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import LoginModal from "./components/LoginModal";
 import RegisterModal from "./components/RegisterModal";
+import Footer from "./components/Footer"
 import "./styles/App.css";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
@@ -14,6 +15,7 @@ import { jwtDecode } from 'jwt-decode';
 
 //Translation
 import { useTranslation } from "react-i18next";
+import { changeLanguage } from "i18next";
 // const [t, i18n] = useTranslation("global")
 // shoppingList, listViewer, listEditor, navbar
 // {t("location.access")}
@@ -27,8 +29,15 @@ const App = () => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [appTheme, setAppTheme] = useState(localStorage.getItem("appTheme") || "dark");;
   const selectedTheme = appTheme === 'dark' ? '' : '-light';
-  const [t, i18n] = useTranslation("global")
+  const [t, i18n] = useTranslation("global");
 
+  useEffect(() => {
+    // Retrieve the language from localStorage or default to 'en'
+    const storedLanguage = localStorage.getItem("language") || "en";
+    // Change the language of i18next
+    i18n.changeLanguage(storedLanguage);
+  }, [i18n]);
+ 
   const handleRegister = async (username, password) => {
     if (loading) {
       window.alert(t("appjs.processingWait"));
@@ -214,6 +223,7 @@ useEffect(() => {
           </Routes>
           </div>
         </div>
+        <Footer></Footer>
       </UserContext.Provider>
     </Router>
   );

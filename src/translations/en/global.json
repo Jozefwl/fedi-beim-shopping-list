@@ -5,7 +5,10 @@
     "appjs": {
         "processingWait": "Processing your request, please wait.",
         "registerSuccess": "Registration successful. You can now log in.",
-        "loggingInWait": "Logging in, please wait."
+        "loggingInWait": "Logging in, please wait.",
+        "username": "Username...",
+        "password": "Password...",
+        "login": "Login"
     },
     "listViewer": {
         "viewBtn": "View",
@@ -38,7 +41,7 @@
             "Groceries": "Groceries",
             "Beverages": "Beverages",
             "Supplies": "Supplies",
-            "Belongings": "Personal Belongings",
+            "Belongings": "Belongings",
             "Other": "Other"
         },
         "expand": "Expand",

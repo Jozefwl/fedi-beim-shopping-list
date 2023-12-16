@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import "../styles/LoginModal.css";
+import { useTranslation } from "react-i18next";
 
 Modal.setAppElement("#root");
+
+//Translation
+
+// const [t, i18n] = useTranslation("global")
+// shoppingList, listViewer, listEditor, navbar
+// {t("location.access")}
+//-----
 
 const LoginModal = ({ isOpen, onRequestClose, onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [t, i18n] = useTranslation("global")
 
   const handleLogin = () => {
     onLogin(username, password);
@@ -33,21 +42,21 @@ const LoginModal = ({ isOpen, onRequestClose, onLogin }) => {
       <div className="modal-body">
         <input
           type="text"
-          placeholder="Username"
+          placeholder={t("appjs.username")}
           value={username}
           onChange={handleUsernameChange}
           className="inputBox"
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder={t("appjs.password")}
           value={password}
           onChange={handlePasswordChange}
         />
       </div>
       <div className="modal-footer">
         <button className="login-btn" onClick={handleLogin}>
-          Login
+        {t("appjs.login")}
         </button>
       </div>
     </Modal>
