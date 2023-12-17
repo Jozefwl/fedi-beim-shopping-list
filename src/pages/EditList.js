@@ -270,7 +270,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
         alert(alertMsg);
         return false;
       }
-      if (isNaN(item.quantity) || item.quantity < 0) {
+      if (isNaN(item.quantity) || item.quantity < 0 || (isCreation && item.quantity === 0)) {
         let alertMsg = `${t("errors.itemBegin")} ${index + 1} ${t("errors.itemNoQty")}`;
         alert(alertMsg);
         return false;
@@ -499,7 +499,14 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
             {t("listEditor.deleteList")}
           </Button>
         )}
-        <Button className={`button-default${selectedTheme}`} onClick={() => handleListArchive(shoppingList)}>{t("listEditor.archiveList")}</Button>
+        <Button className={`button-default${selectedTheme}`} onClick={() => 
+          {
+            if (isCreation) {
+              alert(t("errors.archiveAfterCreation"));
+            } else {
+              handleListArchive(shoppingList);
+            }
+          }}>{t("listEditor.archiveList")}</Button>
         <Button
           className={`button-default${selectedTheme}`}
           onClick={() => {{

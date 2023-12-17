@@ -116,6 +116,7 @@
         "registerFailed":"Registrácia zlyhala, prosím skúste znova.",
         "loginWrongNamePass":"Prihlasovanie zlyhalo, prosím skontrolujte meno a heslo.",
         "wrongPassword": "Neautorizovaný: zlé meno alebo heslo.",
-        "pwNotMatch": "Heslá sa nezhodujú!"
+        "pwNotMatch": "Heslá sa nezhodujú!",
+        "archiveAfterCreation": "List môžete archivovať až po vytvorení."
     }
 }

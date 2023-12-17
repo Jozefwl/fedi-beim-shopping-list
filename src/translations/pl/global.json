@@ -105,6 +105,7 @@
         "registerFailed": "Rejestracja nie powiodła się, proszę spróbować ponownie.",
         "loginWrongNamePass": "Logowanie nieudane, proszę sprawdzić nazwę i hasło.",
         "wrongPassword": "Nieautoryzowany: błędna nazwa lub hasło.",
-        "pwNotMatch": "Hasła nie pasują do siebie!"
+        "pwNotMatch": "Hasła nie pasują do siebie!",
+        "archiveAfterCreation": "Możesz zarchiwizować listę tylko po jej utworzeniu."
     }
 }

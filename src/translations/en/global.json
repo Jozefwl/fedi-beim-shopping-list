@@ -117,6 +117,7 @@
         "registerFailed": "Registration failed, please try again.",
         "loginWrongNamePass": "Login failed, please check the name and password.",
         "wrongPassword": "Unauthorized: wrong name or password.",
-        "pwNotMatch": "Passwords do not match!"
+        "pwNotMatch": "Passwords do not match!",
+        "archiveAfterCreation": "You can archive the list only after creating it."
     }
 }
