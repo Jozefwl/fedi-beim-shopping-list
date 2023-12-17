@@ -15,7 +15,7 @@ import { jwtDecode } from 'jwt-decode';
 
 //Translation
 import { useTranslation } from "react-i18next";
-import { changeLanguage } from "i18next";
+// import { changeLanguage } from "i18next";
 // const [t, i18n] = useTranslation("global")
 // shoppingList, listViewer, listEditor, navbar
 // {t("location.access")}

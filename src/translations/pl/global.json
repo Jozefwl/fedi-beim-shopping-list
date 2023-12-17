@@ -47,6 +47,7 @@
             "Other": "Inne"
         },
         "expand": "Rozwiń",
+        "unexpand": "Zwiń",
         "edit": "Edytuj",
         "saveChanges": "Zapisz zmiany",
         "delete": "Usuń"

@@ -141,8 +141,8 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
     }
   };
 
-  const initialCategory = items.length > 0 ? [items[0].category] : [];
-  const [visibleCategories, setVisibleCategories] = useState(initialCategory);
+  const allCategories = [...new Set(shoppingList.items.map(item => item.category))];
+  const [visibleCategories, setVisibleCategories] = useState(allCategories);
 
   const [checkedItems, setCheckedItems] = useState(
     items.reduce((acc, item) => {
@@ -153,34 +153,23 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
 
   const renderTableRows = () => {
     const categories = [...new Set(items.map((item) => item.category))];
-    const filteredItems = filter === "checked"
-      ? items.filter((item) => checkedItems[item._id])
-      : items.filter((item) => !checkedItems[item._id]);
 
     return categories.map((category, index) => {
       const translatedCategory = t(`shoppingList.categories.${category}`);
 
       const categoryItems = items.filter((item) => item.category === category);
-      // Check if all items are checked only if 'unchecked' filter is selected
-      const areAllItemsChecked = filter === "unchecked" && categoryItems.every((item) => checkedItems[item._id]);
-
-      if (areAllItemsChecked) {
-        return null;
-      }
-
-      
 
       return (<React.Fragment key={index}>
         <tr>
           <td className="category-cell">
-          {t("shoppingList.itemCtg")}: {translatedCategory} ({filteredItems.filter((item) => item.category === category).length})
+            {t("shoppingList.itemCtg")}: {translatedCategory} ({categoryItems.length})
           </td>
           <td className="expand-cell">
             <button
               className={`expand-button ${visibleCategories.includes(category) ? "expanded" : ""}`}
               onClick={() => toggleCategoryVisibility(category)}
             >
-              {visibleCategories.includes(category) ? "▼" : "►"} {t("shoppingList.expand")}
+               {visibleCategories.includes(category) ? `▼ ${t("shoppingList.unexpand")}` : `► ${t("shoppingList.expand")}`}
             </button>
           </td>
         </tr>
@@ -191,30 +180,27 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
               <th>{t("shoppingList.itemName")}</th>
               <th>{t("shoppingList.itemQty")}</th>
             </tr>
-            {filteredItems
-              .filter((item) => item.category === category)
-              .map((item) => (
-                <tr key={item._id}>
-                  <td>
-                    <input
-                      type="checkbox"
-                      value={item._id}
-                      checked={checkedItems[item._id]}
-                      onChange={handleCheckboxChange}
-                      className="checkbox"
-                    />
-                  </td>
-                  <td>{item.name}</td>
-                  <td>{item.quantity}</td>
-                </tr>
-              ))}
+            {categoryItems.map((item) => (
+              <tr key={item._id} className={checkedItems[item._id] ? "checked-item" : ""}>
+                <td>
+                  <input
+                    type="checkbox"
+                    value={item._id}
+                    checked={checkedItems[item._id]}
+                    onChange={handleCheckboxChange}
+                    className="checkbox"
+                  />
+                </td>
+                <td>{item.name}</td>
+                <td>{item.quantity}</td>
+              </tr>
+            ))}
           </React.Fragment>
         )}
       </React.Fragment>
       );
     });
   };
-
 
   return (
     <>
@@ -237,10 +223,6 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
             </div>
           )}
           <div className="filter-dropdown-wrapper">
-            <select className="table-header-dropdown" id="filterDropdown" onChange={handleFilterChange} value={filter}>
-              <option value="unchecked">{t("listViewer.unchecked")}</option>
-              <option value="checked">{t("listViewer.checked")}</option>
-            </select>
           </div>
         </div>
       </div>

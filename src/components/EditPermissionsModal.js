@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/EditPermissionsModal.css";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const EditPermissionsModal = ({ shoppingList, onClose }) => {
   const [users, setUsers] = useState([...shoppingList.sharedTo]);
@@ -8,7 +9,15 @@ const EditPermissionsModal = ({ shoppingList, onClose }) => {
   const [usernames, setUsernames] = useState({});
   const [isPublic, setIsPublic] = useState(shoppingList.isPublic);
   const username = localStorage.getItem('username');
+  const [t] = useTranslation("global")
 
+  //Translation
+
+//import { changeLanguage } from "i18next";
+// const [t, i18n] = useTranslation("global")
+// shoppingList, listViewer, listEditor, navbar
+// {t("location.access")}
+//-----
 
   useEffect(() => {
     setUsers([...shoppingList.sharedTo]);
@@ -66,7 +75,7 @@ const EditPermissionsModal = ({ shoppingList, onClose }) => {
         }
       });
 
-      console.log("Updated Shopping List Response:", response.data);
+      //console.log("Updated Shopping List Response:", response.data);
       onClose();
       window.location.reload();
     } catch (error) {
@@ -81,21 +90,21 @@ const EditPermissionsModal = ({ shoppingList, onClose }) => {
   return (
     <div className="epm-modal">
       <div className="epm-modal-content">
-        <h2 className="epm-black-text">Edit Permissions</h2>
+        <h2 className="epm-black-text">{t("permissionsModal.editPerms")}</h2>
         <div className="epm-visibility-select">
-          <label className="epm-black-text">Visibility: </label>
+          <label className="epm-black-text">{t("permissionsModal.visibility")}</label>
           <select value={isPublic ? "Public" : "Private"} onChange={handleVisibilityChange}>
-            <option value="Public">Public</option>
-            <option value="Private">Private</option>
+            <option value="Public">{t("permissionsModal.public")}</option>
+            <option value="Private">{t("permissionsModal.private")}</option>
           </select>
         </div>
-        <p className="epm-black-text">Users:</p>
+        <p className="epm-black-text">{t("permissionsModal.users")}</p>
         <ul className="epm-user-list">
           {users.map((user) => (
             <li key={user} className="epm-user-item">
               <div className="epm-user-name">{usernames[user] || user}</div>
               {user !== shoppingList.ownerId && (
-                <button className="epm-remove-btn" onClick={() => handleRemoveUser(user)}>Remove</button>
+                <button className="epm-remove-btn" onClick={() => handleRemoveUser(user)}>{t("permissionsModal.remove")}</button>
               )}
             </li>
           ))}
@@ -104,14 +113,14 @@ const EditPermissionsModal = ({ shoppingList, onClose }) => {
           <input
             type="text"
             value={newUser}
-            placeholder="Username..."
+            placeholder={t("appjs.username")}
             onChange={(e) => setNewUser(e.target.value)}
             className="epm-input"
           />
-          <button className="epm-add-btn" onClick={handleAddUser}>Add User</button>
+          <button className="epm-add-btn" onClick={handleAddUser}>{t("permissionsModal.addUser")}</button>
         </div>
-        <button className="epm-close-btn" onClick={onClose}>Discard</button>
-        <button className="epm-close-btn" onClick={handleSaveChanges}>Save Changes</button>
+        <button className="epm-close-btn" onClick={onClose}>{t("permissionsModal.discard")}</button>
+        <button className="epm-close-btn" onClick={handleSaveChanges}>{t("permissionsModal.saveChanges")}</button>
       </div>
     </div>
   );

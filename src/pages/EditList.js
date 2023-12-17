@@ -253,30 +253,32 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
 
 
   const validateInputs = () => {
-    let alertMsg = "";
     if (!listName.trim()) {
       alert(t("errors.noListName"));
       return false;
-    } else
-
-      if (items.length === 0) {
-        alert(t("errors.noListItems"));
+    }
+  
+    if (items.length === 0) {
+      alert(t("errors.noListItems"));
+      return false;
+    }
+  
+    for (let index = 0; index < items.length; index++) {
+      const item = items[index];
+      if (!item.name.trim()) {
+        let alertMsg = `${t("errors.itemBegin")} ${index + 1} ${t("errors.itemNoName")}`;
+        alert(alertMsg);
         return false;
-      } else {
-        items.forEach((item, index) => {
-          if (!item.name.trim()) {
-            alertMsg = `${t("errors.itemBegin")} ${index+1} ${t("errors.itemNoName")}`;
-            alert(alertMsg);
-            return false;
-          } if (isNaN(item.quantity) || item.quantity < 0) {
-            alertMsg = `${t("errors.itemBegin")} ${index+1} ${t("errors.itemNoQty")}`;
-            alert(alertMsg);
-            return false;
-          }
-        });
       }
+      if (isNaN(item.quantity) || item.quantity < 0) {
+        let alertMsg = `${t("errors.itemBegin")} ${index + 1} ${t("errors.itemNoQty")}`;
+        alert(alertMsg);
+        return false;
+      }
+    }
+  
     return true;
-  };
+  };  
 
   const handleListUpdateOrCreate = async () => {
     // Construct the request payload
@@ -500,15 +502,16 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
         <Button className={`button-default${selectedTheme}`} onClick={() => handleListArchive(shoppingList)}>{t("listEditor.archiveList")}</Button>
         <Button
           className={`button-default${selectedTheme}`}
-          onClick={() => {
+          onClick={() => {{
             if (window.confirm(t("listEditor.finishChangesConfirmation"))) {
-              if (!validateInputs()) {
-                // hihi
-              } else {
+              let isValidated=validateInputs()
+              if (!isValidated) {
+                  return; // Stop the function if validation fails
+              } else if (isValidated){
                 handleListUpdateOrCreate();
               }
             }
-          }}
+          }}}
         >{t("listEditor.finishChanges")}</Button>
       </div>
       {showPermissionsModal && (

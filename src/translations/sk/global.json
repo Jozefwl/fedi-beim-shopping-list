@@ -8,6 +8,7 @@
     "loggingInWait":"Prihlasovanie, čakajte prosím",
     "username": "Meno...",
     "password": "Heslo...",
+    "confirmPassword": "Potvrdiť heslo...",
     "login": "Prihlásiť sa",
     "inactivity": "Boli ste odhlásení kvôli neaktivite, prosím prihláste sa znova."
     },
@@ -46,6 +47,7 @@
                 "Other": "Iné"
         },
         "expand":"Rozšíriť",
+        "unexpand": "Zmenšiť",
         "edit": "Upraviť",
         "saveChanges":"Uložiť zmeny",
         "delete": "Vymazať"
@@ -65,6 +67,17 @@
         "archiveSuccess": "List úspešne archivovaný.",
         "enterNewName": "Napíš nové meno nákupného zoznamu:",
         "failedCreation": "Zlyhalo vytvorenie nového zoznamu:"
+    },
+    "permissionsModal":{
+        "editPerms": "Upraviť oprávnenia",
+        "visibility": "Viditeľnosť: ",
+        "public":"Verejné",
+        "private":"Súkromné",
+        "users":"Používatelia:",
+        "remove":"Odstrániť",
+        "addUser":"Pridať používateľa",
+        "discard":"Zahodiť",
+        "saveChanges":"Uložiť zmeny"
     },
     "navbar":{
         "plsLogin": "Prosím, prihláste sa",
