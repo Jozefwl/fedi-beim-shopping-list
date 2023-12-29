@@ -31,8 +31,7 @@ npm start
 ```
 
 ### TODO
-- add backend API
-- connect frontend with backend
+- fix refreshtoken
 - make it look good
 
 See LICENSE.md FOR MORE INFORMATION.
