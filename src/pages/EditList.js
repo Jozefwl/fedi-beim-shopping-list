@@ -308,7 +308,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
         // console.log('List created:', response.data);
         window.location.href = `/shoppingList/${response.data.list._id}`;
       } catch (error) {
-        alert(t("listEditor.failedCreation"), error);
+        alert(t("listEditor.failedCreation"), error.message);
         // Handle error (show error message to user, etc.)
       }
     } else {

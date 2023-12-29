@@ -8,6 +8,7 @@
         "loggingInWait": "Logowanie, proszę czekać.",
         "username": "Nazwa użytkownika...",
         "password": "Hasło...",
+        "confirmPassword": "Potwierdź hasło...",
         "login": "Zaloguj się",
         "inactivity": "Zostałeś wylogowany z powodu braku aktywności. Zaloguj się ponownie.",
         "tokenBad": "Token jest uszkodzony. Zaloguj się ponownie."
@@ -66,7 +67,7 @@
         "unarchiveSuccess": "Lista pomyślnie przywrócona.",
         "archiveSuccess": "Lista pomyślnie zarchiwizowana.",
         "enterNewName": "Wprowadź nową nazwę dla listy zakupów:",
-        "failedCreation": "Nie udało się utworzyć nowej listy:"
+        "failedCreation": "Nie udało się utworzyć nowej listy, jesteś zalogowany?"
     },
     "navbar": {
         "plsLogin": "Proszę się zalogować",

@@ -7,6 +7,7 @@ import global_en from "./translations/en/global.json";
 import global_sk from "./translations/sk/global.json";
 import global_ua from "./translations/ua/global.json";
 import global_pl from "./translations/pl/global.json";
+import global_cz from "./translations/cz/global.json";
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 
 i18next.use(initReactI18next).init({
@@ -20,10 +21,13 @@ i18next.use(initReactI18next).init({
     global: global_sk,
   },
   pl: {
-    global: global_pl,
+    global: global_pl, //Thank you szufler for checking my polish translation!
   },
   ua: {
-    global: global_ua
+    global: global_ua //Thank you Valentin (Delectros) for providing the ukrainian translation!
+  },
+  cz: {
+    global: global_cz
   }
 },
 })

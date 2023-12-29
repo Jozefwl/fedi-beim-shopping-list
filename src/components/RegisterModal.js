@@ -60,20 +60,20 @@ const RegisterModal = ({ isOpen, onRequestClose, onRegister }) => {
       <div className="modal-body">
         <input
           type="text"
-          placeholder="Username"
+          placeholder={t("appjs.username")}
           value={username}
           onChange={handleUsernameChange}
           className="inputBox"
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder={t("appjs.password")}
           value={password}
           onChange={handlePasswordChange}
         />
         <input
           type="password"
-          placeholder="Confirm Password"
+          placeholder={t("appjs.confirmPassword")}
           value={confirmPassword}
           onChange={handleConfirmPasswordChange}
         />
