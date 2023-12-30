@@ -66,7 +66,8 @@
         "unarchiveSuccess": "List úspešne odarchivovaný.",
         "archiveSuccess": "List úspešne archivovaný.",
         "enterNewName": "Napíš nové meno nákupného zoznamu:",
-        "failedCreation": "Zlyhalo vytvorenie nového zoznamu, ste prihlásený?"
+        "failedCreation": "Zlyhalo vytvorenie nového zoznamu, ste prihlásený?",
+        "newValue": "Napíšte novú hodnotu pre"
     },
     "permissionsModal":{
         "editPerms": "Upraviť oprávnenia",

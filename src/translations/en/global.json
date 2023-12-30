@@ -67,7 +67,8 @@
         "unarchiveSuccess": "List successfully unarchived.",
         "archiveSuccess": "List successfully archived.",
         "enterNewName": "Enter new name for the shopping list:",
-        "failedCreation": "Failed to create new list, are you logged in?"
+        "failedCreation": "Failed to create new list, are you logged in?",
+        "newValue": "Enter new value for"
     },
     "permissionsModal":{
         "editPerms": "Edit Permissions",

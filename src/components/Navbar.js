@@ -40,7 +40,7 @@ const Navbar = ({ username, onLoginClick, onLogoutClick, onRegisterClick, onThem
             {appTheme === "light" ? <button className="navbar-theme-toggle-light" onClick={onThemeClick}><FaSun /></button> : <button className="navbar-theme-toggle-dark" onClick={onThemeClick}><FaMoon /></button>}
           
           {username ? (
-            <button className="navbar-btn-login" onClick={onLogoutClick}>
+            <button className="navbar-btn-logout" onClick={onLogoutClick}>
               {t("navbar.logout")}
             </button>
           ) : (

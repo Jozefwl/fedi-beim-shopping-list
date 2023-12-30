@@ -67,7 +67,8 @@
         "unarchiveSuccess": "Lista pomyślnie przywrócona.",
         "archiveSuccess": "Lista pomyślnie zarchiwizowana.",
         "enterNewName": "Wprowadź nową nazwę dla listy zakupów:",
-        "failedCreation": "Nie udało się utworzyć nowej listy, jesteś zalogowany?"
+        "failedCreation": "Nie udało się utworzyć nowej listy, jesteś zalogowany?",
+        "newValue": "Wprowadź nową wartość dla"
     },
     "navbar": {
         "plsLogin": "Proszę się zalogować",

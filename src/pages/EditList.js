@@ -138,7 +138,15 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
 
   const handleInputClick = (item, field) => {
     if (isMobile) {
-      const newValue = window.prompt(`Enter new value for ${field}`, item[field]);
+      let fieldTranslation;
+      if (field === 'name') {
+        fieldTranslation = t("shoppingList.itemName");
+      } else if (field === 'quantity') {
+        fieldTranslation = t("shoppingList.itemQty");
+      } else {
+        fieldTranslation = field;
+      }
+      const newValue = window.prompt(`${t("listEditor.newValue")} ${fieldTranslation}`, item[field]);
       if (newValue !== null) {
         handleItemChange(item._id, field, newValue);
       }
