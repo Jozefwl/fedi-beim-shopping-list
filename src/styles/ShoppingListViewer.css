@@ -1,7 +1,7 @@
 .list-viewer {
   font-family: Arial, sans-serif;
-  margin-left: 10%;
-  margin-right: 10%;
+  margin-left: 20%;
+  margin-right: 20%;
   margin-top: 10px;
   padding: 10px;
   background-color: #131313;
@@ -159,6 +159,23 @@ a {
   flex-direction: column;
 }
 
+.graphs-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+}
+
+.pie-chart, .bar-graph {
+  display: flex;         /* Added to use flexbox */
+  justify-content: center; /* Center horizontally */
+  align-items: center;    /* Center vertically */
+  flex: 1;
+  padding: 50px;
+  height: 300px;
+}
+
+
 .searchbar-input{
   height: 30px;
 }
@@ -189,6 +206,20 @@ a {
     height: 70px; 
     width: 70px;
     margin: 0px;
+  }
+
+  .graphs-container {
+    flex-direction: column; /* Stack the items vertically */
+  }
+  .pie-chart{
+    flex: 1;
+    padding: 10px;
+    height: 70px;
+  }
+ .bar-graph {
+    flex: 1;
+    padding: 10px;
+    height: 170px;
   }
 
   .list-name,

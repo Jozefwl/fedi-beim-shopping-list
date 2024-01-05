@@ -6,9 +6,13 @@ import { Button } from "react-bootstrap";
 import DropdownCheckbox from "./DropdownCheckbox";
 import { jwtDecode } from 'jwt-decode';
 import { useTranslation } from "react-i18next";
+import { ArcElement, Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Bar, Pie } from 'react-chartjs-2';
+Chart.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
 
 const ListViewer = ({ token }) => {
-    const [t] = useTranslation("global")
+    const [t] = useTranslation("global");
     const [shoppingLists, setShoppingLists] = useState(['public']);
     const [selectedFilters, setSelectedFilters] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,7 +21,39 @@ const ListViewer = ({ token }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const appTheme = localStorage.getItem("appTheme") || "dark";
     const selectedTheme = appTheme === 'dark' ? '' : '-light';
+    const [publicItemsCount, setPublicItemsCount] = useState(0);
+    const [barChartData, setBarChartData] = useState({
+        labels: ['Number of Lists', 'Number of Items in Lists'],
+        datasets: [
+          {
+            label: 'Counts',
+            data: [0, 0], 
+            backgroundColor: [
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)'
+            ],
+            borderColor: [
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+          }
+        ]
+      });
+      
+      const [pieChartData, setPieChartData] = useState({
+        labels: ['Total Lists', 'My Lists'],
+        datasets: [
+          {
+            data: [0, 0], 
+            backgroundColor: ['rgba(54, 162, 235, 0.9)', 'rgba(255, 99, 132, 0.8)'],
+            borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
+            borderWidth: 1
+          }
+        ]
+      });
 
+    
 
     useEffect(() => {
         if (token) {
@@ -37,31 +73,22 @@ const ListViewer = ({ token }) => {
     }, [token]);
 
     useEffect(() => {
-        const fetchLists = async () => {
-            setLoading(true);
-            try {
-                const publicListsResponse = await axios.post('http://194.182.91.65:3000/getAllPublicLists');
-                let allLists = publicListsResponse.data;
-
-                if (userId) {
-                    const config = { headers: { Authorization: `Bearer ${token}` } };
-                    const myListsResponse = await axios.get('http://194.182.91.65:3000/getMyLists', config);
-                    allLists = [...allLists, ...myListsResponse.data];
-                }
-
-                // Remove potential duplicates
-                const uniqueLists = Array.from(new Map(allLists.map(list => [list['_id'], list])).values());
-
-                setShoppingLists(uniqueLists);
-            } catch (error) {
-                console.error('Error fetching lists', error);
-            } finally {
-                setLoading(false);
-            }
+        const fetchTotalLists = async () => {
+          try {
+            const response = await axios.get('http://194.182.91.65:3000/');
+            const totalLists = response.data.shoppingListCount;
+      
+            setPieChartData(prevData => ({
+              ...prevData,
+              datasets: [{ ...prevData.datasets[0], data: [totalLists, prevData.datasets[0].data[1]] }]
+            }));
+          } catch (error) {
+            console.error('Error fetching total lists:', error);
+          }
         };
-
-        fetchLists();
-    }, [userId, token]);
+      
+        fetchTotalLists();
+      }, []);
 
     useEffect(() => {
         const fetchUsernames = async (ownerIds) => {
@@ -83,15 +110,52 @@ const ListViewer = ({ token }) => {
                 const publicListsResponse = await axios.post('http://194.182.91.65:3000/getAllPublicLists');
                 let allLists = publicListsResponse.data;
 
+                // Calculate the total number of items in public lists
+                let publicItemsCount = allLists.reduce((total, list) => total + calculateTotalItems(list.items), 0);
+    
+                // Update bar chart data with public lists count and items count
+                setBarChartData(prevData => ({
+                    ...prevData,
+                    datasets: [
+                        {
+                            ...prevData.datasets[0],
+                            data: [allLists.length, publicItemsCount]
+                        }
+                    ]
+                }));
+    
+                let myListsCount = 0;
+                let myItemsCount = 0;
+    
                 if (userId) {
                     const config = { headers: { Authorization: `Bearer ${token}` } };
                     const myListsResponse = await axios.get('http://194.182.91.65:3000/getMyLists', config);
+                    const myLists = myListsResponse.data.filter(list => !list.sharedTo.includes(userId));
                     allLists = [...allLists, ...myListsResponse.data];
+                    myListsCount = myLists.length;
+    
+                    // Calculate the total number of items in my lists
+                    myItemsCount = myLists.reduce((total, list) => total + calculateTotalItems(list.items), 0);
+    
+                    setBarChartData(prevData => ({
+                        ...prevData,
+                        datasets: [
+                            {
+                                ...prevData.datasets[0],
+                                data: [myListsCount, myItemsCount]
+                            }
+                        ]
+                    }));
+    
+                    setPieChartData(prevData => ({
+                        ...prevData,
+                        datasets: [{ ...prevData.datasets[0], data: [prevData.datasets[0].data[0], myListsCount] }]
+                    }));
                 }
-
+    
                 const uniqueLists = Array.from(new Map(allLists.map(list => [list['_id'], list])).values());
                 setShoppingLists(uniqueLists);
-
+    
                 // Extract unique owner IDs and fetch usernames
                 const ownerIds = [...new Set(uniqueLists.map(list => list.ownerId))];
                 if (ownerIds.length > 0) {
@@ -103,10 +167,10 @@ const ListViewer = ({ token }) => {
                 setLoading(false);
             }
         };
-
+    
         fetchLists();
     }, [userId, token]);
-
+    
     const calculateTotalItems = (items) => {
         if (!Array.isArray(items)) {
             console.error('Invalid items array:', items);
@@ -153,7 +217,6 @@ const ListViewer = ({ token }) => {
             const isSharedWithMe = selectedFilters.includes('shared') && list.sharedTo.includes(userId);
             const isArchived = selectedFilters.includes('archived') && list.isArchived;
 
-            // Make list 
             if (isArchived) {
                 return list.isArchived;
             }
@@ -161,15 +224,19 @@ const ListViewer = ({ token }) => {
             // Searching logic
             const matchesSearchQuery = list.shoppingListName.toLowerCase().includes(searchQuery.toLowerCase());
 
-            return (isPublic || isMine || isSharedWithMe) && matchesSearchQuery && !list.isArchived;
-        });
-    };
+        return (isPublic || isMine || isSharedWithMe) && matchesSearchQuery && !list.isArchived;
+    });
+};
+
+
 
     const getFilterLabels = (filterValues) => {
         return filterValues.map(value =>
             options.find(option => option.value === value)?.label || value
         );
     };
+
+    
 
     return (
         <div className={`list-viewer${selectedTheme}`}>
@@ -185,6 +252,15 @@ const ListViewer = ({ token }) => {
             <div className="search-bar">
                         <input className="searchbar-input" type="text" placeholder={t("listViewer.search")} onChange={handleSearchChange} />
                     </div>
+
+                    <div className="graphs-container">
+                <div className="pie-chart">
+                <Pie data={pieChartData} />
+                </div>
+                <div className="bar-graph">
+                <Bar data={barChartData} />
+                </div>
+            </div>
             <div className="list-tiles">
                 {filteredShoppingLists().map((list) => {
                     const totalItems = calculateTotalItems(list.items);

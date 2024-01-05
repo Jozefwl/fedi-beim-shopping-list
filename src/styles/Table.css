@@ -225,6 +225,33 @@ td {
   color: white; 
 }
 
+.parent-piechart-container {
+  margin-top: 2%;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  height: 20%;
+  width: 100%;
+}
+
+.pie-chart-container {
+  text-align: center;
+  width: auto; /* Let it size according to content */
+  height: auto; /* Let it size according to content */
+  border: 2px solid white; 
+  padding: 10px;
+  box-sizing: border-box; 
+}
+
+.pie-chart-container-light {
+  text-align: center;
+  width: auto; /* Let it size according to content */
+  height: auto; /* Let it size according to content */
+  border: 2px solid rgb(0, 0, 0); 
+  padding: 10px;
+  box-sizing: border-box; 
+}
+
 .everything-checked{
   display: flex;
   justify-content: center;

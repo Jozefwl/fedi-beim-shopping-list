@@ -5,6 +5,9 @@ import "../styles/ErrorMsg.css";
 import "../styles/Table.css";
 import UserContext from "../components/UserContext";
 import { useTranslation } from "react-i18next";
+import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
+Chart.register(ArcElement, Tooltip, Legend);
 
 const ParentComponent = () => {
   const { shoppingListId } = useParams();
@@ -73,7 +76,6 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
         await axios.put(`http://194.182.91.65:3000/updateList/${shoppingList._id}`, { items: updatedItems }, {
           headers: { Authorization: authHeader }
         });
-
         window.alert(t("shoppingList.updateSuccess"));
       } catch (error) {
         console.error("Error updating list", error);
@@ -202,9 +204,30 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
     });
   };
 
+      // pie chart data and variables
+      const checkedCount = Object.values(checkedItems).filter(Boolean).length;
+      const uncheckedCount = items.length - checkedCount;
+    
+      const pieChartData = {
+        labels: ['Checked Items', 'Unchecked Items'],
+        datasets: [{
+          data: [checkedCount, uncheckedCount],
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.9)',
+            'rgba(255, 99, 132, 0.9)'
+          ],
+          borderColor: [
+            'rgba(54, 162, 235, 0.9)',
+            'rgba(255, 99, 132, 0.9)'
+          ],
+          borderWidth: 1
+        }]
+      };
+
   return (
     <>
       <div className={`table-header${selectedTheme}`}>
+  
         <div className="header-content">
           <div className="tableName">
             <p className={`table-header-text${selectedTheme}`}>{shoppingList.shoppingListName}</p>
@@ -227,9 +250,15 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
         </div>
       </div>
       {renderDeletePrompt()}
+      
       <table className={`table-viewer${selectedTheme}`}>
         <tbody>{renderTableRows()}</tbody>
       </table>
+      <div className="parent-piechart-container">
+      <div className={`pie-chart-container${selectedTheme}`}>
+        <Pie data={pieChartData} />
+      </div>
+    </div>
     </>
 
   );
