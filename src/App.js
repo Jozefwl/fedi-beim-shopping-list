@@ -182,6 +182,7 @@ const refreshToken = async () => {
     const response = await axios.post('http://194.182.91.65:3000/refreshToken', {}, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
+    console.log('Refresh token response:', response); 
     if (response.status === 200) {
       const newToken = response.data.newToken;
       localStorage.setItem('token', newToken);
@@ -200,14 +201,14 @@ useEffect(() => {
       const currentTime = Date.now(); 
       const timeElapsed = currentTime - parseInt(loginTime); // Time elapsed since login in milliseconds
 
-      if (timeElapsed >= 3300000) { // 3300000 milliseconds = 55 minutes
+      if (timeElapsed >= 1800000) { // 1 800 000 milliseconds = 30 minutes
         refreshToken();
       }
     }
   };
 
   const interval = setInterval(checkTokenExpiry, 30000); // Check every 30s or 1/2 min
-  console.log("INTREVALLERY"+interval)
+  //console.log("INTREVALLERY"+interval)
 
   return () => clearInterval(interval);
 }, [token]);

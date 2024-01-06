@@ -295,7 +295,7 @@ const EditList = ({ shoppingList, shoppingListId, isCreation }) => {
       items: items.map((item) => ({
         name: item.name,
         category: item.category || 'Other',
-        quantity: item.quantity,
+        quantity: parseInt(item.quantity),
         checked: item.checked,
         ...(item._id && !item._id.startsWith('new-') && { _id: item._id }), // Include _id only if it exists and is not a temporary ID
       }))

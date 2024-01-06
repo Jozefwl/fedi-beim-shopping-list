@@ -29,7 +29,14 @@
         "loadingLists": "Loading shopping lists...",
         "shoppingLists": "Shopping Lists",
         "items": "items",
-        "ownedBy": "Owner:"
+        "ownedBy": "Owner:",
+        "checkedItemsGraph": "Checked items",
+        "uncheckedItemsGraph": "Unchecked items",
+        "totalListsGraph": "Total lists",
+        "myListsGraph": "My lists",
+        "numberOfListsGraph": "Number of lists",
+        "numberOfItemsGraph": "Number of items in lists",
+        "countsGraph": "Count"
     },
     "shoppingList": {
         "updateConfirmation": "Are you sure you want to update the list?",

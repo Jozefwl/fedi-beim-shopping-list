@@ -29,7 +29,14 @@
         "loadingLists": "Ładowanie list zakupów...",
         "shoppingLists": "Listy Zakupów",
         "items": "przedmioty",
-        "ownedBy": "Właściciel:"
+        "ownedBy": "Właściciel:",
+        "checkedItemsGraph": "Zaznaczone pozycje",
+        "uncheckedItemsGraph": "Niezaznaczone pozycje",
+        "totalListsGraph": "Wszystkie listy",
+        "myListsGraph": "Moje listy",
+        "numberOfListsGraph": "Liczba list",
+        "numberOfItemsGraph": "Liczba przedmiotów",
+        "countsGraph": "Wykresy"
     },
     "shoppingList": {
         "updateConfirmation": "Czy na pewno chcesz zaktualizować listę?",

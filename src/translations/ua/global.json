@@ -29,7 +29,14 @@
         "loadingLists": "Завантаження списків покупок...",
         "shoppingLists": "Списки покупок",
         "items": "кількість",
-        "ownedBy": "Власник:"
+        "ownedBy": "Власник:",
+        "checkedItemsGraph": "Позначені пункти",
+        "uncheckedItemsGraph": "Непозначені пункти",
+        "totalListsGraph": "Всього списків",
+        "myListsGraph": "Мої списки",
+        "numberOfListsGraph": "Кількість списків",
+        "numberOfItemsGraph": "Кількість предметів",
+        "countsGraph": "Кількість"
     },
     "shoppingList": {
         "updateConfirmation": "Ви впевнені, що хочете оновити список?",

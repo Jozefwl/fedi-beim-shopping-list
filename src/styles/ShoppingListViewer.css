@@ -9,8 +9,8 @@
 
 .list-viewer-light {
   font-family: Arial, sans-serif;
-  margin-left: 10%;
-  margin-right: 10%;
+  margin-left: 20%;
+  margin-right: 20%;
   margin-top: 10px;
   padding: 10px;
   background-color: #ebebeb;
@@ -214,7 +214,8 @@ a {
   .pie-chart{
     flex: 1;
     padding: 10px;
-    height: 70px;
+    height: 40px;
+    width: 50%;
   }
  .bar-graph {
     flex: 1;

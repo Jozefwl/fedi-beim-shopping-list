@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { handeLogin, handleRegister } from "../components/UserContext";
 import axios from "axios";
 import "../styles/ShoppingListViewer.css";
 import { Link } from "react-router-dom";
@@ -22,38 +23,34 @@ const ListViewer = ({ token }) => {
     const appTheme = localStorage.getItem("appTheme") || "dark";
     const selectedTheme = appTheme === 'dark' ? '' : '-light';
     const [publicItemsCount, setPublicItemsCount] = useState(0);
-    const [barChartData, setBarChartData] = useState({
-        labels: ['Number of Lists', 'Number of Items in Lists'],
-        datasets: [
-          {
-            label: 'Counts',
-            data: [0, 0], 
-            backgroundColor: [
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)'
-            ],
-            borderColor: [
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)'
-            ],
-            borderWidth: 1
-          }
-        ]
-      });
-      
-      const [pieChartData, setPieChartData] = useState({
-        labels: ['Total Lists', 'My Lists'],
-        datasets: [
-          {
-            data: [0, 0], 
-            backgroundColor: ['rgba(54, 162, 235, 0.9)', 'rgba(255, 99, 132, 0.8)'],
-            borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
-            borderWidth: 1
-          }
-        ]
-      });
 
-    
+    const [barChartData, setBarChartData] = useState({
+        labels: ["", ""],
+        datasets: [
+            {
+                label: `${t("listViewer.countsGraph")}`,
+                data: [0, 0],
+                backgroundColor: ['#2f8a0e','#c91414'],
+                borderColor: ['#2f8a0e','#c91414'],
+                borderWidth: 1
+            }
+        ]
+    });
+
+
+
+    const [pieChartData, setPieChartData] = useState({
+        labels: [t("listViewer.totalListsGraph"), t("listViewer.myListsGraph")],
+        datasets: [
+            {
+                data: [0, 0],
+                backgroundColor: ['#967a15', '#ffc800'],
+                borderColor: ['#967a15', '#ffc800'],
+                borderWidth: 1
+            }
+        ]
+    });
+
 
     useEffect(() => {
         if (token) {
@@ -74,21 +71,21 @@ const ListViewer = ({ token }) => {
 
     useEffect(() => {
         const fetchTotalLists = async () => {
-          try {
-            const response = await axios.get('http://194.182.91.65:3000/');
-            const totalLists = response.data.shoppingListCount;
-      
-            setPieChartData(prevData => ({
-              ...prevData,
-              datasets: [{ ...prevData.datasets[0], data: [totalLists, prevData.datasets[0].data[1]] }]
-            }));
-          } catch (error) {
-            console.error('Error fetching total lists:', error);
-          }
+            try {
+                const response = await axios.get('http://194.182.91.65:3000/');
+                const totalLists = response.data.shoppingListCount;
+
+                setPieChartData(prevData => ({
+                    ...prevData,
+                    datasets: [{ ...prevData.datasets[0], data: [totalLists, prevData.datasets[0].data[1]] }]
+                }));
+            } catch (error) {
+                console.error('Error fetching total lists:', error);
+            }
         };
-      
+
         fetchTotalLists();
-      }, []);
+    }, []);
 
     useEffect(() => {
         const fetchUsernames = async (ownerIds) => {
@@ -112,31 +109,38 @@ const ListViewer = ({ token }) => {
 
                 // Calculate the total number of items in public lists
                 let publicItemsCount = allLists.reduce((total, list) => total + calculateTotalItems(list.items), 0);
-    
+
+
                 // Update bar chart data with public lists count and items count
+                const translatedLabels = [
+                    t("listViewer.numberOfListsGraph"),
+                    t("listViewer.numberOfItemsGraph")
+                ];
+
                 setBarChartData(prevData => ({
                     ...prevData,
+                    labels: translatedLabels,
                     datasets: [
                         {
                             ...prevData.datasets[0],
-                            data: [allLists.length, publicItemsCount]
+                            data: [allLists.length, publicItemsCount],
                         }
                     ]
                 }));
-    
+
                 let myListsCount = 0;
                 let myItemsCount = 0;
-    
+
                 if (userId) {
                     const config = { headers: { Authorization: `Bearer ${token}` } };
                     const myListsResponse = await axios.get('http://194.182.91.65:3000/getMyLists', config);
                     const myLists = myListsResponse.data.filter(list => !list.sharedTo.includes(userId));
                     allLists = [...allLists, ...myListsResponse.data];
                     myListsCount = myLists.length;
-    
+
                     // Calculate the total number of items in my lists
                     myItemsCount = myLists.reduce((total, list) => total + calculateTotalItems(list.items), 0);
-    
+
                     setBarChartData(prevData => ({
                         ...prevData,
                         datasets: [
@@ -146,16 +150,16 @@ const ListViewer = ({ token }) => {
                             }
                         ]
                     }));
-    
+
                     setPieChartData(prevData => ({
                         ...prevData,
                         datasets: [{ ...prevData.datasets[0], data: [prevData.datasets[0].data[0], myListsCount] }]
                     }));
                 }
-    
+
                 const uniqueLists = Array.from(new Map(allLists.map(list => [list['_id'], list])).values());
                 setShoppingLists(uniqueLists);
-    
+
                 // Extract unique owner IDs and fetch usernames
                 const ownerIds = [...new Set(uniqueLists.map(list => list.ownerId))];
                 if (ownerIds.length > 0) {
@@ -167,10 +171,23 @@ const ListViewer = ({ token }) => {
                 setLoading(false);
             }
         };
-    
+
         fetchLists();
-    }, [userId, token]);
-    
+    }, [userId, token, t]);
+
+    // Reset the bar chart and pie chart data when the language changes
+    useEffect(() => {
+        setBarChartData(prevData => ({
+            ...prevData,
+            labels: [t("listViewer.numberOfListsGraph"), t("listViewer.numberOfItemsGraph")]
+        }));
+
+        setPieChartData(prevData => ({
+            ...prevData,
+            labels: [t("listViewer.totalListsGraph"), t("listViewer.myListsGraph")]
+        }));
+    }, [t]);
+
     const calculateTotalItems = (items) => {
         if (!Array.isArray(items)) {
             console.error('Invalid items array:', items);
@@ -224,9 +241,9 @@ const ListViewer = ({ token }) => {
             // Searching logic
             const matchesSearchQuery = list.shoppingListName.toLowerCase().includes(searchQuery.toLowerCase());
 
-        return (isPublic || isMine || isSharedWithMe) && matchesSearchQuery && !list.isArchived;
-    });
-};
+            return (isPublic || isMine || isSharedWithMe) && matchesSearchQuery && !list.isArchived;
+        });
+    };
 
 
 
@@ -236,10 +253,18 @@ const ListViewer = ({ token }) => {
         );
     };
 
-    
+
 
     return (
         <div className={`list-viewer${selectedTheme}`}>
+            <div className="graphs-container">
+                <div className="pie-chart">
+                    <Pie data={pieChartData} />
+                </div>
+                <div className="bar-graph">
+                    <Bar data={barChartData} />
+                </div>
+            </div>
             <div className={`list-navbar${selectedTheme}`}>
                 <div className="filter-text">
                     {getFilterLabels(selectedFilters).join(", ")} {t("listViewer.shoppingLists")}
@@ -250,17 +275,10 @@ const ListViewer = ({ token }) => {
                 </div>
             </div>
             <div className="search-bar">
-                        <input className="searchbar-input" type="text" placeholder={t("listViewer.search")} onChange={handleSearchChange} />
-                    </div>
-
-                    <div className="graphs-container">
-                <div className="pie-chart">
-                <Pie data={pieChartData} />
-                </div>
-                <div className="bar-graph">
-                <Bar data={barChartData} />
-                </div>
+                <input className="searchbar-input" type="text" placeholder={t("listViewer.search")} onChange={handleSearchChange} />
             </div>
+
+
             <div className="list-tiles">
                 {filteredShoppingLists().map((list) => {
                     const totalItems = calculateTotalItems(list.items);
@@ -274,7 +292,7 @@ const ListViewer = ({ token }) => {
                                 <span className="item-count">{totalItems} {t("listViewer.items")}</span>
                             </div>
                             <div className="list-preview">
-                                <p>{t("shoppingList.itemCtg")}: {t("shoppingList.categories."+firstCategory)}</p>
+                                <p>{t("shoppingList.itemCtg")}: {t("shoppingList.categories." + firstCategory)}</p>
                                 <ul>
                                     {firstTwoItems.map((item, index) => (
                                         <li key={item.id || index}>{item.name}</li>
@@ -282,7 +300,7 @@ const ListViewer = ({ token }) => {
                                 </ul>
                             </div>
                             <div className="list-owner">
-                            {t("listViewer.ownedBy")} {usernames[list.ownerId] || "Loading..."}
+                                {t("listViewer.ownedBy")} {usernames[list.ownerId] || "Loading..."}
                             </div>
                             <Link to={"/shoppinglist/" + list._id}><Button className={`view-button${selectedTheme}`}>{t("listViewer.viewBtn")}</Button></Link>
                         </div>

@@ -28,7 +28,14 @@
         "loadingLists": "Načítání nákupních seznamů...",
         "shoppingLists": "Nákupní seznamy",
         "items": "věcí",
-        "ownedBy": "Vlastník:"
+        "ownedBy": "Vlastník:",
+        "checkedItemsGraph": "Zaškrtnuté položky",
+        "uncheckedItemsGraph": "Nezaškrtnuté položky",
+        "totalListsGraph": "Celkový počet seznamů",
+        "myListsGraph": "Moje seznamy",
+        "numberOfListsGraph": "Počet seznamů",
+        "numberOfItemsGraph": "Počet položek v seznamech",
+        "countsGraph": "Počty"
     },
     "shoppingList": {
         "updateConfirmation": "Jste si jistý, že chcete aktualizovat seznam?",

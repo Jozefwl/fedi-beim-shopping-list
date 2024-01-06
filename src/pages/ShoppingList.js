@@ -152,77 +152,79 @@ const Table = ({ shoppingList, hreflink, canEdit }) => {
       return acc;
     }, {})
   );
-
   const renderTableRows = () => {
     const categories = [...new Set(items.map((item) => item.category))];
-
+  
     return categories.map((category, index) => {
       const translatedCategory = t(`shoppingList.categories.${category}`);
-
+  
       const categoryItems = items.filter((item) => item.category === category);
-
-      return (<React.Fragment key={index}>
-        <tr>
-          <td className="category-cell">
-            {t("shoppingList.itemCtg")}: {translatedCategory} ({categoryItems.length})
-          </td>
-          <td className="expand-cell">
-            <button
-              className={`expand-button ${visibleCategories.includes(category) ? "expanded" : ""}`}
-              onClick={() => toggleCategoryVisibility(category)}
-            >
-               {visibleCategories.includes(category) ? `▼ ${t("shoppingList.unexpand")}` : `► ${t("shoppingList.expand")}`}
-            </button>
-          </td>
-        </tr>
-        {visibleCategories.includes(category) && (
-          <React.Fragment>
-            <tr>
-              <th></th>
-              <th>{t("shoppingList.itemName")}</th>
-              <th>{t("shoppingList.itemQty")}</th>
+  
+      return (
+        <React.Fragment key={index}>
+          <tr>
+            <td className="category-cell" colSpan="2">
+              {t("shoppingList.itemCtg")}: {translatedCategory} ({categoryItems.length})
+            </td>
+          </tr>
+          <tr>
+            <th></th>
+            <th>{t("shoppingList.itemName")}</th>
+            <th>{t("shoppingList.itemQty")}</th>
+          </tr>
+          {categoryItems.map((item) => (
+            <tr key={item._id} className={checkedItems[item._id] ? "checked-item" : ""}>
+              <td>
+                <input
+                  type="checkbox"
+                  value={item._id}
+                  checked={checkedItems[item._id]}
+                  onChange={handleCheckboxChange}
+                  className="checkbox"
+                />
+              </td>
+              <td>{item.name}</td>
+              <td>{item.quantity}</td>
             </tr>
-            {categoryItems.map((item) => (
-              <tr key={item._id} className={checkedItems[item._id] ? "checked-item" : ""}>
-                <td>
-                  <input
-                    type="checkbox"
-                    value={item._id}
-                    checked={checkedItems[item._id]}
-                    onChange={handleCheckboxChange}
-                    className="checkbox"
-                  />
-                </td>
-                <td>{item.name}</td>
-                <td>{item.quantity}</td>
-              </tr>
-            ))}
-          </React.Fragment>
-        )}
-      </React.Fragment>
+          ))}
+        </React.Fragment>
       );
     });
   };
-
-      // pie chart data and variables
-      const checkedCount = Object.values(checkedItems).filter(Boolean).length;
-      const uncheckedCount = items.length - checkedCount;
     
-      const pieChartData = {
-        labels: ['Checked Items', 'Unchecked Items'],
-        datasets: [{
-          data: [checkedCount, uncheckedCount],
-          backgroundColor: [
-            'rgba(54, 162, 235, 0.9)',
-            'rgba(255, 99, 132, 0.9)'
-          ],
-          borderColor: [
-            'rgba(54, 162, 235, 0.9)',
-            'rgba(255, 99, 132, 0.9)'
-          ],
+// pie chart data and variables
+const [pieChartData, setPieChartData] = useState({
+  labels: [],
+  datasets: [
+      {
+          data: [],
+          backgroundColor: [],
+          borderColor: [],
           borderWidth: 1
-        }]
-      };
+      }
+  ]
+});
+
+useEffect(() => {
+  const checkedCount = Object.values(checkedItems).filter(Boolean).length;
+  const uncheckedCount = items.length - checkedCount;
+
+  setPieChartData({
+    labels: [t("listViewer.checkedItemsGraph"), t("listViewer.uncheckedItemsGraph")],
+    datasets: [{
+      data: [checkedCount, uncheckedCount],
+      backgroundColor: [
+        '#2f8a0e',
+        '#c91414'
+    ],
+    borderColor: [
+      '#2f8a0e',
+      '#c91414'
+    ],
+      borderWidth: 1
+    }]
+  });
+}, [t, checkedItems]);
 
   return (
     <>
