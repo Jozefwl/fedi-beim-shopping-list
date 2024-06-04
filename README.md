@@ -2,7 +2,7 @@
 
 This repository is no longer actively maintained. Dependencies may contain security vulnerabilities that could compromise the security of applications built using this code.
 
-**We strongly recommend against using this repository in production environments.**
+**I strongly recommend against using this repository in production environments.**
 
 --------------------------
 # Shopping List Application
