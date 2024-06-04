@@ -1,7 +1,10 @@
-# WARNING
-This repository is no longer maintained and depdencies may contain security vulnerabilities which may compromise the security of the application !!!
+## WARNING: Important Security Notice
 
+This repository is no longer actively maintained. Dependencies may contain security vulnerabilities that could compromise the security of applications built using this code.
 
+**We strongly recommend against using this repository in production environments.**
+
+--------------------------
 # Shopping List Application
 
 This is a React-based shopping list application. It allows users to create, view, edit, and manage shopping lists. +
